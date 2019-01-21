@@ -1,6 +1,6 @@
 
 public class Salle {
-	String nom;
+	private String nom;
 	
 	public Salle(String nom) {
 		this.nom = nom;
