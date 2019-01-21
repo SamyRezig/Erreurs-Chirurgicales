@@ -32,7 +32,7 @@ public class Agenda {
 			// Lecture de la 2e ligne jusqu'a la fin du fichier
 			while ((ligne = fluxTexte.readLine()) != null) {
 				System.out.println(ligne);
-				
+				// Creation d'une chirurgie a partir de la ligne recuperee. 
 				operation = creationChirurgie(ligne.split(";"));
 				this.listChirurgies.add(operation);
 				
@@ -49,8 +49,8 @@ public class Agenda {
 	public Chirurgie creationChirurgie(String [] infoSeparees) {
 		int identifiant = Integer.parseInt(infoSeparees[0]);
 		IntervalleTemps datesOperation = new IntervalleTemps(infoSeparees[1], infoSeparees[2], infoSeparees[1], infoSeparees[3]);
-		Salle bloc = this.trouverSalle(infoSeparees[4]);
-		Chirurgien chirurgien = this.trouverChirurgien(infoSeparees[5]);
+		Salle bloc = this.trouverSalle(infoSeparees[4]);                    // Evite les doublons de salles
+		Chirurgien chirurgien = this.trouverChirurgien(infoSeparees[5]);    // Evite les doublons de chirurgiens
 		
 		return new Chirurgie(identifiant, datesOperation, bloc, chirurgien);
 	}
@@ -61,6 +61,7 @@ public class Agenda {
 				return operation.getSalle();
 			}
 		}
+                // La salle n'a pas ete trouvee. Une nouvelle est creee.
 		return new Salle(nomSalle);
 	}
 	
@@ -70,6 +71,7 @@ public class Agenda {
 				return operation.getChirurgien();
 			}
 		}
+                // Le chirurgien n'a pas ete trouve. Un nouveau chirurgien est cree.
 		return new Chirurgien(nomChirurgien);
 	}
 }
