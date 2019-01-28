@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ubiquite extends Conflit {
 
@@ -8,8 +11,17 @@ public class Ubiquite extends Conflit {
   	}
 
 	@Override
-	public void resoudreConflit(Chirurgie first, Chirurgie second) {
+	public void resoudreConflit(Chirurgie first, Chirurgie second, List<Chirurgien> lc, List<Salle> ls) {
+		LocalDate ld = first.getDatesOperation().getDateDebut().toLocalDate();
+		List<Chirurgien> chirurgienDispo = new ArrayList<>();
+		//chirurgienDispo=
+		
 		
 	}
 
+	
+	/**
+	 * Modifier le chirurgien
+	 * Modifier l'heure
+	 */
 }

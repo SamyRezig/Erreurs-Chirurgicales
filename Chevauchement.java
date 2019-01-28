@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class Chevauchement extends Conflit {
 
@@ -9,7 +10,7 @@ public class Chevauchement extends Conflit {
 	}
 
 	@Override
-	public void resoudreConflit(Chirurgie first, Chirurgie second) {
+	public void resoudreConflit(Chirurgie first, Chirurgie second, List<Chirurgien> lc, List<Salle> ls) {
 		
 	}
 
