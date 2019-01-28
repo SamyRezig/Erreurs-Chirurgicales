@@ -10,7 +10,7 @@ public class Chevauchement extends Conflit {
 	}
 
 	@Override
-	public void resoudreConflit(Chirurgie first, Chirurgie second, List<Chirurgien> lc, List<Salle> ls) {
+	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
 		
 	}
 

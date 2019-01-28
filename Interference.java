@@ -9,7 +9,7 @@ public class Interference extends Conflit {
 	}
 
 	@Override
-	public void resoudreConflit(Chirurgie first, Chirurgie second,List<Chirurgien> lc, List<Salle> ls) {
+	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
 		// TODO Auto-generated method stub
 		
 	}

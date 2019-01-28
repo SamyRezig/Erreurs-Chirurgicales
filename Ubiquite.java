@@ -11,10 +11,13 @@ public class Ubiquite extends Conflit {
   	}
 
 	@Override
-	public void resoudreConflit(Chirurgie first, Chirurgie second, List<Chirurgien> lc, List<Salle> ls) {
-		LocalDate ld = first.getDatesOperation().getDateDebut().toLocalDate();
-		List<Chirurgien> chirurgienDispo = new ArrayList<>();
-		//chirurgienDispo=
+	public void resoudreConflit( List<Chirurgien> lc, List<Salle> ls) {
+		LocalDate ld = super.getFirst().getDatesOperation().getDateDebut().toLocalDate();
+		if(lc.size() == 1) {
+			//Deplace les horaires
+		}else {
+			//Change de chirurgien
+		}
 		
 		
 	}

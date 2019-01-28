@@ -15,8 +15,9 @@ public class Main {
 		 * 
 		 * a.identifierConflit();
 		 */
-		System.out.println(a.getListConflits());
+		System.out.println(a.getListConflits().size());
 		System.out.println(a.getChirurgiensDispos());
+		System.out.println(a.getListeSalles());
 
 	}
 }

@@ -15,7 +15,16 @@ public abstract class Conflit {
 		return this.getClass() + " -- " + this.firstChirurgie + " avec " + this.secondChirurgie;
 	}
 	
-	public abstract void resoudreConflit(Chirurgie first,Chirurgie second, List<Chirurgien> lc, List<Salle> ls);
+	public abstract void resoudreConflit(List<Chirurgien> lc, List<Salle> ls);
+	//public abstract void resoudreConflit(PlanningJournee pj);
+
+	public Chirurgie getFirst() {
+		return this.firstChirurgie;
+	}
+
+	public Chirurgie getSecond() {
+		return this.secondChirurgie;
+	}
 	
 	/*
 	 * Ubiquite -> changer chirurgien

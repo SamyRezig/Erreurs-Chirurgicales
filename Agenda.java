@@ -26,7 +26,9 @@ public class Agenda {
 	public Agenda(String nomFichier) {
 		this();
 		this.remplirDepuisFichier(nomFichier);
+		this.setPlanningParJournee(this.listeJournees());
 		this.rescencerTousConflits();
+		
 	}
 
 	private void remplirDepuisFichier(String nomFichier) {
@@ -55,6 +57,7 @@ public class Agenda {
 			System.out.println("Pas de fichier trouve.");
 		}
 
+		// Definition des chirurgiens disponibles et des salles.
 		this.setPlanningParJournee(this.listeJournees());
 	}
 
@@ -142,6 +145,11 @@ public class Agenda {
 		return listeMedecins;
 	}
 
+	/**
+	 *  
+	 * 
+	 */
+	
 	public void setPlanningParJournee(List<LocalDate> ld) {
 		Map<LocalDate, List<Chirurgie>> mapJournee = new HashMap<>();
 		Map<LocalDate, List<Chirurgien>> mapMedecins = new HashMap<>();
@@ -194,11 +202,6 @@ public class Agenda {
 			// a continuer...
 		}
 	}
-
-	/**
-	 * 
-	 * Ubiquite : (17,18) , (21,22) Chevauchement : (9,10) Interference : (9,10,11)
-	 * , (13,14)
-	 * 
-	 */
+	
+	
 }
