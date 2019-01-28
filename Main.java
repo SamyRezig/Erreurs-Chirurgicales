@@ -20,6 +20,8 @@ public class Main {
                 System.out.println(a.getChirurgieJournee(localDate));
                 
                 a.identifierConflit();*/
-		a.rescencerTousConflits();
+		System.out.println(a.getListConflits());
+		System.out.println(a.getChirurgiensDispos());
+		
 	}
 }

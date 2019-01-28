@@ -13,13 +13,15 @@ import java.util.stream.Collectors;
 public class Agenda {
 	private List<Chirurgie> listChirurgies;
 	private List<Conflit> listConflits;
-	private Map<LocalDate, List<Chirurgie>> edt; 
+	private Map<LocalDate, List<Chirurgie>> edt;
+	private Map<LocalDate, List<Chirurgien>> chirurgiensDispos;
         
 	
 	private Agenda() {
 		this.listChirurgies = new ArrayList<>();
 		this.listConflits = new ArrayList<>();
 		this.edt = new HashMap<>();
+		this.chirurgiensDispos = new HashMap<>();
 	}
 	
 	public Agenda(String nomFichier) {
@@ -55,7 +57,15 @@ public class Agenda {
 			System.out.println("Pas de fichier trouve.");
 		}
 		
-		this.edt = getListeChirurgieJournee();
+		this.setPlanningParJournee(this.listeJournees());
+	}
+	
+	public List<Conflit> getListConflits() {
+		return this.listConflits;
+	}
+	
+	public Map<LocalDate, List<Chirurgien>> getChirurgiensDispos() {
+		return chirurgiensDispos;
 	}
 	
 	public Map<LocalDate, List<Chirurgie>> getEdt() {
@@ -102,24 +112,45 @@ public class Agenda {
                 }
             }
             
-            return chirurgieJournee;
-        }
-        
-    public Map<LocalDate,List<Chirurgie>> getListeChirurgieJournee(){
-    	Map<LocalDate,List<Chirurgie>> mapJournee = new HashMap<>();
-    	List<LocalDate> ld = this.listChirurgies.stream()
+         return chirurgieJournee;
+    }
+	
+	private List<LocalDate> listeJournees() {
+		List<LocalDate> ld = this.listChirurgies.stream()
                 .map( x -> x.getDatesOperation().getDateDebut().toLocalDate())
                 .distinct()
                 .collect(Collectors.toList());
-    	List<Chirurgie> tmp = new ArrayList<>();
-    	for(LocalDate l : ld) {
+		return ld;
+	}   
+	
+	private List<Chirurgien> getChirurgienJournee(List<Chirurgie> listeChg) {
+		List<Chirurgien> listeMedecins = new ArrayList<>();
+		
+		for (Chirurgie chg : listeChg) {
+			if (! listeMedecins.contains(chg)) {
+				listeMedecins.add(chg.getChirurgien());
+			}
+		}
+		return null;
+	}
+	
+    public void setPlanningParJournee(List<LocalDate> ld){
+    	Map<LocalDate,List<Chirurgie>> mapJournee = new HashMap<>();
+    	Map<LocalDate, List<Chirurgien>> mapMedecins = new HashMap<>();
+    	
+    	List<Chirurgie> tmp = new ArrayList<>();		// Liste des chirurgies pour une journee
+    	List<Chirurgien> listeMedecins = new ArrayList<>();
+    	
+     	for(LocalDate l : ld) {
     		tmp=getChirurgieJournee(l);
+    		listeMedecins = this.getChirurgienJournee(tmp);
     		System.out.println(tmp.size());
     		mapJournee.put(l, tmp);
+    		mapMedecins.put(l, listeMedecins);
 
     	}
-    			
-		return mapJournee;
+    	this.edt = mapJournee;
+    	this.chirurgiensDispos = mapMedecins;
     }
     
     public void rescencerTousConflits() {
@@ -147,7 +178,11 @@ public class Agenda {
     	System.out.println(listConflits);
     }
 	
-	
+	public void resoudreTousConflits() {
+		for (Conflit conflitCourant : this.listConflits) {
+			// a continuer...
+		}
+	}
 	
 	
 	/**
