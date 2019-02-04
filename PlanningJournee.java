@@ -49,6 +49,13 @@ public class PlanningJournee {
 			conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSalles);
 		}
 	}
+	
+	public void visualiser() {
+		for (Chirurgie chrg : this.listeChirurgies) {
+			System.out.print(chrg + " : ");
+			chrg.visualisation();
+		}
+	}
 
 	@Override
 	public String toString() {

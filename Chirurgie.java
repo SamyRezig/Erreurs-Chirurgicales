@@ -1,3 +1,7 @@
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
+
 public class Chirurgie {
 	private int identifiant;
 	private IntervalleTemps datesOperation;
@@ -82,6 +86,27 @@ public class Chirurgie {
 			return true;
 		}
 		return false;
+	}
+	
+	public void visualisation() {
+		List<LocalDateTime> ref = new ArrayList<>();
+		LocalDateTime base = null;
+		// Construction des marquages de temps
+		for (int i = 0; i < 48; i++) {
+			ref.add(base);
+			base.plusMinutes(30);
+		}
+		
+		for (LocalDateTime time : ref) {
+			if (false) {
+				System.out.print("-");
+				
+			} else {
+				System.out.print("*");
+			}
+			System.out.println();
+		}
+		
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class Agenda {
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
 	//private List<Conflit> listConflits;					// Liste contenant tous les conflits
 	private Map<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
-	private Statistiques stats;
+	public Statistiques stats;
 
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
@@ -198,9 +198,25 @@ public class Agenda {
 		}
 	}
 	
-	/*public void statistiques() {
-		this.stats = new Statistiques(this.listeChi)
-	}*/
+	public List<Conflit> extraireConflits() {
+		List<Conflit> tousConflits = new ArrayList<>();
+		
+		for (PlanningJournee contenuJour : this.planning.values()) {
+			tousConflits.addAll(contenuJour.getListeConflits());
+		}
+		
+		return tousConflits;
+	}
+	
+	public void statistiques() {
+		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits());
+	}
+	
+	public void visuliser() {
+		for (PlanningJournee contenuJour : this.planning.values()) {
+			contenuJour.visualiser();
+		}
+	}
 
 
 }

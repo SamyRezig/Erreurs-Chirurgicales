@@ -2,7 +2,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class IntervalleTemps {
+public class IntervalleTemps implements Comparable<IntervalleTemps>{
 	private LocalDateTime dateDebut;
 	private LocalDateTime dateFin;
 
@@ -54,6 +54,11 @@ public class IntervalleTemps {
 	
 	public void reduireDebut(long biaisMinutes) {
 		this.dateDebut.plusMinutes(-biaisMinutes);
+	}
+	
+	@Override
+	public int compareTo(IntervalleTemps autre) {
+		return (int)this.duree() - (int)autre.duree();	// Les durees ne depassent pas une journee
 	}
 
 	@Override
