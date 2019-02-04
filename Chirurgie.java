@@ -38,6 +38,10 @@ public class Chirurgie {
 
 		return null;
 	}
+	
+	public long duree() {
+		return this.datesOperation.duree();
+	}
 
 	public boolean estChevauchement(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation) && this.salle.equals(second.salle)

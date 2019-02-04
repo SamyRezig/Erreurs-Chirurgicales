@@ -12,13 +12,12 @@ public class Ubiquite extends Conflit {
 
 	@Override
 	public void resoudreConflit( List<Chirurgien> lc, List<Salle> ls) {
-		LocalDate ld = super.getFirst().getDatesOperation().getDateDebut().toLocalDate();
+		LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
 		if(lc.size() == 1) {
 			//Deplace les horaires
 		}else {
 			//Change de chirurgien
 		}
-		
 		
 	}
 

@@ -16,13 +16,12 @@ public abstract class Conflit {
 	}
 	
 	public abstract void resoudreConflit(List<Chirurgien> lc, List<Salle> ls);
-	//public abstract void resoudreConflit(PlanningJournee pj);
 
-	public Chirurgie getFirst() {
+	public Chirurgie getPremiereChirurgie() {
 		return this.firstChirurgie;
 	}
 
-	public Chirurgie getSecond() {
+	public Chirurgie getSecondeChirurgie() {
 		return this.secondChirurgie;
 	}
 	
