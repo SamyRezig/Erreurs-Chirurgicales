@@ -1,4 +1,3 @@
-
 public class Chirurgie {
 	private int identifiant;
 	private IntervalleTemps datesOperation;
@@ -15,9 +14,17 @@ public class Chirurgie {
 	public Salle getSalle() {
 		return this.salle;
 	}
+	
+	public void setSalle(Salle s) {
+		this.salle = s;
+	}
 
 	public Chirurgien getChirurgien() {
 		return this.chirurgien;
+	}
+
+	public void setChirurgien(Chirurgien ch) {
+		this.chirurgien = ch;
 	}
 
 	public IntervalleTemps getDatesOperation() {
@@ -38,15 +45,15 @@ public class Chirurgie {
 
 		return null;
 	}
-	
+
 	public long duree() {
 		return this.datesOperation.duree();
 	}
-	
+
 	public void reduireFin(long biaisMinutes) {
 		this.datesOperation.reduireFin(biaisMinutes);
 	}
-	
+
 	public void reduireDebut(long biaisMinutes) {
 		this.datesOperation.reduireDebut(biaisMinutes);
 	}
@@ -91,4 +98,5 @@ public class Chirurgie {
 		return strb.toString();
 	}
 
+	
 }
