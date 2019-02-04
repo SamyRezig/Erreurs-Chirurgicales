@@ -25,6 +25,9 @@ public abstract class Conflit {
 		return this.secondChirurgie;
 	}
 	
+	
+	
+	
 	/*
 	 * Ubiquite -> changer chirurgien
 	 * 			-> deplacer heure chg

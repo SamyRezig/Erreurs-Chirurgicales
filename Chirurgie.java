@@ -18,7 +18,7 @@ public class Chirurgie {
 	public Salle getSalle() {
 		return this.salle;
 	}
-	
+
 	public void setSalle(Salle s) {
 		this.salle = s;
 	}
@@ -87,7 +87,7 @@ public class Chirurgie {
 		}
 		return false;
 	}
-	
+
 	public void visualisation() {
 		List<LocalDateTime> ref = new ArrayList<>();
 		LocalDateTime base = null;
@@ -96,17 +96,17 @@ public class Chirurgie {
 			ref.add(base);
 			base.plusMinutes(30);
 		}
-		
+
 		for (LocalDateTime time : ref) {
 			if (false) {
 				System.out.print("-");
-				
+
 			} else {
 				System.out.print("*");
 			}
 			System.out.println();
 		}
-		
+
 	}
 
 	@Override
@@ -123,5 +123,4 @@ public class Chirurgie {
 		return strb.toString();
 	}
 
-	
 }
