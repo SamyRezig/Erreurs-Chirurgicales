@@ -42,6 +42,14 @@ public class Chirurgie {
 	public long duree() {
 		return this.datesOperation.duree();
 	}
+	
+	public void reduireFin(long biaisMinutes) {
+		this.datesOperation.reduireFin(biaisMinutes);
+	}
+	
+	public void reduireDebut(long biaisMinutes) {
+		this.datesOperation.reduireDebut(biaisMinutes);
+	}
 
 	public boolean estChevauchement(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation) && this.salle.equals(second.salle)

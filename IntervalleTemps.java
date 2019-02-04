@@ -47,6 +47,14 @@ public class IntervalleTemps {
 		this.dateDebut.plusMinutes(biaisMinutes);
 		this.dateFin.plusMinutes(biaisMinutes);
 	}
+	
+	public void reduireFin(long biaisMinutes) {
+		this.dateFin.plusMinutes(-biaisMinutes);
+	}
+	
+	public void reduireDebut(long biaisMinutes) {
+		this.dateDebut.plusMinutes(-biaisMinutes);
+	}
 
 	@Override
 	public String toString() {

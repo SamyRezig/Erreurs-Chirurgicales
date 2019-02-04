@@ -6,8 +6,16 @@ public class Correcteur {
 		courante.getDatesOperation().translater(biaisMinutes);
 	}
 
-	// Reduire l'intervalle de temps d'une chirurgie par le debut
+	// Reduire l'intervalle de temps d'une chirurgie par la fin
+	public static void reduireFin(Chirurgie courante, long biaisMinutes) {
+		courante.reduireFin(biaisMinutes);
+	}
+	
 	// Reduire l'intervalle de temps par la fin
+	public static void reduireDebut(Chirurgie courante, long biaisMinutes) {
+		courante.reduireDebut(biaisMinutes);
+	}
+	
 	// Changer le chirurgien
 	// Changer la salle
 }
