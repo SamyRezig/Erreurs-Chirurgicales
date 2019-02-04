@@ -6,7 +6,8 @@ public class Correcteur {
 		courante.getDatesOperation().translater(biaisMinutes);
 	}
 
-	// Reduire l'intervalle de temps d'une chirurgie
+	// Reduire l'intervalle de temps d'une chirurgie par le debut
+	// Reduire l'intervalle de temps par la fin
 	// Changer le chirurgien
 	// Changer la salle
 }
