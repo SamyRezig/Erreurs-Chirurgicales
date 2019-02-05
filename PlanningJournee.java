@@ -7,15 +7,16 @@ import java.util.ArrayList;
 public class PlanningJournee {
 
 	private List<Chirurgie> listeChirurgies;
-	private List<Salle> listeSalles;
+	private List<Salle> listeSalles; // Salle classique
+        private List<Salle> listeSallesUrgence; // Salle urgence
 	private List<Chirurgien> listeChirurgiens;
 	private List<Conflit> listeConflits;
 
-	public PlanningJournee(List<Chirurgie> lc,List<Salle> ls, List<Chirurgien> lch) {
+	public PlanningJournee(List<Chirurgie> lc,List<Salle> ls, List<Salle> lsu,  List<Chirurgien> lch) {
 		this.listeChirurgies = lc;
 		this.listeSalles = ls;
 		this.listeChirurgiens = lch;
-
+                this.listeSallesUrgence = lsu;
 		this.listeConflits = new ArrayList<>();
 	}
 
@@ -48,9 +49,14 @@ public class PlanningJournee {
 	}
 	
 	public void resoudreConflits() {
-		for (Conflit conflitCourant : this.listeConflits) {
+                
+		for(Conflit conflitCourant : this.listeConflits) {
+                        if(conflitCourant.getPremiereChirurgie().estUrgente()){
+                            conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSallesUrgence);
+                        }else{
 			conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSalles);
-		}
+                        }        
+                }
 	}
 	
 	public void visualiser() {
@@ -59,12 +65,6 @@ public class PlanningJournee {
 			chrg.visualisation();
 		}
 	}
-        
-        public void visualiserConflits() {
-            for (Conflit conflitCourant : this.listeConflits) {
-                conflitCourant.visualiser();
-            }
-        }
 
 	@Override
 	public String toString() {

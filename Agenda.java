@@ -102,13 +102,23 @@ public class Agenda {
 	public List<Salle> getListeSalles(){
 		List<Salle> ls = new ArrayList<>();
 		for(Chirurgie c : this.listeChirurgies) {
-			if(!ls.contains(c.getSalle())) {
+			if(!ls.contains(c.getSalle()) && !c.getSalle().estUrgence()) {
 				ls.add(c.getSalle());
 			}
 		}
 		return ls;
 	}
 
+        public List<Salle> getListeSallesUrgence(){
+            List<Salle> lsu = new ArrayList<>();
+            for(Chirurgie c : this.listeChirurgies) {
+			if(!lsu.contains(c.getSalle()) && c.getSalle().estUrgence()) {
+				lsu.add(c.getSalle());
+			}
+		}
+            return lsu;
+        }
+        
 
 	public List<Chirurgie> getChirurgieJournee(LocalDate l) {
 		List<Chirurgie> chirurgieJournee = new ArrayList<>();
@@ -146,6 +156,14 @@ public class Agenda {
 							.distinct()
 							.collect(Collectors.toList());
 	}
+        
+        public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
+		return this.listeChirurgies.stream()
+							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && x.estUrgente())
+							.map( x->x.getSalle() )
+							.distinct()
+							.collect(Collectors.toList());
+	}
 
 	public void setPlanningParJournee(List<LocalDate> ld) {
 		//Map<LocalDate, List<Chirurgie>> mapJournee = new HashMap<>();
@@ -157,15 +175,16 @@ public class Agenda {
 		List<Chirurgie> tmp = new ArrayList<>(); // Liste des chirurgies pour une journee
 		List<Chirurgien> listeMedecins = new ArrayList<>();
 		List<Salle> listeSalles = null;
+                List<Salle> listeSallesUrgence=null;
 
 		for (LocalDate l : ld) {
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
 			listeMedecins = this.getChirurgienJournee(tmp);
 			listeSalles = this.getSallesJournee(l);
-
+                        listeSallesUrgence= this.getSallesUrgenceJournee(l);
 			// Creer un objet PlanningJournee
-			jour = new PlanningJournee(tmp, listeSalles, listeMedecins);
+			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
 			// Mettre dans Map
 			mapJournees.put(l, jour);
 
@@ -212,17 +231,11 @@ public class Agenda {
 		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits());
 	}
 	
-	public void visualiser() {
+	public void visuliser() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiser();
 		}
 	}
-        
-        public void visualiserConflits() {
-            for (PlanningJournee contenuJour : this.planning.values()) {
-			contenuJour.visualiserConflits();
-		}
-        }
 
 
 }

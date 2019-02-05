@@ -54,10 +54,8 @@ public class Statistiques {
 	}
 
 	private long calculerDernierQuartile() {
-		OptionalLong ol = this.operationsSansConflit.stream()
-                                            .mapToLong(chrg -> chrg.duree())
-                                            .sorted()
-                                            .skip((this.operationsSansConflit.size() * 4) / 4 - 1).findFirst();
+		OptionalLong ol = this.operationsSansConflit.stream().mapToLong(chrg -> chrg.duree()).sorted()
+				.skip(this.operationsSansConflit.size() * 3 / 4).findFirst();
 		long dernierQuartile = ol.getAsLong();
 
 		return dernierQuartile;

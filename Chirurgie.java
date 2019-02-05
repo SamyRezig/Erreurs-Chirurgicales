@@ -14,9 +14,13 @@ public class Chirurgie {
 		this.datesOperation = datesOp;
 		this.salle = salle;
 		this.chirurgien = chirurgien;
-                this.urgence = this.salle.urgence();
+                this.urgence = this.salle.estUrgence();
 	}
 
+        public boolean estUrgente(){
+            return this.urgence;
+        }
+        
 	public Salle getSalle() {
 		return this.salle;
 	}
@@ -92,26 +96,22 @@ public class Chirurgie {
 
 	public void visualisation() {
 		List<LocalDateTime> ref = new ArrayList<>();
-                LocalDateTime fin = this.datesOperation.getDateFin();
-                LocalDateTime debut = this.datesOperation.getDateDebut();
-		LocalDateTime base = debut.minusSeconds(debut.getSecond())
-                                          .minusMinutes(debut.getMinute())
-                                          .minusHours(debut.getHour());
+		LocalDateTime base = null;
 		// Construction des marquages de temps
-		for (int i = 0; i < 24 * 4; i++) {
+		for (int i = 0; i < 48; i++) {
 			ref.add(base);
-			base = base.plusMinutes(15);
+			base.plusMinutes(30);
 		}
 
 		for (LocalDateTime time : ref) {
-			if (time.isAfter(debut) && time.isBefore(fin)) {
-				System.out.print("*");
+			if (false) {
+				System.out.print("-");
 
 			} else {
-				System.out.print("_");
+				System.out.print("*");
 			}
+			System.out.println();
 		}
-                System.out.println();
 
 	}
 
@@ -125,8 +125,6 @@ public class Chirurgie {
 		strb.append(this.salle);
 		strb.append("|");
 		strb.append(this.chirurgien);
-                strb.append("|");
-                strb.append(this.urgence);
 		strb.append("\n");
 		return strb.toString();
 	}

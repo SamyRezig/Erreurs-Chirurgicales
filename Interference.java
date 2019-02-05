@@ -1,3 +1,4 @@
+import java.time.Duration;
 import java.util.List;
 
 public class Interference extends Conflit {
@@ -8,8 +9,8 @@ public class Interference extends Conflit {
 
 	@Override
 	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		//LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
-		Salle tmpSalle = null;
+                long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
+                Salle tmpSalle = null;
 		for(Salle s : ls) {
 			if(!this.getPremiereChirurgie().getSalle().equals(s)) {
 				tmpSalle = s;

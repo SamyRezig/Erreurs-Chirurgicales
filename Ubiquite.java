@@ -1,3 +1,4 @@
+import java.time.Duration;
 import java.util.List;
 
 public class Ubiquite extends Conflit {
@@ -15,9 +16,9 @@ public class Ubiquite extends Conflit {
 		if(lc.size() == 1) {
 			//Deplace les horaires
 			long duree = this.getSecondeChirurgie().duree();
-			long dureeChevauchement;
+			long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
 			// heure fin first - heure debut seconde
-			Correcteur.translater(getSecondeChirurgie(), duree);
+			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15);
 			
 		}else {
 			//Change de chirurgien

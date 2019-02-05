@@ -9,11 +9,12 @@ public class Salle {
 	public String getNom() {
 		return this.nom;
 	}
-        
-        public boolean urgence() {
+	
+        public boolean estUrgence() {
             return this.nom.split("-")[1].startsWith("U");
         }
-	
+
+         
 	@Override
 	public String toString() {
 		return this.nom;

@@ -15,7 +15,7 @@ public abstract class Conflit {
 		return this.getClass() + " -- " + this.firstChirurgie + " avec " + this.secondChirurgie;
 	}
 	
-	public abstract void resoudreConflit(List<Chirurgien> lc, List<Salle> ls);
+	 public abstract void resoudreConflit(List<Chirurgien> lc, List<Salle> ls);
 
 	public Chirurgie getPremiereChirurgie() {
 		return this.firstChirurgie;
@@ -24,27 +24,9 @@ public abstract class Conflit {
 	public Chirurgie getSecondeChirurgie() {
 		return this.secondChirurgie;
 	}
-        
-        public void visualiser() {
-            System.out.print(this.firstChirurgie + "\t");
-            this.firstChirurgie.visualisation();
-            
-            System.out.print(this.secondChirurgie + "\t");
-            this.secondChirurgie.visualisation();
-            
-            System.out.println();
-        }
 	
 	
 	
 	
-	/*
-	 * Ubiquite -> changer chirurgien
-	 * 			-> deplacer heure chg
-	 * 
-	 * Interference -> changer salle
-	 * 				-> deplacer heure chg
-	 * 
-	 * Chevauchement -> deplacer chirurgien et salle
-	 * */
+	
 }
