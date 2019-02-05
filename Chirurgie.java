@@ -7,12 +7,14 @@ public class Chirurgie {
 	private IntervalleTemps datesOperation;
 	private Salle salle;
 	private Chirurgien chirurgien;
+        private boolean urgence;
 
 	public Chirurgie(int id, IntervalleTemps datesOp, Salle salle, Chirurgien chirurgien) {
 		this.identifiant = id;
 		this.datesOperation = datesOp;
 		this.salle = salle;
 		this.chirurgien = chirurgien;
+                this.urgence = this.salle.urgence();
 	}
 
 	public Salle getSalle() {
@@ -119,6 +121,8 @@ public class Chirurgie {
 		strb.append(this.salle);
 		strb.append("|");
 		strb.append(this.chirurgien);
+                strb.append("|");
+                strb.append(this.urgence);
 		strb.append("\n");
 		return strb.toString();
 	}

@@ -9,6 +9,10 @@ public class Salle {
 	public String getNom() {
 		return this.nom;
 	}
+        
+        public boolean urgence() {
+            return this.nom.split("-")[1].startsWith("U");
+        }
 	
 	@Override
 	public String toString() {
