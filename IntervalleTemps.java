@@ -18,6 +18,11 @@ public class IntervalleTemps {
 		// Conversion et setting
 		this.dateDebut = LocalDateTime.parse(dateDebut, formatteur);
 		this.dateFin = LocalDateTime.parse(dateFin, formatteur);
+                
+                // Inversion des valuers si la date de début est apres la date de fin
+                if (this.dateFin.isBefore(this.dateDebut)) {
+                    this.dateFin = this.dateFin.plusDays(1);
+                }
 	}
 
 	public LocalDateTime getDateDebut() {
