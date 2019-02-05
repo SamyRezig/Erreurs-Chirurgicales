@@ -1,7 +1,7 @@
 public class Main {
 
 	public static void main(String[] args) {
-		Agenda a = new Agenda("MiniBase(1).csv");
+		Agenda a = new Agenda("Chirurgies_v2.csv");
 
 		// System.out.println(a.getListConflits().size());
 		// System.out.println(a.getChirurgiensDispos());
@@ -18,10 +18,15 @@ public class Main {
 		System.out.println("moyenne : " + a.stats.getDureeMoyenne());
 		System.out.println("premier quartile : " + a.stats.getPremierQuartile());
 		System.out.println("mediane : " + a.stats.getMediane());
-		System.out.println("dernier quartile : " + a.stats.getPremierQuartile());
+		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
+                
+                a.visualiser();
 
-		System.out.println("tout :");
-		a.stats.afficheTout();
+		/*System.out.println("tout :");
+		a.stats.afficheTout();*/
+                
+                //IntervalleTemps t = new IntervalleTemps("01/01/2019", "12:00:00", "01/01/2019", "11:00:00");
+                //System.out.println(t);
 
 	}
 }

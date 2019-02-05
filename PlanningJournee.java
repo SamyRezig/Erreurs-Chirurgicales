@@ -59,6 +59,12 @@ public class PlanningJournee {
 			chrg.visualisation();
 		}
 	}
+        
+        public void visualiserConflits() {
+            for (Conflit conflitCourant : this.listeConflits) {
+                conflitCourant.visualiser();
+            }
+        }
 
 	@Override
 	public String toString() {

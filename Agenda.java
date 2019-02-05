@@ -212,11 +212,17 @@ public class Agenda {
 		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits());
 	}
 	
-	public void visuliser() {
+	public void visualiser() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiser();
 		}
 	}
+        
+        public void visualiserConflits() {
+            for (PlanningJournee contenuJour : this.planning.values()) {
+			contenuJour.visualiserConflits();
+		}
+        }
 
 
 }

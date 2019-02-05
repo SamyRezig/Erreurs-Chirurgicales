@@ -24,6 +24,16 @@ public abstract class Conflit {
 	public Chirurgie getSecondeChirurgie() {
 		return this.secondChirurgie;
 	}
+        
+        public void visualiser() {
+            System.out.print(this.firstChirurgie + "\t");
+            this.firstChirurgie.visualisation();
+            
+            System.out.print(this.secondChirurgie + "\t");
+            this.secondChirurgie.visualisation();
+            
+            System.out.println();
+        }
 	
 	
 	
