@@ -118,7 +118,7 @@ public class Agenda {
 		}
             return lsu;
         }
-        
+
 
 	public List<Chirurgie> getChirurgieJournee(LocalDate l) {
 		List<Chirurgie> chirurgieJournee = new ArrayList<>();
@@ -156,7 +156,7 @@ public class Agenda {
 							.distinct()
 							.collect(Collectors.toList());
 	}
-        
+
         public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
 							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && x.estUrgente())
@@ -216,26 +216,34 @@ public class Agenda {
 			contenuJour.resoudreConflits();
 		}
 	}
-	
+
 	public List<Conflit> extraireConflits() {
 		List<Conflit> tousConflits = new ArrayList<>();
-		
+
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			tousConflits.addAll(contenuJour.getListeConflits());
 		}
-		
+
 		return tousConflits;
 	}
-	
+
 	public void statistiques() {
 		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits());
 	}
-	
-	public void visuliser() {
+
+	public void visualiser() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiser();
+			System.out.println();
 		}
 	}
+
+	public void visualiserConflits() {
+        for (PlanningJournee contenuJour : this.planning.values()) {
+			contenuJour.visualiserConflits();
+			System.out.println();
+		}
+    }
 
 
 }

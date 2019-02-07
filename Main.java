@@ -19,12 +19,12 @@ public class Main {
 		System.out.println("premier quartile : " + a.stats.getPremierQuartile());
 		System.out.println("mediane : " + a.stats.getMediane());
 		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
-                
-                a.visualiser();
+
+        a.visualiserConflits();
 
 		/*System.out.println("tout :");
 		a.stats.afficheTout();*/
-                
+
                 //IntervalleTemps t = new IntervalleTemps("01/01/2019", "12:00:00", "01/01/2019", "11:00:00");
                 //System.out.println(t);
 

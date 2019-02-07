@@ -47,18 +47,24 @@ public class PlanningJournee {
 		this.listeConflits.stream()
 							.forEach(System.out::println);
 	}
-	
+
 	public void resoudreConflits() {
-                
+
 		for(Conflit conflitCourant : this.listeConflits) {
                         if(conflitCourant.getPremiereChirurgie().estUrgente()){
                             conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSallesUrgence);
                         }else{
 			conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSalles);
-                        }        
+                        }
                 }
 	}
-	
+
+	public void visualiserConflits() {
+		for (Conflit conflitCourant : this.listeConflits) {
+			conflitCourant.visualiser();
+		}
+	}
+
 	public void visualiser() {
 		for (Chirurgie chrg : this.listeChirurgies) {
 			System.out.print(chrg + " : ");

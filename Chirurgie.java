@@ -17,10 +17,10 @@ public class Chirurgie {
                 this.urgence = this.salle.estUrgence();
 	}
 
-        public boolean estUrgente(){
-            return this.urgence;
-        }
-        
+    public boolean estUrgente(){
+        return this.urgence;
+    }
+
 	public Salle getSalle() {
 		return this.salle;
 	}
@@ -96,22 +96,30 @@ public class Chirurgie {
 
 	public void visualisation() {
 		List<LocalDateTime> ref = new ArrayList<>();
-		LocalDateTime base = null;
+		LocalDateTime fin = this.datesOperation.getDateFin();
+		LocalDateTime debut = this.datesOperation.getDateDebut();
+		LocalDateTime base = debut.minusSeconds(debut.getSecond())
+									.minusMinutes(debut.getMinute())
+									.minusHours(debut.getHour());
 		// Construction des marquages de temps
-		for (int i = 0; i < 48; i++) {
+		for (int i = 0; i < 24 * 4; i++) {
 			ref.add(base);
-			base.plusMinutes(30);
+			base = base.plusMinutes(15);
 		}
 
 		for (LocalDateTime time : ref) {
-			if (false) {
-				System.out.print("-");
+			if (time.isAfter(debut) && time.isBefore(fin)) {
+				System.out.print("*");
 
 			} else {
-				System.out.print("*");
+				System.out.print("-");
 			}
-			System.out.println();
 		}
+		// Chirurgie sur deux jours successifs
+		if (fin.getDayOfYear() != (debut.getDayOfYear())) {
+			System.out.print(">>");		// La suite de la chirugie se trouve sur le lendemain
+		}
+		System.out.println();
 
 	}
 
