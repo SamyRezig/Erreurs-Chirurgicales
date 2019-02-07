@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Ubiquite extends Conflit {
 
-	
+
 
 	public Ubiquite(Chirurgie first, Chirurgie second) {
 		super(first, second);
@@ -11,6 +11,7 @@ public class Ubiquite extends Conflit {
 
 	@Override
 	public void resoudreConflit( List<Chirurgien> lc, List<Salle> ls) {
+		System.out.println(this);
 		//LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
 		Chirurgien tmpChirurgien = null;
 		if(lc.size() == 1) {
@@ -18,8 +19,8 @@ public class Ubiquite extends Conflit {
 			long duree = this.getSecondeChirurgie().duree();
 			long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
 			// heure fin first - heure debut seconde
-			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15);
-			
+			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 60);
+
 		}else {
 			//Change de chirurgien
 			for(Chirurgien c : lc) {
@@ -30,12 +31,12 @@ public class Ubiquite extends Conflit {
 			}
 			Correcteur.changerChirurgien(getSecondeChirurgie(), tmpChirurgien);
 		}
-		
+		System.out.println(this);
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * Modifier le chirurgien
 	 * Modifier l'heure

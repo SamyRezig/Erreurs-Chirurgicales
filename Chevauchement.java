@@ -3,18 +3,17 @@ import java.util.List;
 
 public class Chevauchement extends Conflit {
 
-	
-	
-	
 	public Chevauchement(Chirurgie first, Chirurgie second) {
 		super(first, second);
 	}
 
 	@Override
 	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-            	long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
+		System.out.println(this);
+            	long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(),
+														this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
 
-                if(lc.size() !=1){
+                if(lc.size() > 1){
                     Chirurgien tmpChirurgien = null;
                     for(Chirurgien c : lc) {
                             if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
@@ -28,12 +27,14 @@ public class Chevauchement extends Conflit {
                                     tmpSalle = s;
                             }
                     }
-                    Correcteur.changerChirurgien(getSecondeChirurgie(), tmpChirurgien);
-                    Correcteur.changerSalle(getSecondeChirurgie(), tmpSalle);
+                    Correcteur.changerChirurgien(this.getSecondeChirurgie(), tmpChirurgien);
+                    Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
                 }else{
-                    Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15);
+					System.out.println("Decalage et translation");
+                    Correcteur.translater(this.getSecondeChirurgie(), dureeChevauchement + 30);
                 }
-                
+				System.out.println(this);
+
 
 	}
 

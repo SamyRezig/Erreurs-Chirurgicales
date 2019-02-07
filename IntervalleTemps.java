@@ -18,7 +18,7 @@ public class IntervalleTemps {
 		// Conversion et setting
 		this.dateDebut = LocalDateTime.parse(dateDebut, formatteur);
 		this.dateFin = LocalDateTime.parse(dateFin, formatteur);
-                
+
                 // Si la date de début est apres la date de fin, on rajoute une journee a la date de fin
                 if (this.dateFin.isBefore(this.dateDebut)) {
                     this.dateFin = this.dateFin.plusDays(1);
@@ -28,8 +28,8 @@ public class IntervalleTemps {
 	public LocalDateTime getDateDebut() {
 		return this.dateDebut;
 	}
-	
-	
+
+
 	public LocalDateTime getDateFin() {
 		return this.dateFin;
 	}
@@ -52,16 +52,16 @@ public class IntervalleTemps {
 	}
 
 	public void translater(long biaisMinutes) {
-		this.dateDebut.plusMinutes(biaisMinutes);
-		this.dateFin.plusMinutes(biaisMinutes);
+		this.dateDebut = this.dateDebut.plusMinutes(biaisMinutes);
+		this.dateFin = this.dateFin.plusMinutes(biaisMinutes);
 	}
 
 	public void reduireFin(long biaisMinutes) {
-		this.dateFin.plusMinutes(-biaisMinutes);
+		this.dateFin = this.dateFin.plusMinutes(-biaisMinutes);
 	}
 
 	public void reduireDebut(long biaisMinutes) {
-		this.dateDebut.plusMinutes(-biaisMinutes);
+		this.dateDebut = this.dateDebut.plusMinutes(-biaisMinutes);
 	}
 
 	@Override

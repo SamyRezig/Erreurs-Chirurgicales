@@ -25,6 +25,9 @@ public class PlanningJournee {
 	}
 
 	public void setConflits() {
+		// Vider la liste de conflit actuelle
+		this.listeConflits.clear();
+		
 		Conflit nouveauConflit; // Sauvegarde le nouveau conflit, est null s'il y en a pas
 
 		for (int i = 0; i < this.listeChirurgies.size(); i++) {

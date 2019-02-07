@@ -26,7 +26,7 @@ public abstract class Conflit {
 	}
 
 	public void visualiser() {
-		System.out.print(this.firstChirurgie);
+		System.out.print(this.getClass() + "\n" + this.firstChirurgie);
 		this.firstChirurgie.visualisation();
 
 		System.out.print(this.secondChirurgie);

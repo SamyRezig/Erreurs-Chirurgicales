@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Scanner;
 
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
@@ -26,7 +27,7 @@ public class Agenda {
 		this();
 		this.remplirDepuisFichier(nomFichier);
 		this.setPlanningParJournee(this.listeJournees());
-		this.rescencerTousConflits();
+		this.recenserTousConflits();
 	}
 
 	private void remplirDepuisFichier(String nomFichier) {
@@ -192,14 +193,14 @@ public class Agenda {
 		this.planning = mapJournees;		// Setting de l'attribut planning
 	}
 
-	public void rescencerTousConflits() {
-		List<Conflit> conflitsDuJour;
+	public void recenserTousConflits() {
+		//List<Conflit> conflitsDuJour;
 
 		// Pour jour, rescenser les conflits de ce jour
 		// Ajouter tous les conflits dans la liste ListConflits
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.setConflits();
-			conflitsDuJour = contenuJour.getListeConflits();
+			//conflitsDuJour = contenuJour.getListeConflits();
 			//this.listConflits.addAll(conflitsDuJour);
 		}
 	}
@@ -215,6 +216,18 @@ public class Agenda {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.resoudreConflits();
 		}
+	}
+
+	public void resolution() {
+		for (int i = 0; i < 10; i++) {
+			this.visualiserConflits();
+
+			(new Scanner(System.in)).nextLine();
+
+			this.resoudreTousConflits();
+			this.recenserTousConflits();
+		}
+		this.visualiserConflits();
 	}
 
 	public List<Conflit> extraireConflits() {
