@@ -1,7 +1,9 @@
+import java.util.Scanner;
+
 public class Main {
 
 	public static void main(String[] args) {
-		Agenda a = new Agenda("Chirurgies_v2.csv");
+		Agenda a = new Agenda("MiniBase(1).csv");
 
 		// System.out.println(a.getListConflits().size());
 		// System.out.println(a.getChirurgiensDispos());
@@ -20,7 +22,8 @@ public class Main {
 		System.out.println("mediane : " + a.stats.getMediane());
 		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
 
-        a.visualiserConflits();
+        a.resolution();
+
 
 		/*System.out.println("tout :");
 		a.stats.afficheTout();*/

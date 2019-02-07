@@ -8,7 +8,7 @@ public class PlanningJournee {
 
 	private List<Chirurgie> listeChirurgies;
 	private List<Salle> listeSalles; // Salle classique
-        private List<Salle> listeSallesUrgence; // Salle urgence
+    private List<Salle> listeSallesUrgence; // Salle urgence
 	private List<Chirurgien> listeChirurgiens;
 	private List<Conflit> listeConflits;
 
@@ -16,7 +16,7 @@ public class PlanningJournee {
 		this.listeChirurgies = lc;
 		this.listeSalles = ls;
 		this.listeChirurgiens = lch;
-                this.listeSallesUrgence = lsu;
+        this.listeSallesUrgence = lsu;
 		this.listeConflits = new ArrayList<>();
 	}
 
@@ -27,7 +27,7 @@ public class PlanningJournee {
 	public void setConflits() {
 		// Vider la liste de conflit actuelle
 		this.listeConflits.clear();
-		
+
 		Conflit nouveauConflit; // Sauvegarde le nouveau conflit, est null s'il y en a pas
 
 		for (int i = 0; i < this.listeChirurgies.size(); i++) {

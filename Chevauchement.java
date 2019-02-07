@@ -1,5 +1,6 @@
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 
 public class Chevauchement extends Conflit {
 
@@ -13,7 +14,7 @@ public class Chevauchement extends Conflit {
             	long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(),
 														this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
 
-                if(lc.size() > 1){
+                if(lc.size() != 1){
                     Chirurgien tmpChirurgien = null;
                     for(Chirurgien c : lc) {
                             if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
@@ -25,11 +26,13 @@ public class Chevauchement extends Conflit {
                     for(Salle s : ls) {
                             if(!this.getPremiereChirurgie().getSalle().equals(s)) {
                                     tmpSalle = s;
+									break;
                             }
                     }
                     Correcteur.changerChirurgien(this.getSecondeChirurgie(), tmpChirurgien);
                     Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
-                }else{
+
+                } else {
 					System.out.println("Decalage et translation");
                     Correcteur.translater(this.getSecondeChirurgie(), dureeChevauchement + 30);
                 }
