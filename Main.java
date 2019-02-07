@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-		Agenda a = new Agenda("MiniBase(1).csv");
+		Agenda a = new Agenda("11102016.txt");
 
 		// System.out.println(a.getListConflits().size());
 		// System.out.println(a.getChirurgiensDispos());
@@ -22,7 +22,9 @@ public class Main {
 		System.out.println("mediane : " + a.stats.getMediane());
 		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
 
-        a.resolution();
+        //a.resolution();
+		a.statistiques();
+		a.stats.afficheHeuresConflits();
 
 
 		/*System.out.println("tout :");

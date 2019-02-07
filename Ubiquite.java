@@ -29,7 +29,7 @@ public class Ubiquite extends Conflit {
 					break;
 				}
 			}
-			Correcteur.changerChirurgien(getSecondeChirurgie(), tmpChirurgien);
+			if (tmpChirurgien != null)	Correcteur.changerChirurgien(getSecondeChirurgie(), tmpChirurgien);
 		}
 		System.out.println(this);
 	}

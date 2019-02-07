@@ -3,6 +3,10 @@ import java.util.OptionalLong;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.time.LocalTime;
+import java.util.stream.Collectors;
 
 public class Statistiques {
 	private Set<Chirurgie> operationsSansConflit;
@@ -10,6 +14,7 @@ public class Statistiques {
 	private long premierQuartile;
 	private long mediane;
 	private long dernierQuartile;
+	private Map<LocalTime, Integer> heuresConflits;
 
 	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits) {
 
@@ -29,6 +34,7 @@ public class Statistiques {
 		this.premierQuartile = this.calculerPremierQuartile();
 		this.mediane = this.calculerMediane();
 		this.dernierQuartile = this.calculerDernierQuartile();
+		topHeuresConflits(listeConflits);
 	}
 
 	private long calculerDureeMoyenne() {
@@ -61,6 +67,27 @@ public class Statistiques {
 		return dernierQuartile;
 	}
 
+	private void topHeuresConflits(List<Conflit> listeConflits) {
+		Map<LocalTime, Integer> tableFrequences = new HashMap<>();
+		Integer frequence;
+
+		List<LocalTime> listeTemps = new ArrayList<>();
+		for (Conflit conflitCourant : listeConflits) {
+			listeTemps.add(conflitCourant.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalTime());
+			listeTemps.add(conflitCourant.getPremiereChirurgie().getDatesOperation().getDateFin().toLocalTime());
+			listeTemps.add(conflitCourant.getSecondeChirurgie().getDatesOperation().getDateDebut().toLocalTime());
+			listeTemps.add(conflitCourant.getSecondeChirurgie().getDatesOperation().getDateFin().toLocalTime());
+		}
+
+		for (LocalTime temps : listeTemps) {
+			frequence = tableFrequences.get(temps);
+			if (frequence == null)	tableFrequences.put(temps, 1);
+			else 					tableFrequences.put(temps, frequence + 1);
+		}
+
+		this.heuresConflits = tableFrequences;
+	}
+
 	public long getDureeMoyenne() {
 		return this.dureeMoyenne;
 	}
@@ -75,6 +102,14 @@ public class Statistiques {
 
 	public long getDernierQuartile() {
 		return this.dernierQuartile;
+	}
+
+	public void afficheHeuresConflits() {
+		System.out.println(this.heuresConflits);
+	}
+
+	public List<LocalTime> getHeuresConflits() {
+		return new ArrayList<>(this.heuresConflits.keySet());
 	}
 
 	public void afficheTout() {

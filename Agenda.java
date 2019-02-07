@@ -110,15 +110,15 @@ public class Agenda {
 		return ls;
 	}
 
-        public List<Salle> getListeSallesUrgence(){
-            List<Salle> lsu = new ArrayList<>();
+    public List<Salle> getListeSallesUrgence(){
+        List<Salle> lsu = new ArrayList<>();
             for(Chirurgie c : this.listeChirurgies) {
-			if(!lsu.contains(c.getSalle()) && c.getSalle().estUrgence()) {
-				lsu.add(c.getSalle());
+				if(!lsu.contains(c.getSalle()) && c.getSalle().estUrgence()) {
+					lsu.add(c.getSalle());
+				}
 			}
-		}
-            return lsu;
-        }
+        return lsu;
+    }
 
 
 	public List<Chirurgie> getChirurgieJournee(LocalDate l) {
@@ -152,13 +152,13 @@ public class Agenda {
 
 	public List<Salle> getSallesJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
-							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) )
+							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && !x.estUrgente())
 							.map( x->x.getSalle() )
 							.distinct()
 							.collect(Collectors.toList());
 	}
 
-        public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
+    public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
 							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && x.estUrgente())
 							.map( x->x.getSalle() )
@@ -176,14 +176,14 @@ public class Agenda {
 		List<Chirurgie> tmp = new ArrayList<>(); // Liste des chirurgies pour une journee
 		List<Chirurgien> listeMedecins = new ArrayList<>();
 		List<Salle> listeSalles = null;
-                List<Salle> listeSallesUrgence=null;
+        List<Salle> listeSallesUrgence=null;
 
 		for (LocalDate l : ld) {
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
 			listeMedecins = this.getChirurgienJournee(tmp);
 			listeSalles = this.getSallesJournee(l);
-                        listeSallesUrgence= this.getSallesUrgenceJournee(l);
+            listeSallesUrgence= this.getSallesUrgenceJournee(l);
 			// Creer un objet PlanningJournee
 			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
 			// Mettre dans Map
@@ -221,6 +221,7 @@ public class Agenda {
 	public void resolution() {
 		for (int i = 0; i < 10; i++) {
 			this.visualiserConflits();
+			System.out.println("Nombre de conflits : " + this.nombreConflits());
 
 			(new Scanner(System.in)).nextLine();
 
@@ -228,6 +229,10 @@ public class Agenda {
 			this.recenserTousConflits();
 		}
 		this.visualiserConflits();
+	}
+
+	private int nombreConflits() {
+		return this.extraireConflits().size();
 	}
 
 	public List<Conflit> extraireConflits() {

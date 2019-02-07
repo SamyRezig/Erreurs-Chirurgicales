@@ -17,13 +17,13 @@ public class Correcteur {
 	}
 
 	// Changer le chirurgien
-	
+
 	public static void changerChirurgien(Chirurgie courante, Chirurgien ch) {
 		courante.setChirurgien(ch);
 	}
-	
+
 	// Changer la salle
-	
+
 	public static void changerSalle(Chirurgie courante, Salle s) {
 		courante.setSalle(s);
 	}
