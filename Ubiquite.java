@@ -19,7 +19,7 @@ public class Ubiquite extends Conflit {
 			long duree = this.getSecondeChirurgie().duree();
 			long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
 			// heure fin first - heure debut seconde
-			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 60);
+			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15);
 
 		}else {
 			//Change de chirurgien

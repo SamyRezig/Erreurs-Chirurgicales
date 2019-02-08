@@ -11,6 +11,7 @@ public class Interference extends Conflit {
 	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
         long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
         Salle tmpSalle = null;
+        
 		for(Salle s : ls) {
 			if(!this.getPremiereChirurgie().getSalle().equals(s)) {
 				tmpSalle = s;

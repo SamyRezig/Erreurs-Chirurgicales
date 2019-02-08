@@ -28,6 +28,7 @@ public class Agenda {
 		this.remplirDepuisFichier(nomFichier);
 		this.setPlanningParJournee(this.listeJournees());
 		this.recenserTousConflits();
+                this.statistiques();
 	}
 
 	private void remplirDepuisFichier(String nomFichier) {
