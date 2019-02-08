@@ -3,21 +3,24 @@ import java.util.List;
 
 public class Interference extends Conflit {
 
-	public Interference(Chirurgie first, Chirurgie second) {
-		super(first, second);
-	}
+    public Interference(Chirurgie first, Chirurgie second) {
+	super(first, second);
+    }
 
-	@Override
-	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
+    @Override
+    public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
         long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
         Salle tmpSalle = null;
-        
-		for(Salle s : ls) {
-			if(!this.getPremiereChirurgie().getSalle().equals(s)) {
-				tmpSalle = s;
-			}
+        if (lc.size() == 1 || ls.size() == 1) {
+            Correcteur.translater(this.getSecondeChirurgie(), dureeChevauchement);
+        } else {
+            for(Salle s : ls) {
+		if(!this.getPremiereChirurgie().getSalle().equals(s)) {
+                    tmpSalle = s;
 		}
-		if (tmpSalle != null)	Correcteur.changerSalle(getSecondeChirurgie(), tmpSalle);
-	}
+            }
+            if (tmpSalle != null)	Correcteur.changerSalle(getSecondeChirurgie(), tmpSalle);
+        }
+    }
 
 }

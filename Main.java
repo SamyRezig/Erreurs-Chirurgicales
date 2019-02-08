@@ -22,9 +22,9 @@ public class Main {
 		System.out.println("mediane : " + a.stats.getMediane());
 		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
 
-                //a.resolution();
-		a.statistiques();
-		a.stats.dureeParChirurgien();
+                a.resolution();
+		//a.statistiques();
+		//a.stats.dureeParChirurgien();
 
 
 		/*System.out.println("tout :");
