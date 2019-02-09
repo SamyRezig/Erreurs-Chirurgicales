@@ -9,7 +9,14 @@ public class Chevauchement extends Conflit {
 	}
 
 	@Override
+	public boolean persiste() {
+		return this.getPremiereChirurgie().estChevauchement(this.getSecondeChirurgie());
+	}
+
+	@Override
 	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
+		if (!this.persiste())   return ;
+		
 		System.out.println(this);
 		System.out.println(ls);
         long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(),

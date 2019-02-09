@@ -16,14 +16,12 @@ public class Main {
 
 		System.out.println(a.extraireConflits());
 
-		a.statistiques();
 		System.out.println("moyenne : " + a.stats.getDureeMoyenne());
 		System.out.println("premier quartile : " + a.stats.getPremierQuartile());
 		System.out.println("mediane : " + a.stats.getMediane());
 		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
 
-                a.resolution();
-		//a.statistiques();
+        a.resolution();
 		//a.stats.dureeParChirurgien();
 
 

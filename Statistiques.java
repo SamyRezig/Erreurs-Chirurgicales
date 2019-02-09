@@ -111,50 +111,50 @@ public class Statistiques {
 	public List<LocalTime> getHeuresConflits() {
 		return new ArrayList<>(this.heuresConflits.keySet());
 	}
-        
-        public void dureeParSalle() {
-            List<Salle> salles = this.operationsSansConflit.stream()
-                                                    .map( x->x.getSalle() )
-                                                    .collect(Collectors.toList());
-            Map<Salle, Double> dureeSalles = new HashMap<>();
-            long sum;
-            long card;
-            
-            for (Salle salleCourante : salles) {
-                sum = this.operationsSansConflit.stream()
-                                        .filter( x->x.getSalle().equals(salleCourante) )
-                                        .mapToLong( x->x.duree() )
-                                        .sum();
-                card = this.operationsSansConflit.stream()
-                                        .filter( x->x.getSalle().equals(salleCourante) )
-                                        .count();
-                dureeSalles.put(salleCourante, (double)sum / (double)card);
-            }
-            
-            System.out.println(dureeSalles);
+
+    public void dureeParSalle() {
+        List<Salle> salles = this.operationsSansConflit.stream()
+                                                .map( x->x.getSalle() )
+                                                .collect(Collectors.toList());
+        Map<Salle, Double> dureeSalles = new HashMap<>();
+        long sum;
+        long card;
+
+        for (Salle salleCourante : salles) {
+            sum = this.operationsSansConflit.stream()
+                                    .filter( x->x.getSalle().equals(salleCourante) )
+                                    .mapToLong( x->x.duree() )
+                                    .sum();
+            card = this.operationsSansConflit.stream()
+                                    .filter( x->x.getSalle().equals(salleCourante) )
+                                    .count();
+            dureeSalles.put(salleCourante, (double)sum / (double)card);
         }
-        
-        public void dureeParChirurgien() {
-            List<Chirurgien> chirurgiens = this.operationsSansConflit.stream()
-                                                    .map( x->x.getChirurgien() )
-                                                    .collect(Collectors.toList());
-            Map<Chirurgien, Double> dureeChirurgien = new HashMap<>();
-            long sum;
-            long card;
-            
-            for (Chirurgien chgCourante : chirurgiens) {
-                sum = this.operationsSansConflit.stream()
-                                        .filter( x->x.getChirurgien().equals(chgCourante) )
-                                        .mapToLong( x->x.duree() )
-                                        .sum();
-                card = this.operationsSansConflit.stream()
-                                        .filter( x->x.getChirurgien().equals(chgCourante) )
-                                        .count();
-                dureeChirurgien.put(chgCourante, (double)sum / (double)card);
-            }
-            
-            System.out.println(dureeChirurgien);
+
+        System.out.println(dureeSalles);
+    }
+
+    public void dureeParChirurgien() {
+        List<Chirurgien> chirurgiens = this.operationsSansConflit.stream()
+                                                .map( x->x.getChirurgien() )
+                                                .collect(Collectors.toList());
+        Map<Chirurgien, Double> dureeChirurgien = new HashMap<>();
+        long sum;
+        long card;
+
+        for (Chirurgien chgCourante : chirurgiens) {
+            sum = this.operationsSansConflit.stream()
+                                    .filter( x->x.getChirurgien().equals(chgCourante) )
+                                    .mapToLong( x->x.duree() )
+                                    .sum();
+            card = this.operationsSansConflit.stream()
+                                    .filter( x->x.getChirurgien().equals(chgCourante) )
+                                    .count();
+            dureeChirurgien.put(chgCourante, (double)sum / (double)card);
         }
+
+        System.out.println(dureeChirurgien);
+    }
 
 	public void afficheTout() {
 		this.operationsSansConflit.stream().mapToLong(chrg -> chrg.duree()).sorted().forEach(System.out::println);

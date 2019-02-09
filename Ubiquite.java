@@ -1,16 +1,23 @@
 import java.time.Duration;
 import java.util.List;
 
+import java.util.Random;
+
 public class Ubiquite extends Conflit {
-
-
 
 	public Ubiquite(Chirurgie first, Chirurgie second) {
 		super(first, second);
   	}
 
 	@Override
-	public void resoudreConflit( List<Chirurgien> lc, List<Salle> ls) {
+	public boolean persiste() {
+		return this.getPremiereChirurgie().estUbiquite(this.getSecondeChirurgie());
+	}
+
+	@Override
+	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
+		if (!this.persiste())   return ;
+
 		System.out.println(this);
 		//LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
 		Chirurgien tmpChirurgien = null;
@@ -19,9 +26,9 @@ public class Ubiquite extends Conflit {
 			long duree = this.getSecondeChirurgie().duree();
 			long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(), this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
 			// heure fin first - heure debut seconde
-			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15);
+			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15); // + temps de pause
 
-		}else {
+		} else {
 			//Change de chirurgien
 			for(Chirurgien c : lc) {
 				if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
