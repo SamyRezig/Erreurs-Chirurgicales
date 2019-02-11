@@ -23,8 +23,11 @@ public class Correcteur {
 	}
 
 	// Changer la salle
-
 	public static void changerSalle(Chirurgie courante, Salle s) {
 		courante.setSalle(s);
+	}
+	
+	public static void modifierHoraire(Chirurgie courante) {
+		
 	}
 }

@@ -17,8 +17,13 @@ public class Interference extends Conflit {
     @Override
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
         if (!this.persiste())   return ;
-
-        Salle tmpSalle = null;
+        this.modifierChirurgie(lc, ls);
+        
+    }
+    
+    @Override
+    public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
+    	Salle tmpSalle = null;
 
         if (lc.size() == 1 || ls.size() == 1) {
             long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(),

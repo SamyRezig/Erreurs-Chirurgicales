@@ -14,7 +14,7 @@ public class Chirurgie {
 		this.datesOperation = datesOp;
 		this.salle = salle;
 		this.chirurgien = chirurgien;
-                this.urgence = this.salle.estUrgence();
+        this.urgence = this.salle.estUrgence();
 	}
 
     public boolean estUrgente(){
@@ -121,6 +121,10 @@ public class Chirurgie {
 		}
 		System.out.println();
 
+	}
+	
+	public boolean horaireSuspecte() {
+		return this.duree() > 180;
 	}
 
 	@Override

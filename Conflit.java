@@ -8,7 +8,7 @@ public abstract class Conflit {
 
 	public abstract void resoudreConflit(List<Chirurgien> lc, List<Salle> ls);
 	public abstract boolean persiste();
-	public abstract void modifierUneChirurgie();	// Mettre le code de resolutionClonflit() dedans
+	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls);	// Mettre le code de resolutionClonflit() dedans
 
 	public Conflit(Chirurgie first, Chirurgie second) {
 		this.firstChirurgie=first;
@@ -37,12 +37,10 @@ public abstract class Conflit {
 		System.out.println();
 	}
 
-	public boolean dureeSuspecte() {
-		return false;
-	}
-
-	public void modifierHoraires() {
-
+	public void modifierHorairesSuspectes() {
+		if (this.firstChirurgie.horaireSuspecte()) {
+			Correcteur.modifierHoraire(this.firstChirurgie);
+		}
 	}
 
 	// Pour resoudre un conflit :

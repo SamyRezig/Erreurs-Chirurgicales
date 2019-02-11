@@ -19,6 +19,11 @@ public class Ubiquite extends Conflit {
 		if (!this.persiste())   return ;
 
 		System.out.println(this);
+		this.modifierChirurgie(lc,ls);
+		System.out.println(this);
+	}
+	
+	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
 		//LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
 		Chirurgien tmpChirurgien = null;
 		if(lc.size() == 1) {
@@ -38,7 +43,6 @@ public class Ubiquite extends Conflit {
 			}
 			if (tmpChirurgien != null)	Correcteur.changerChirurgien(getSecondeChirurgie(), tmpChirurgien);
 		}
-		System.out.println(this);
 	}
 
 
