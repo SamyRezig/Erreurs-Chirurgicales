@@ -37,8 +37,8 @@ public abstract class Conflit {
 		System.out.println();
 	}
 
-	public void modifierHorairesSuspectes() {
-		if (this.firstChirurgie.horaireSuspecte()) {
+	public void modifierHeuresSuspectes() {
+		if (this.firstChirurgie.heureDebutSuspecte()) {
 			Correcteur.modifierHoraire(this.firstChirurgie);
 		}
 	}

@@ -1,3 +1,5 @@
+import java.time.Duration;
+
 public class Correcteur {
 	// Methodes pour corriger une chirurgie.
 
@@ -25,6 +27,21 @@ public class Correcteur {
 	// Changer la salle
 	public static void changerSalle(Chirurgie courante, Salle s) {
 		courante.setSalle(s);
+	}
+	
+	// premiere doit commencer avant seconde
+	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
+		long dureeInter = Duration.between(premiere.getDatesOperation().getDateFin(),
+								seconde.getDatesOperation().getDateDebut()).toMinutes();
+		
+		double tauxSuspect1 = premiere.tauxSuspectFin(dureeInter);
+		double tauxSuspect2 = seconde.tauxSuspectDebut(dureeInter);
+		
+		if (tauxSuspect1 > tauxSuspect2) {
+			Correcteur.reduireFin(premiere, dureeInter);
+		} else {
+			Correcteur.reduireDebut(seconde, dureeInter);
+		}
 	}
 	
 	public static void modifierHoraire(Chirurgie courante) {
