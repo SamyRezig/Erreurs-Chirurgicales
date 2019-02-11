@@ -28,23 +28,40 @@ public class Correcteur {
 	public static void changerSalle(Chirurgie courante, Salle s) {
 		courante.setSalle(s);
 	}
-	
+
 	// premiere doit commencer avant seconde
 	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
-		long dureeInter = Duration.between(premiere.getDatesOperation().getDateFin(),
-								seconde.getDatesOperation().getDateDebut()).toMinutes();
+			
+			// Si les chirurgies ne se chevauchent pas completement
+			
+			long dureeInter = Duration
+					.between(premiere.getDatesOperation().getDateFin(), seconde.getDatesOperation().getDateDebut())
+					.toMinutes();
+			//Sinon priviligié le changement de chirurgien / salle
+			double tauxSuspect1 = premiere.tauxSuspectFin(dureeInter);
+			double tauxSuspect2 = seconde.tauxSuspectDebut(dureeInter);
+			
+			System.out.println(dureeInter);
+
+			/*if (dureeInter < 0) {
+				dureeInter = -dureeInter;
+			}*/
+
+			if (tauxSuspect1 > tauxSuspect2) {
+				Correcteur.reduireFin(premiere, dureeInter);
+				System.out.println(premiere);
+				System.out.println("Cas A");
+
+			} else {
+				Correcteur.reduireDebut(seconde, dureeInter);
+				System.out.println(seconde);
+				System.out.println("Cas B");
+
+			}
 		
-		double tauxSuspect1 = premiere.tauxSuspectFin(dureeInter);
-		double tauxSuspect2 = seconde.tauxSuspectDebut(dureeInter);
-		
-		if (tauxSuspect1 > tauxSuspect2) {
-			Correcteur.reduireFin(premiere, dureeInter);
-		} else {
-			Correcteur.reduireDebut(seconde, dureeInter);
-		}
 	}
-	
+
 	public static void modifierHoraire(Chirurgie courante) {
-		
+
 	}
 }

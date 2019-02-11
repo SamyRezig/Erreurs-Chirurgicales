@@ -2,17 +2,19 @@ import java.util.List;
 
 public abstract class Conflit {
 
-
 	private Chirurgie firstChirurgie;
 	private Chirurgie secondChirurgie;
 
 	public abstract void resoudreConflit(List<Chirurgien> lc, List<Salle> ls);
+
 	public abstract boolean persiste();
-	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls);	// Mettre le code de resolutionClonflit() dedans
+
+	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls); // Mettre le code de
+																					// resolutionClonflit() dedans
 
 	public Conflit(Chirurgie first, Chirurgie second) {
-		this.firstChirurgie=first;
-		this.secondChirurgie=second;
+		this.firstChirurgie = first;
+		this.secondChirurgie = second;
 	}
 
 	public String toString() {
@@ -44,11 +46,11 @@ public abstract class Conflit {
 	}
 
 	// Pour resoudre un conflit :
-		// les deux chirurgies sont toujours en conflit ?
-			// non : return;
-		// On examine les durees des deux chirurgies
-		// Changer celle qui sont suspectes
-		// Verifier si le conflit persiste toujours
-			// si oui : changer de salles/chirurgiens
+	// les deux chirurgies sont toujours en conflit ?
+	// non : return;
+	// On examine les durees des deux chirurgies
+	// Changer celle qui sont suspectes
+	// Verifier si le conflit persiste toujours
+	// si oui : changer de salles/chirurgiens
 
 }

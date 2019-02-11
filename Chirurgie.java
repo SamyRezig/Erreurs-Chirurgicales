@@ -163,6 +163,13 @@ public class Chirurgie {
 		return 1 - certitude;
 	}
 
+	
+	@Override
+	public Chirurgie clone() {
+		Chirurgie tmp = this; 
+		return tmp;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder strb = new StringBuilder();
