@@ -126,6 +126,10 @@ public class Chirurgie {
 	public boolean dureeSuspecte() {
 		return this.duree() > 134;	// dernier quartile de la grande base de donnees
 	}
+        
+        public boolean heureSuspecte() {
+            return this.heureDebutSuspecte() || this.heureFinSuspecte();
+        }
 	
 	public boolean heureDebutSuspecte() {
 		List<LocalDateTime> heuresSuspectes = new ArrayList<>();
@@ -150,8 +154,8 @@ public class Chirurgie {
 	public double tauxSuspectDebut(long chevauchement) {
 		long duree = this.datesOperation.duree();
 		int heuresSusp = (this.heureDebutSuspecte()) ? 2 : 0;
-		double certitude = Math.pow((double)chevauchement / (double)1440, (double)duree + heuresSusp);
-		
+		double certitude = Math.pow((double)duree / (double)1440, (double)chevauchement + heuresSusp);
+                
 		return 1 - certitude;
 	}
 	

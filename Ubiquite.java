@@ -15,20 +15,25 @@ public class Ubiquite extends Conflit {
 	}
 
 	@Override
-	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		if (!this.persiste())   return ;
-
-		System.out.println(this);
-		this.modifierChirurgie(lc,ls);
-		System.out.println(this);
+	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {             
+                if (this.persiste()) {
+                    if (this.getSecondeChirurgie().dureeSuspecte()) {
+                        // Couper
+                        Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
+                    } else if (this.getSecondeChirurgie().heureSuspecte()) {
+                        // Decaler
+                        long dureeInter = this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
+                        Correcteur.translater(this.getSecondeChirurgie(), dureeInter);
+                    } else {
+                        // Modifier info chirurgies
+                        this.modifierChirurgie(lc, ls);
+                    }
+                    
+                }
 	}
 	
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
-		//LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
-		
-
-		
-		  Chirurgie tmpChirurgie = this.getSecondeChirurgie().clone();
+		 /* Chirurgie tmpChirurgie = this.getSecondeChirurgie().clone();
 		  if(tmpChirurgie.dureeSuspecte()){
 		  		long dureeReduite = tmpChirurgie.duree() - 104; // 104 = dureeMoyenne
 		  		Correcteur.reduireDebut(tmpChirurgie, dureeReduite);
@@ -41,9 +46,7 @@ public class Ubiquite extends Conflit {
 		 			this.getSecondeChirurgie().getDatesOperation().reduireDebut(dureeReduite);
 		 			
 		  		}
-		  }
-		
-		
+		  }*/
 		Chirurgien tmpChirurgien = null;
 		if(lc.size() == 1) {
 			//Deplace les horaires

@@ -13,13 +13,6 @@ public class Interference extends Conflit {
 	public boolean persiste() {
 		return this.getPremiereChirurgie().estInterference(this.getSecondeChirurgie());
 	}
-
-    @Override
-    public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-        if (!this.persiste())   return ;
-        this.modifierChirurgie(lc, ls);
-        
-    }
     
     @Override
     public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
