@@ -5,6 +5,7 @@ public abstract class Conflit {
 	private Chirurgie firstChirurgie;
 	private Chirurgie secondChirurgie;
 
+
 	public abstract boolean persiste();
 
 	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls); // Mettre le code de
@@ -36,8 +37,9 @@ public abstract class Conflit {
 
 		System.out.println();
 	}
+
         
-	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {             
+        	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {             
                 if (this.persiste()) {
                     if (this.getSecondeChirurgie().dureeSuspecte()) {
                         // Couper

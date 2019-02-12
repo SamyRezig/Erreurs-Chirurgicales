@@ -19,8 +19,7 @@ public class Interference extends Conflit {
     	Salle tmpSalle = null;
 
         if (lc.size() == 1 || ls.size() == 1) {
-            long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(),
-                                                this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
+            long dureeChevauchement =this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
             Correcteur.translater(this.getSecondeChirurgie(), dureeChevauchement);
 
         } else {

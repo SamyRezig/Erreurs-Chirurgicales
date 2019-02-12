@@ -34,32 +34,40 @@ public class Correcteur {
 			
 			// Si les chirurgies ne se chevauchent pas completement
 			
-			long dureeInter = Duration
-					.between(premiere.getDatesOperation().getDateFin(), seconde.getDatesOperation().getDateDebut())
-					.toMinutes();
+			long dureeInter = premiere.dureeIntersection(seconde);
 			//Sinon priviligié le changement de chirurgien / salle
 			double tauxSuspect1 = premiere.tauxSuspectFin(dureeInter);
 			double tauxSuspect2 = seconde.tauxSuspectDebut(dureeInter);
-			
 			System.out.println(dureeInter);
 
-			/*if (dureeInter < 0) {
-				dureeInter = -dureeInter;
-			}*/
+                        
+                        
+                        
+                            if (tauxSuspect1 > tauxSuspect2) {
+                                    Correcteur.reduireFin(premiere, dureeInter);
+                                    System.out.println(premiere);
+                                    System.out.println("Cas A");
 
-			if (tauxSuspect1 > tauxSuspect2) {
-				Correcteur.reduireFin(premiere, dureeInter);
-				System.out.println(premiere);
-				System.out.println("Cas A");
-
-			} else {
-				Correcteur.reduireDebut(seconde, dureeInter);
-				System.out.println(seconde);
-				System.out.println("Cas B");
-
-			}
-		
+                            } else {
+                                    Correcteur.reduireDebut(seconde, dureeInter);
+                                    System.out.println(seconde);
+                                    System.out.println("Cas B");
+                            }
+                        
 	}
+        
+        public static void decalageChirurgie (Chirurgie premiere, Chirurgie seconde){
+            if(premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
+                if(premiere.duree()> seconde.duree()){
+                    long duree = Duration.between(premiere.getDatesOperation().getDateDebut(), seconde.getDatesOperation().getDateFin()).toMinutes();
+                    Correcteur.translater(premiere, duree + 15);
+                }else{
+                    long duree = Duration.between(seconde.getDatesOperation().getDateDebut(), premiere.getDatesOperation().getDateFin()).toMinutes();
+                    Correcteur.translater(seconde, duree +15);
+            }
+            }else{
+        }
+        }
 
 	public static void modifierHoraire(Chirurgie courante) {
 

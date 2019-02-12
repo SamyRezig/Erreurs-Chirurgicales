@@ -61,7 +61,7 @@ public class IntervalleTemps {
 	}
 
 	public void reduireDebut(long biaisMinutes) {
-		this.dateDebut = this.dateDebut.minusMinutes(biaisMinutes);
+		this.dateDebut = this.dateDebut.plusMinutes(biaisMinutes);
 	}
 
 	@Override

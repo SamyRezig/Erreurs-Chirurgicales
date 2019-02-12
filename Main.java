@@ -39,11 +39,11 @@ public class Main {
 		
 		if (c1.getDatesOperation().getDateDebut().isBefore(c2.getDatesOperation().getDateDebut())) {
 			lc.get(2).visualiser();
-			Correcteur.couperDuree(c1, c2);
+			Correcteur.decalageChirurgie(c1, c2);
 			lc.get(2).visualiser();
 		}else {
 			lc.get(2).visualiser();
-			Correcteur.couperDuree(c2, c1);
+			Correcteur.decalageChirurgie(c2, c1);
 			lc.get(2).visualiser();
 		}
 		

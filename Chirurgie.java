@@ -1,3 +1,4 @@
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -167,6 +168,27 @@ public class Chirurgie {
 		return 1 - certitude;
 	}
 
+        public boolean estImbrique(Chirurgie chg){
+            if ( chg.getDatesOperation().getDateDebut().isBefore(this.getDatesOperation().getDateDebut()) 
+                  && chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())){
+                return true;
+            }
+            return false;
+        }
+        
+        public long dureeIntersection(Chirurgie chg){
+            long dureeInter = 0;
+            if(this.estImbrique(chg)){
+                return this.duree();
+            }else if(chg.estImbrique(this)){
+                return chg.duree();
+            }else{
+                dureeInter = Duration.between(this.getDatesOperation().getDateFin(), chg.getDatesOperation().getDateDebut())
+			.toMinutes();
+                return dureeInter;
+            }
+        }
+        
 	
 	@Override
 	public Chirurgie clone() {

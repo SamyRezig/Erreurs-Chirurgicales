@@ -13,21 +13,11 @@ public class Chevauchement extends Conflit {
 		return this.getPremiereChirurgie().estChevauchement(this.getSecondeChirurgie());
 	}
 
-	@Override
-	public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		if (!this.persiste())   return ;
-		
-		System.out.println(this);
-		
-		this.modifierChirurgie(lc, ls);
-        
-        System.out.println(this);
-
-	}
+	
 	
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
-		long dureeChevauchement = Duration.between(this.getPremiereChirurgie().getDatesOperation().getDateFin(),
-				this.getSecondeChirurgie().getDatesOperation().getDateDebut()).toMinutes();
+            long dureeChevauchement =this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
+
 
 		if(lc.size() != 1 && ls.size() != 1){
 			Chirurgien tmpChirurgien = null;
