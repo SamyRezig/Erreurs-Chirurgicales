@@ -221,7 +221,6 @@ public class Agenda {
 
 	public void resolution() {
 		for (int i = 0; i < 10; i++) {
-			this.visualiserConflits();
 			System.out.println("Nombre de conflits : " + this.nombreConflits());
 
 			(new Scanner(System.in)).nextLine();
@@ -229,7 +228,13 @@ public class Agenda {
 			this.resoudreTousConflits();
 			this.recenserTousConflits();
 		}
-		this.visualiserConflits();
+		//this.visualiserConflits();
+		System.out.println(this.listeChirurgies);
+		Statistiques.repartition(this.listeChirurgies);
+		System.out.println("Nombre de conflits restant : " + this.nombreConflits());
+
+		// Qualite de la resolution
+		this.stats.qualite(this.listeChirurgies);
 	}
 
 	private int nombreConflits() {

@@ -13,34 +13,41 @@ public class Chevauchement extends Conflit {
 		return this.getPremiereChirurgie().estChevauchement(this.getSecondeChirurgie());
 	}
 
-	
-	
+	@Override
+	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
+		return (lc.size() >= 3) || (ls.size() >= 3);
+	}
+
+
+
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
-            long dureeChevauchement =this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
+		Chirurgien tmpChirurgien = null;
+        Salle tmpSalle = null;
 
-
-		if(lc.size() != 1 && ls.size() != 1){
-			Chirurgien tmpChirurgien = null;
+		if(lc.size() != 1){
 			for(Chirurgien c : lc) {
 				if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
 					tmpChirurgien = c;
+					lc.remove(tmpChirurgien);
+					lc.add(tmpChirurgien);
 					break;
 				}
 			}
-			Salle tmpSalle = null;
+		}
+
+		if (ls.size() != 1) {
 			for(Salle s : ls) {
 				if(!this.getPremiereChirurgie().getSalle().equals(s)) {
 					tmpSalle = s;
+					ls.remove(tmpSalle);
+					ls.add(tmpSalle);
 					break;
 				}
 			}
-			if (tmpSalle != null)	Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
-			if (tmpChirurgien != null)	Correcteur.changerChirurgien(this.getSecondeChirurgie(), tmpChirurgien);
-
-		} else {
-			System.out.println("Decalage et translation");
-			Correcteur.translater(this.getSecondeChirurgie(), dureeChevauchement + 30);
 		}
+		if (tmpSalle != null)	Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
+		if (tmpChirurgien != null)	Correcteur.changerChirurgien(this.getSecondeChirurgie(), tmpChirurgien);
+
 	}
 
 }

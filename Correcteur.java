@@ -1,4 +1,7 @@
 import java.time.Duration;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalTime;
 
 public class Correcteur {
 	// Methodes pour corriger une chirurgie.
@@ -31,45 +34,90 @@ public class Correcteur {
 
 	// premiere doit commencer avant seconde
 	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
-			
+
 			// Si les chirurgies ne se chevauchent pas completement
-			
+
 			long dureeInter = premiere.dureeIntersection(seconde);
 			//Sinon priviligié le changement de chirurgien / salle
-			double tauxSuspect1 = premiere.tauxSuspectFin(dureeInter);
-			double tauxSuspect2 = seconde.tauxSuspectDebut(dureeInter);
-			System.out.println(dureeInter);
+			double tauxSuspect1 = premiere.tauxSuspect(dureeInter);
+			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
+			System.out.println(dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
 
-                        
-                        
-                        
                             if (tauxSuspect1 > tauxSuspect2) {
-                                    Correcteur.reduireFin(premiere, dureeInter);
+                                    Correcteur.reduireFin(premiere, dureeInter + 15);
                                     System.out.println(premiere);
                                     System.out.println("Cas A");
 
                             } else {
-                                    Correcteur.reduireDebut(seconde, dureeInter);
+                                    Correcteur.reduireDebut(seconde, dureeInter + 15);
                                     System.out.println(seconde);
                                     System.out.println("Cas B");
                             }
-                        
+
 	}
-        
+
         public static void decalageChirurgie (Chirurgie premiere, Chirurgie seconde){
             if(premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
-                if(premiere.duree()> seconde.duree()){
+                if(premiere.duree() > seconde.duree()){
                     long duree = Duration.between(premiere.getDatesOperation().getDateDebut(), seconde.getDatesOperation().getDateFin()).toMinutes();
                     Correcteur.translater(premiere, duree + 15);
                 }else{
                     long duree = Duration.between(seconde.getDatesOperation().getDateDebut(), premiere.getDatesOperation().getDateFin()).toMinutes();
-                    Correcteur.translater(seconde, duree +15);
+                    Correcteur.translater(seconde, duree + 15);
             }
             }else{
+				Correcteur.translation(premiere, seconde);
         }
         }
 
-	public static void modifierHoraire(Chirurgie courante) {
+	public static void normaliserDebut(Chirurgie courante) {
+		LocalTime debut = LocalTime.from(courante.getDatesOperation().getDateDebut());
 
+		// LocalTime indesirables
+		List<LocalTime> indesirables = new ArrayList<>();
+		indesirables.add(LocalTime.of(8, 0));
+		indesirables.add(LocalTime.of(13, 0));
+		indesirables.add(LocalTime.of(17, 0));
+		indesirables.add(LocalTime.of(0, 0));
+
+		// Couper la duree
+		if (indesirables.contains(debut) && courante.dureeSuspecte()) {
+			System.out.println("----Normalisation du debut : " + debut);
+			long dureeTotale = courante.duree();
+			long dureeFinale = 134;		// Dernier quartile des durees
+
+			// dureeSuspecte() assure que dureeTotale > dureeFinale
+			Correcteur.reduireDebut(courante, dureeTotale - dureeFinale);
+		} else {
+			System.out.println("----Pas de normalisation a faire sur le debut");
+		}
+	}
+
+	public static void normaliserFin(Chirurgie courante) {
+		LocalTime fin = LocalTime.from(courante.getDatesOperation().getDateFin());
+
+		// LocalTime indesirables
+		List<LocalTime> indesirables = new ArrayList<>();
+		indesirables.add(LocalTime.of(8, 0));
+		indesirables.add(LocalTime.of(13, 0));
+		indesirables.add(LocalTime.of(17, 0));
+		indesirables.add(LocalTime.of(0, 0));
+
+		// Couper la duree
+		if (indesirables.contains(fin) && courante.dureeSuspecte()) {
+			System.out.println("----Normalisation de la fin : " + fin);
+			long dureeTotale = courante.duree();
+			long dureeFinale = 134;		// Dernier quartile des durees
+
+			// dureeSuspecte() assure que dureeTotale > dureeFinale
+			Correcteur.reduireFin(courante, dureeTotale - dureeFinale);
+		} else {
+			System.out.println("----Pas de normalisation a faire sur la fin");
+		}
+	}
+
+	public static void translation(Chirurgie premiere, Chirurgie seconde) {
+		long dureeChevauchement = premiere.dureeIntersection(seconde);
+		Correcteur.translater(seconde, dureeChevauchement + 15);
 	}
 }

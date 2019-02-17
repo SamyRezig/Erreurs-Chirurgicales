@@ -14,13 +14,15 @@ public class Ubiquite extends Conflit {
 		return this.getPremiereChirurgie().estUbiquite(this.getSecondeChirurgie());
 	}
 
-	
+	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
+		return (lc.size() >= 3);
+	}
+
+
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
 		//LocalDate ld = super.getPremiereChirurgie().getDatesOperation().getDateDebut().toLocalDate();
-		
 
-		
-		  Chirurgie tmpChirurgie = this.getSecondeChirurgie().clone();
+		  /*Chirurgie tmpChirurgie = this.getSecondeChirurgie().clone();
 		  if(tmpChirurgie.dureeSuspecte()){
 		  		long dureeReduite = tmpChirurgie.duree() - 104; // 104 = dureeMoyenne
 		  		Correcteur.reduireDebut(tmpChirurgie, dureeReduite);
@@ -31,31 +33,24 @@ public class Ubiquite extends Conflit {
 		 			this.getSecondeChirurgie().setSalle(tmpChirurgie.getSalle());
 		 			this.getSecondeChirurgie().setChirurgien(tmpChirurgie.getChirurgien());
 		 			this.getSecondeChirurgie().getDatesOperation().reduireDebut(dureeReduite);
-		 			
-		  		}
-		  }
-		
-		
-		Chirurgien tmpChirurgien = null;
-		if(lc.size() == 1) {
-			//Deplace les horaires
-			long duree = this.getSecondeChirurgie().duree();
-			long dureeChevauchement =this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
-			// heure fin first - heure debut seconde
-			Correcteur.translater(getSecondeChirurgie(), dureeChevauchement + 15); // + temps de pause
 
-		} else {
-			//Change de chirurgien
-			for(Chirurgien c : lc) {
-				if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
-					tmpChirurgien = c;
-					break;
-				}
+		  		}
+		  }*/
+
+		Chirurgien tmpChirurgien = null;
+		//Change de chirurgien
+		for(Chirurgien c : lc) {
+			if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
+				tmpChirurgien = c;
+				lc.remove(tmpChirurgien);
+				lc.add(tmpChirurgien);
+				break;
 			}
-			if (tmpChirurgien != null)	Correcteur.changerChirurgien(getSecondeChirurgie(), tmpChirurgien);
 		}
-		
+		if (tmpChirurgien != null)	Correcteur.changerChirurgien(this.getSecondeChirurgie(), tmpChirurgien);
+
+
 	}
-		  
-		
+
+
 }

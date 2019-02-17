@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
+import java.util.Collection;
 
 public class Statistiques {
 	private Set<Chirurgie> operationsSansConflit;
@@ -112,51 +113,140 @@ public class Statistiques {
 		return new ArrayList<>(this.heuresConflits.keySet());
 	}
 
-    public void dureeParSalle() {
-        List<Salle> salles = this.operationsSansConflit.stream()
+    public Map<Salle, Double> dureeParSalle() {
+		return this.dureeParSalle(this.operationsSansConflit);
+    }
+
+	public Map<Salle, Double> dureeParSalle(Collection<Chirurgie> chirurgies) {
+		List<Salle> salles = this.operationsSansConflit.stream()
                                                 .map( x->x.getSalle() )
                                                 .collect(Collectors.toList());
-        Map<Salle, Double> dureeSalles = new HashMap<>();
+		Map<Salle, Double> dureeSalles = new HashMap<>();
         long sum;
         long card;
 
         for (Salle salleCourante : salles) {
-            sum = this.operationsSansConflit.stream()
+            sum = chirurgies.stream()
                                     .filter( x->x.getSalle().equals(salleCourante) )
                                     .mapToLong( x->x.duree() )
                                     .sum();
-            card = this.operationsSansConflit.stream()
+            card = chirurgies.stream()
                                     .filter( x->x.getSalle().equals(salleCourante) )
                                     .count();
             dureeSalles.put(salleCourante, (double)sum / (double)card);
         }
 
-        System.out.println(dureeSalles);
+		return dureeSalles;
+	}
+
+    public Map<Chirurgien, Double> dureeParChirurgien() {
+		return this.dureeParChirurgien(this.operationsSansConflit);
     }
 
-    public void dureeParChirurgien() {
-        List<Chirurgien> chirurgiens = this.operationsSansConflit.stream()
+	public Map<Chirurgien, Double> dureeParChirurgien(Collection<Chirurgie> chirurgies) {
+		List<Chirurgien> chirurgiens = this.operationsSansConflit.stream()
                                                 .map( x->x.getChirurgien() )
                                                 .collect(Collectors.toList());
-        Map<Chirurgien, Double> dureeChirurgien = new HashMap<>();
+
+		Map<Chirurgien, Double> dureeChirurgien = new HashMap<>();
         long sum;
         long card;
 
         for (Chirurgien chgCourante : chirurgiens) {
-            sum = this.operationsSansConflit.stream()
+            sum = chirurgies.stream()
                                     .filter( x->x.getChirurgien().equals(chgCourante) )
                                     .mapToLong( x->x.duree() )
                                     .sum();
-            card = this.operationsSansConflit.stream()
+            card = chirurgies.stream()
                                     .filter( x->x.getChirurgien().equals(chgCourante) )
                                     .count();
             dureeChirurgien.put(chgCourante, (double)sum / (double)card);
         }
 
-        System.out.println(dureeChirurgien);
-    }
+		return dureeChirurgien;
+	}
 
 	public void afficheTout() {
 		this.operationsSansConflit.stream().mapToLong(chrg -> chrg.duree()).sorted().forEach(System.out::println);
+	}
+
+	public static void repartition(List<Chirurgie> listeChirurgies) {
+		Map<Chirurgien, Long> mapChirurgien = new HashMap<>();
+		Map<Salle, Long> mapSalle = new HashMap<>();
+
+		Long cpt = null;
+		for (Chirurgie courante : listeChirurgies) {
+			// MAJ des chirurgiens
+			cpt = mapChirurgien.get(courante.getChirurgien());
+			if (cpt == null) {
+				mapChirurgien.put(courante.getChirurgien(), courante.getDatesOperation().duree());
+			} else {
+				mapChirurgien.put(courante.getChirurgien(), cpt + courante.getDatesOperation().duree());
+			}
+
+			//MAJ des salles
+			cpt = mapSalle.get(courante.getSalle());
+			if (cpt == null) {
+				mapSalle.put(courante.getSalle(), courante.getDatesOperation().duree());
+			} else {
+				mapSalle.put(courante.getSalle(), cpt + courante.getDatesOperation().duree());
+			}
+		}
+
+		System.out.println("Repartition par chirurgien :\n" + mapChirurgien);
+		System.out.println("Repartition par salle :\n" + mapSalle);
+	}
+
+	public double ecartSalles(Map<Salle, Double> realisationSalles) {
+		Map<Salle, Double> dureeSallesCorrectes = this.dureeParSalle();
+		double somme = 0;
+
+		for (Salle courant : realisationSalles.keySet()) {
+			somme += Math.pow((dureeSallesCorrectes.get(courant) - realisationSalles.get(courant)), 2);
+		}
+
+		return Math.sqrt(somme / (double) realisationSalles.keySet().size());
+	}
+
+	public double ecartChirurgiens(Map<Chirurgien, Double> realisationChirurgiens) {
+		Map<Chirurgien, Double> dureesChirurgiensCorrectes = this.dureeParChirurgien();
+		double somme = 0;
+
+		for (Chirurgien courant : realisationChirurgiens.keySet()) {
+			somme += Math.pow((dureesChirurgiensCorrectes.get(courant) - realisationChirurgiens.get(courant)), 2);
+		}
+
+		return Math.sqrt(somme / (double) realisationChirurgiens.keySet().size());
+	}
+
+	public double ecartType(Collection<Double> valeurs) {
+		double moyenne = 0.0;
+		double sommeCarrees = 0.0;
+
+		for (Double v : valeurs) {
+			moyenne += v;
+		}
+		moyenne = moyenne / (double) valeurs.size();
+
+		for (Double v : valeurs) {
+			sommeCarrees += Math.pow((v - moyenne), 2);
+		}
+		return Math.sqrt(sommeCarrees / (double) valeurs.size());
+	}
+
+	public void qualite(List<Chirurgie> listeChirurgies) {
+		Map<Salle, Double> realisationsSalles = this.dureeParSalle(listeChirurgies);
+		Map<Chirurgien, Double> realisationsChirurgiens = this.dureeParChirurgien(listeChirurgies);
+
+		double ecartSalles = this.ecartSalles(realisationsSalles);
+		double ecartChirurgiens = this.ecartChirurgiens(realisationsChirurgiens);
+
+		System.out.println("Ecart par salles : " + ecartSalles);
+		System.out.println("Ecart par chirurgiens : " + ecartChirurgiens);
+		System.out.println("Ecart-type salles : " + this.ecartType(realisationsSalles.values()));
+		System.out.println("Ecart-type chirurgiens : " + this.ecartType(realisationsChirurgiens.values()));
+
+		System.out.println(this.dureeParSalle());
+		System.out.println(this.dureeParChirurgien());
 	}
 }

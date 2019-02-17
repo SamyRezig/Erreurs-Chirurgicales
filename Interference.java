@@ -13,23 +13,25 @@ public class Interference extends Conflit {
 	public boolean persiste() {
 		return this.getPremiereChirurgie().estInterference(this.getSecondeChirurgie());
 	}
-    
+
+    @Override
+    public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
+		return (ls.size() >= 3);
+	}
+
     @Override
     public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
     	Salle tmpSalle = null;
-
-        if (lc.size() == 1 || ls.size() == 1) {
-            long dureeChevauchement =this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
-            Correcteur.translater(this.getSecondeChirurgie(), dureeChevauchement);
-
-        } else {
-            for (Salle s : ls) {
-                if (!this.getPremiereChirurgie().getSalle().equals(s)) {
-                    tmpSalle = s;
-                }
+        for (Salle s : ls) {
+            if (!this.getPremiereChirurgie().getSalle().equals(s)) {
+                tmpSalle = s;
+                ls.remove(tmpSalle);
+                ls.add(tmpSalle);
+                break;
             }
-            if (tmpSalle != null)	Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
         }
+        if (tmpSalle != null)	Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
+
     }
 
 }

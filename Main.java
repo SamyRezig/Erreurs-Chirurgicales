@@ -23,20 +23,25 @@ public class Main {
 		System.out.println("mediane : " + a.stats.getMediane());
 		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
 
-        //a.resolution();
-		
-        
-        List<Conflit> lc = a.extraireConflits();
+        a.resolution();
+
+		a.stats.dureeParSalle();
+		a.stats.dureeParChirurgien();
+
+
+        /*List<Conflit> lc = a.extraireConflits();
         System.out.println(lc.size());
-        //List<Conflit> lcu = new ArrayList<>();
-        
-        
-        
-        
-        
-		Chirurgie c1 = lc.get(2).getPremiereChirurgie();
+
+		Conflit c = lc.get(0);
+
+		System.out.println(c);
+		c.resoudreConflit(null, null);
+		System.out.println("Conflit resolu !!!!!!!!!!!!!!!");
+		System.out.println(c);*/
+
+		/*Chirurgie c1 = lc.get(2).getPremiereChirurgie();
 		Chirurgie c2 = lc.get(2).getSecondeChirurgie();
-		
+
 		if (c1.getDatesOperation().getDateDebut().isBefore(c2.getDatesOperation().getDateDebut())) {
 			lc.get(2).visualiser();
 			Correcteur.decalageChirurgie(c1, c2);
@@ -45,16 +50,8 @@ public class Main {
 			lc.get(2).visualiser();
 			Correcteur.decalageChirurgie(c2, c1);
 			lc.get(2).visualiser();
-		}
-		
-		//a.stats.dureeParChirurgien();
+		}*/
 
-
-		/*System.out.println("tout :");
-		a.stats.afficheTout();*/
-
-                //IntervalleTemps t = new IntervalleTemps("01/01/2019", "12:00:00", "01/01/2019", "11:00:00");
-                //System.out.println(t);
 
 	}
 }

@@ -61,6 +61,10 @@ public class Chirurgie {
 		return this.datesOperation.duree();
 	}
 
+	public boolean commenceAvant(Chirurgie autre) {
+		return this.datesOperation.getDateDebut().isBefore(autre.datesOperation.getDateDebut());
+	}
+
 	public void reduireFin(long biaisMinutes) {
 		this.datesOperation.reduireFin(biaisMinutes);
 	}
@@ -72,7 +76,7 @@ public class Chirurgie {
 	public boolean estChevauchement(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation) && this.salle.equals(second.salle)
 				&& this.chirurgien.equals(second.chirurgien)) {
-			System.out.println("CHEVAUCHEMENT");
+			//System.out.println("CHEVAUCHEMENT");
 			return true;
 		}
 		return false;
@@ -80,7 +84,7 @@ public class Chirurgie {
 
 	public boolean estInterference(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation) && this.salle.equals(second.salle)) {
-			System.out.println("INTERFERENCE");
+			//System.out.println("INTERFERENCE");
 			return true;
 		}
 		return false;
@@ -89,7 +93,7 @@ public class Chirurgie {
 	public boolean estUbiquite(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation)
 				&& this.getChirurgien().equals(second.getChirurgien())) {
-			System.out.println("UBIQUITE");
+			//System.out.println("UBIQUITE");
 			return true;
 		}
 		return false;
@@ -123,15 +127,15 @@ public class Chirurgie {
 		System.out.println();
 
 	}
-	
+
 	public boolean dureeSuspecte() {
 		return this.duree() > 134;	// dernier quartile de la grande base de donnees
 	}
-        
+
         public boolean heureSuspecte() {
             return this.heureDebutSuspecte() || this.heureFinSuspecte();
         }
-	
+
 	public boolean heureDebutSuspecte() {
 		List<LocalDateTime> heuresSuspectes = new ArrayList<>();
 		for (LocalDateTime heure : heuresSuspectes) {
@@ -141,7 +145,7 @@ public class Chirurgie {
 		}
 		return false;
 	}
-	
+
 	public boolean heureFinSuspecte() {
 		List<LocalDateTime> heuresSuspectes = new ArrayList<>();
 		for (LocalDateTime heure : heuresSuspectes) {
@@ -151,31 +155,22 @@ public class Chirurgie {
 		}
 		return false;
 	}
-	
-	public double tauxSuspectDebut(long chevauchement) {
-		long duree = this.datesOperation.duree();
-		int heuresSusp = (this.heureDebutSuspecte()) ? 2 : 0;
-		double certitude = Math.pow((double)duree / (double)1440, (double)chevauchement + heuresSusp);
-                
-		return 1 - certitude;
-	}
-	
-	public double tauxSuspectFin(long chevauchement) {
-		long duree = this.datesOperation.duree();
-		int heuresSusp = (this.heureFinSuspecte()) ? 2 : 0;
-		double certitude = Math.pow((double)chevauchement / (double)1440, (double)duree + heuresSusp);
-		
-		return 1 - certitude;
+
+	public double tauxSuspect(long chevauchement) {
+		return 1 - ((double) chevauchement / (double) this.datesOperation.duree());
 	}
 
         public boolean estImbrique(Chirurgie chg){
-            if ( chg.getDatesOperation().getDateDebut().isBefore(this.getDatesOperation().getDateDebut()) 
-                  && chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())){
+            if ( (chg.getDatesOperation().getDateDebut().isBefore(this.getDatesOperation().getDateDebut())
+				|| chg.getDatesOperation().getDateDebut().equals(this.getDatesOperation().getDateDebut()))
+
+                  && (chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())
+				  || chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())) ) {
                 return true;
             }
             return false;
         }
-        
+
         public long dureeIntersection(Chirurgie chg){
             long dureeInter = 0;
             if(this.estImbrique(chg)){
@@ -183,16 +178,16 @@ public class Chirurgie {
             }else if(chg.estImbrique(this)){
                 return chg.duree();
             }else{
-                dureeInter = Duration.between(this.getDatesOperation().getDateFin(), chg.getDatesOperation().getDateDebut())
+                dureeInter = Duration.between(chg.getDatesOperation().getDateDebut(), this.getDatesOperation().getDateFin())
 			.toMinutes();
                 return dureeInter;
             }
         }
-        
-	
+
+
 	@Override
 	public Chirurgie clone() {
-		Chirurgie tmp = this; 
+		Chirurgie tmp = this;
 		return tmp;
 	}
 
