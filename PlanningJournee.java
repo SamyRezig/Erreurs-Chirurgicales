@@ -112,7 +112,7 @@ public class PlanningJournee {
                         }else{
 							conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSalles);
                         }
-						this.trierListes();
+						this.trierListes();	// On reordonne les listes des salles et des chirurgiens disponibles
                 }
 	}
 

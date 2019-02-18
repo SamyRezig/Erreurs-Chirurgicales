@@ -17,7 +17,8 @@ public abstract class Conflit {
 	public Conflit(Chirurgie first, Chirurgie second) {
 		this.firstChirurgie = first;
 		this.secondChirurgie = second;
-
+		this.firstChirurgie.setCorrige();
+		this.secondChirurgie.setCorrige();
 	}
 
 	public String toString() {
@@ -70,7 +71,7 @@ public abstract class Conflit {
 		Correcteur.normaliserDebut(this.getSecondeChirurgie());
 
 		// Resolution par decoupage
-		if (this.persiste() && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte())) {
+		if (this.persiste() && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && !this.getPremiereChirurgie().courte() && !this.getSecondeChirurgie().courte()) {
 			System.out.println("----Decoupage des chirurgies");
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
 		} else {

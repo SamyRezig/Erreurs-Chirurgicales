@@ -8,7 +8,8 @@ public class Chirurgie {
 	private IntervalleTemps datesOperation;
 	private Salle salle;
 	private Chirurgien chirurgien;
-        private boolean urgence;
+    private boolean urgence;
+    private boolean corrige;
 
 	public Chirurgie(int id, IntervalleTemps datesOp, Salle salle, Chirurgien chirurgien) {
 		this.identifiant = id;
@@ -16,6 +17,15 @@ public class Chirurgie {
 		this.salle = salle;
 		this.chirurgien = chirurgien;
         this.urgence = this.salle.estUrgence();
+        this.corrige = false;
+	}
+	
+	public void setCorrige() {
+		this.corrige = true;
+	}
+	
+	public boolean getCorrige() {
+		return this.corrige;
 	}
 
     public boolean estUrgente(){
@@ -126,6 +136,11 @@ public class Chirurgie {
 		}
 		System.out.println();
 
+	}
+	
+	public boolean courte() {
+		return this.datesOperation.duree() < 61;
+		
 	}
 
 	public boolean dureeSuspecte() {

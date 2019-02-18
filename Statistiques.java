@@ -3,6 +3,7 @@ import java.util.OptionalLong;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.time.LocalTime;
@@ -18,6 +19,8 @@ public class Statistiques {
 	private Map<LocalTime, Integer> heuresConflits;
 	private Map<Chirurgien, Double> dureeParChirurgien;
 	private Map<Salle, Double> dureeParSalle;
+	private double ecartTypeSalles;
+	private double ecartTypeChirurgiens;
 
 	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits) {
 
@@ -44,12 +47,17 @@ public class Statistiques {
 		
 		System.out.println("----Calcul des heures des conflits les plus frequentes...");
 		this.heuresConflits = this.topHeuresConflits(listeConflits);
+		System.out.println(this.heuresConflits);
 		
 		System.out.println("----Calcul des durees moyennes par chirurgien...");
 		this.dureeParChirurgien = this.dureeParChirurgien();
 		
 		System.out.println("----Calcul des durees moyennes par salle...");
 		this.dureeParSalle = this.dureeParSalle();
+		
+		System.out.println("----Calcul des ecart-types");
+		this.ecartTypeSalles = this.ecartType(this.dureeParSalle.values());
+		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());
 		
 		System.out.println("Fin du chargement des outils statistiques.");
 	}
@@ -101,6 +109,11 @@ public class Statistiques {
 			if (frequence == null)	tableFrequences.put(temps, 1);
 			else 					tableFrequences.put(temps, frequence + 1);
 		}
+		
+		tableFrequences = tableFrequences.entrySet().stream()
+										.sorted(Map.Entry.<LocalTime, Integer>comparingByValue().reversed()) 			
+										.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+												(oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
 		return tableFrequences;
 	}
@@ -239,6 +252,7 @@ public class Statistiques {
 		double somme = 0;
 
 		for (Chirurgien courant : realisationChirurgiens.keySet()) {
+			//System.out.println(dureesChirurgiensCorrectes.get(courant) + " -- " + realisationChirurgiens.get(courant));
 			somme += Math.pow((dureesChirurgiensCorrectes.get(courant) - realisationChirurgiens.get(courant)), 2);
 		}
 
@@ -263,18 +277,29 @@ public class Statistiques {
 
 	// Mesure plusieurs indicateurs de qualite au sujet de la correction de la base de donnees
 	public void qualite(List<Chirurgie> listeChirurgies) {
+		/*List<Chirurgie> listeChirurgies = baseChirurgies.stream()
+														.filter( x->x.getCorrige() )
+														.collect(Collectors.toList());*/
+		System.out.println("Nombre de chirurgies prises en compte : " + listeChirurgies.size());
 		Map<Salle, Double> realisationsSalles = this.dureeParSalle(listeChirurgies);
 		Map<Chirurgien, Double> realisationsChirurgiens = this.dureeParChirurgien(listeChirurgies);
 
 		double ecartSalles = this.ecartSalles(realisationsSalles);
 		double ecartChirurgiens = this.ecartChirurgiens(realisationsChirurgiens);
 
-		System.out.println("Ecart par salles : " + ecartSalles);
-		System.out.println("Ecart par chirurgiens : " + ecartChirurgiens);
-		System.out.println("Ecart-type salles : " + this.ecartType(realisationsSalles.values()));
-		System.out.println("Ecart-type chirurgiens : " + this.ecartType(realisationsChirurgiens.values()));
+		System.out.println("Ecart par salles avant et apres correction: " + ecartSalles);
+		System.out.println("Ecart par chirurgiens avant et apres correction: " + ecartChirurgiens);
+		
+		System.out.println("Ecart-type salles avant correction: " + this.ecartTypeSalles);
+		System.out.println("Ecart-type chirurgiens avant correction: " + this.ecartTypeChirurgiens);
+		System.out.println("Ecart-type salles apres correction: " + this.ecartType(realisationsSalles.values()));
+		System.out.println("Ecart-type chirurgiens apres correction: " + this.ecartType(realisationsChirurgiens.values()));
 
-		System.out.println(this.dureeParSalle);
-		System.out.println(this.dureeParChirurgien);
+		System.out.println("AVANT : " + this.dureeParSalle);
+		System.out.println("APRES : " + realisationsSalles);
+		
+		System.out.println("AVANT : " + this.dureeParChirurgien);
+		System.out.println("APRES : " + realisationsChirurgiens);
 	}
 }
+

@@ -46,12 +46,12 @@ public class Correcteur {
                             if (tauxSuspect1 > tauxSuspect2) {
                                     Correcteur.reduireFin(premiere, dureeInter + 15);
                                     System.out.println(premiere);
-                                    System.out.println("Cas A");
+                                    System.out.println("--------Reduction par la fin");
 
                             } else {
                                     Correcteur.reduireDebut(seconde, dureeInter + 15);
                                     System.out.println(seconde);
-                                    System.out.println("Cas B");
+                                    System.out.println("--------Reduction par le debut");
                             }
 
 	}
@@ -76,9 +76,19 @@ public class Correcteur {
 		// LocalTime indesirables
 		List<LocalTime> indesirables = new ArrayList<>();
 		indesirables.add(LocalTime.of(8, 0));
-		indesirables.add(LocalTime.of(13, 0));
-		indesirables.add(LocalTime.of(17, 0));
 		indesirables.add(LocalTime.of(0, 0));
+		indesirables.add(LocalTime.of(14, 0));
+		indesirables.add(LocalTime.of(13, 40));
+		indesirables.add(LocalTime.of(14, 15));
+		indesirables.add(LocalTime.of(11, 15));
+		indesirables.add(LocalTime.of(15, 15));
+		indesirables.add(LocalTime.of(12, 50));
+		indesirables.add(LocalTime.of(13, 50));
+		indesirables.add(LocalTime.of(10, 15));
+		indesirables.add(LocalTime.of(12, 35));
+		indesirables.add(LocalTime.of(14, 50));
+		indesirables.add(LocalTime.of(15, 20));
+		indesirables.add(LocalTime.of(17, 0));
 
 		// Couper la duree
 		if (indesirables.contains(debut) && courante.dureeSuspecte()) {
@@ -99,9 +109,19 @@ public class Correcteur {
 		// LocalTime indesirables
 		List<LocalTime> indesirables = new ArrayList<>();
 		indesirables.add(LocalTime.of(8, 0));
-		indesirables.add(LocalTime.of(13, 0));
-		indesirables.add(LocalTime.of(17, 0));
 		indesirables.add(LocalTime.of(0, 0));
+		indesirables.add(LocalTime.of(14, 0));
+		indesirables.add(LocalTime.of(13, 40));
+		indesirables.add(LocalTime.of(14, 15));
+		indesirables.add(LocalTime.of(11, 15));
+		indesirables.add(LocalTime.of(15, 15));
+		indesirables.add(LocalTime.of(12, 50));
+		indesirables.add(LocalTime.of(13, 50));
+		indesirables.add(LocalTime.of(10, 15));
+		indesirables.add(LocalTime.of(12, 35));
+		indesirables.add(LocalTime.of(14, 50));
+		indesirables.add(LocalTime.of(15, 20));
+		indesirables.add(LocalTime.of(17, 0));
 
 		// Couper la duree
 		if (indesirables.contains(fin) && courante.dureeSuspecte()) {
