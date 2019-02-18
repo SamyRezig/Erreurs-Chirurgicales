@@ -44,14 +44,14 @@ public class Agenda {
 
 			// Lecture de la 2e ligne jusqu'a la fin du fichier
 			while ((ligne = fluxTexte.readLine()) != null) {
-				System.out.println(ligne);
+				//System.out.println(ligne);
 
 				operation = creationChirurgie(ligne.split(";"));
 				this.listeChirurgies.add(operation);
 
 			}
-			System.out.println("Fin");
-			System.out.println(listeChirurgies);
+			System.out.println("Fin de la lecture des chirurgies");
+			//System.out.println(listeChirurgies);
 
 		} catch (IOException e) {
 			System.out.println("Pas de fichier trouve.");
@@ -228,8 +228,8 @@ public class Agenda {
 			this.resoudreTousConflits();
 			this.recenserTousConflits();
 		}
-		//this.visualiserConflits();
-		System.out.println(this.listeChirurgies);
+		this.visualiserConflits();
+		//System.out.println(this.listeChirurgies);
 		Statistiques.repartition(this.listeChirurgies);
 		System.out.println("Nombre de conflits restant : " + this.nombreConflits());
 
@@ -258,14 +258,12 @@ public class Agenda {
 	public void visualiser() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiser();
-			System.out.println();
 		}
 	}
 
 	public void visualiserConflits() {
         for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiserConflits();
-			System.out.println();
 		}
     }
 

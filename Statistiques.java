@@ -16,6 +16,8 @@ public class Statistiques {
 	private long mediane;
 	private long dernierQuartile;
 	private Map<LocalTime, Integer> heuresConflits;
+	private Map<Chirurgien, Double> dureeParChirurgien;
+	private Map<Salle, Double> dureeParSalle;
 
 	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits) {
 
@@ -31,11 +33,25 @@ public class Statistiques {
 		this.operationsSansConflit.removeAll(enConflit);
 
 		// Remplissage des attributs
+		System.out.println("Chargement des outils statistiques...");
+		System.out.println("----Calcul des moyennes...");
 		this.dureeMoyenne = this.calculerDureeMoyenne();
+		
+		System.out.println("----Calcul des quartiles/mediane...");
 		this.premierQuartile = this.calculerPremierQuartile();
 		this.mediane = this.calculerMediane();
 		this.dernierQuartile = this.calculerDernierQuartile();
-		topHeuresConflits(listeConflits);
+		
+		System.out.println("----Calcul des heures des conflits les plus frequentes...");
+		this.heuresConflits = this.topHeuresConflits(listeConflits);
+		
+		System.out.println("----Calcul des durees moyennes par chirurgien...");
+		this.dureeParChirurgien = this.dureeParChirurgien();
+		
+		System.out.println("----Calcul des durees moyennes par salle...");
+		this.dureeParSalle = this.dureeParSalle();
+		
+		System.out.println("Fin du chargement des outils statistiques.");
 	}
 
 	private long calculerDureeMoyenne() {
@@ -68,7 +84,7 @@ public class Statistiques {
 		return dernierQuartile;
 	}
 
-	private void topHeuresConflits(List<Conflit> listeConflits) {
+	private Map<LocalTime, Integer> topHeuresConflits(List<Conflit> listeConflits) {
 		Map<LocalTime, Integer> tableFrequences = new HashMap<>();
 		Integer frequence;
 
@@ -86,7 +102,7 @@ public class Statistiques {
 			else 					tableFrequences.put(temps, frequence + 1);
 		}
 
-		this.heuresConflits = tableFrequences;
+		return tableFrequences;
 	}
 
 	public long getDureeMoyenne() {
@@ -103,6 +119,14 @@ public class Statistiques {
 
 	public long getDernierQuartile() {
 		return this.dernierQuartile;
+	}
+	
+	public Map<Chirurgien, Double> getDureeParChirurgien() {
+		return this.dureeParChirurgien;
+	}
+	
+	public Map<Salle, Double> getDureeParSalle() {
+		return this.dureeParSalle;
 	}
 
 	public void afficheHeuresConflits() {
@@ -166,9 +190,9 @@ public class Statistiques {
 		return dureeChirurgien;
 	}
 
-	public void afficheTout() {
+	/*public void afficheTout() {
 		this.operationsSansConflit.stream().mapToLong(chrg -> chrg.duree()).sorted().forEach(System.out::println);
-	}
+	}*/
 
 	public static void repartition(List<Chirurgie> listeChirurgies) {
 		Map<Chirurgien, Long> mapChirurgien = new HashMap<>();
@@ -193,12 +217,13 @@ public class Statistiques {
 			}
 		}
 
-		System.out.println("Repartition par chirurgien :\n" + mapChirurgien);
-		System.out.println("Repartition par salle :\n" + mapSalle);
+		System.out.println("Repartition par chirurgien en minutes:\n" + mapChirurgien);
+		System.out.println("Repartition par salle en minutes:\n" + mapSalle);
 	}
 
+	// Moyenne des ecarts au carre entre les durees d'utilisation des salles avant correction et apres correction de la base de donnees
 	public double ecartSalles(Map<Salle, Double> realisationSalles) {
-		Map<Salle, Double> dureeSallesCorrectes = this.dureeParSalle();
+		Map<Salle, Double> dureeSallesCorrectes = this.dureeParSalle;
 		double somme = 0;
 
 		for (Salle courant : realisationSalles.keySet()) {
@@ -208,8 +233,9 @@ public class Statistiques {
 		return Math.sqrt(somme / (double) realisationSalles.keySet().size());
 	}
 
+	// Moyenne des ecarts au carre entre les durees de travail des chirurgiens avant correction et apres correction de la base de donnees
 	public double ecartChirurgiens(Map<Chirurgien, Double> realisationChirurgiens) {
-		Map<Chirurgien, Double> dureesChirurgiensCorrectes = this.dureeParChirurgien();
+		Map<Chirurgien, Double> dureesChirurgiensCorrectes = this.dureeParChirurgien;
 		double somme = 0;
 
 		for (Chirurgien courant : realisationChirurgiens.keySet()) {
@@ -218,7 +244,8 @@ public class Statistiques {
 
 		return Math.sqrt(somme / (double) realisationChirurgiens.keySet().size());
 	}
-
+	
+	// Calcule l'ecart-type entre les valeurs passees en parametre
 	public double ecartType(Collection<Double> valeurs) {
 		double moyenne = 0.0;
 		double sommeCarrees = 0.0;
@@ -234,6 +261,7 @@ public class Statistiques {
 		return Math.sqrt(sommeCarrees / (double) valeurs.size());
 	}
 
+	// Mesure plusieurs indicateurs de qualite au sujet de la correction de la base de donnees
 	public void qualite(List<Chirurgie> listeChirurgies) {
 		Map<Salle, Double> realisationsSalles = this.dureeParSalle(listeChirurgies);
 		Map<Chirurgien, Double> realisationsChirurgiens = this.dureeParChirurgien(listeChirurgies);
@@ -246,7 +274,7 @@ public class Statistiques {
 		System.out.println("Ecart-type salles : " + this.ecartType(realisationsSalles.values()));
 		System.out.println("Ecart-type chirurgiens : " + this.ecartType(realisationsChirurgiens.values()));
 
-		System.out.println(this.dureeParSalle());
-		System.out.println(this.dureeParChirurgien());
+		System.out.println(this.dureeParSalle);
+		System.out.println(this.dureeParChirurgien);
 	}
 }
