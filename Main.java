@@ -1,11 +1,8 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Main {
 
 	public static void main(String[] args) {
-		Agenda a = new Agenda("MiniBase(1).csv");
+		Agenda a = new Agenda("Chirurgies_v2.csv");
 
 		// System.out.println(a.getListConflits().size());
 		// System.out.println(a.getChirurgiensDispos());

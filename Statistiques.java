@@ -295,6 +295,9 @@ public class Statistiques {
 		System.out.println("Ecart-type salles apres correction: " + this.ecartType(realisationsSalles.values()));
 		System.out.println("Ecart-type chirurgiens apres correction: " + this.ecartType(realisationsChirurgiens.values()));
 
+		System.out.println("Difference d'écart-type des salles avant/apres corrections : " + (this.ecartTypeSalles - this.ecartType(realisationsSalles.values())));
+		System.out.println("Difference d'écart-type des chirurgiens avant/apres corrections : " + (this.ecartTypeChirurgiens - this.ecartType(realisationsChirurgiens.values())));
+
 		System.out.println("AVANT : " + this.dureeParSalle);
 		System.out.println("APRES : " + realisationsSalles);
 		

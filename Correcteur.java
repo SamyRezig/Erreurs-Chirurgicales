@@ -140,4 +140,15 @@ public class Correcteur {
 		long dureeChevauchement = premiere.dureeIntersection(seconde);
 		Correcteur.translater(seconde, dureeChevauchement + 15);
 	}
+	
+	
+	
+	/**
+	 * Comparer ancienne liste de conflits avec les conflits restant 
+	 * Si les conflits restant ne sont pas dans l'ancienne liste de conflits
+	 * 	On applique une autre strat de correction
+	 * Sinon 
+	 * 	On applique correction basique
+	 * 
+	 */
 }
