@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 import java.util.Collection;
 
 public class Statistiques {
+	private Set<Chirurgie> operations;
 	private Set<Chirurgie> operationsSansConflit;
+	private int nbConflits;
 	private long dureeMoyenne; // Duree moyenne d'une operation
 	private long premierQuartile;
 	private long mediane;
@@ -23,6 +25,7 @@ public class Statistiques {
 	private double ecartTypeChirurgiens;
 
 	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits) {
+		this.nbConflits = listeConflits.size();
 
 		// Extraction des chirurgies en conflits
 		Set<Chirurgie> enConflit = new HashSet<>(); // implementer hashCode ?
@@ -30,6 +33,8 @@ public class Statistiques {
 			enConflit.add(conflit.getPremiereChirurgie());
 			enConflit.add(conflit.getSecondeChirurgie());
 		}
+		// Toutes les operations
+		this.operations = new HashSet<>(listeBase);
 
 		// Difference
 		this.operationsSansConflit = new HashSet<>(listeBase);
@@ -252,7 +257,6 @@ public class Statistiques {
 		double somme = 0;
 
 		for (Chirurgien courant : realisationChirurgiens.keySet()) {
-			//System.out.println(dureesChirurgiensCorrectes.get(courant) + " -- " + realisationChirurgiens.get(courant));
 			somme += Math.pow((dureesChirurgiensCorrectes.get(courant) - realisationChirurgiens.get(courant)), 2);
 		}
 
@@ -274,35 +278,28 @@ public class Statistiques {
 		}
 		return Math.sqrt(sommeCarrees / (double) valeurs.size());
 	}
-
-	// Mesure plusieurs indicateurs de qualite au sujet de la correction de la base de donnees
-	public void qualite(List<Chirurgie> listeChirurgies) {
-		/*List<Chirurgie> listeChirurgies = baseChirurgies.stream()
-														.filter( x->x.getCorrige() )
-														.collect(Collectors.toList());*/
-		System.out.println("Nombre de chirurgies prises en compte : " + listeChirurgies.size());
-		Map<Salle, Double> realisationsSalles = this.dureeParSalle(listeChirurgies);
-		Map<Chirurgien, Double> realisationsChirurgiens = this.dureeParChirurgien(listeChirurgies);
-
-		double ecartSalles = this.ecartSalles(realisationsSalles);
-		double ecartChirurgiens = this.ecartChirurgiens(realisationsChirurgiens);
-
-		System.out.println("Ecart par salles avant et apres correction: " + ecartSalles);
-		System.out.println("Ecart par chirurgiens avant et apres correction: " + ecartChirurgiens);
-		
-		System.out.println("Ecart-type salles avant correction: " + this.ecartTypeSalles);
-		System.out.println("Ecart-type chirurgiens avant correction: " + this.ecartTypeChirurgiens);
-		System.out.println("Ecart-type salles apres correction: " + this.ecartType(realisationsSalles.values()));
-		System.out.println("Ecart-type chirurgiens apres correction: " + this.ecartType(realisationsChirurgiens.values()));
-
-		System.out.println("Difference d'écart-type des salles avant/apres corrections : " + (this.ecartTypeSalles - this.ecartType(realisationsSalles.values())));
-		System.out.println("Difference d'écart-type des chirurgiens avant/apres corrections : " + (this.ecartTypeChirurgiens - this.ecartType(realisationsChirurgiens.values())));
-
-		System.out.println("AVANT : " + this.dureeParSalle);
-		System.out.println("APRES : " + realisationsSalles);
-		
-		System.out.println("AVANT : " + this.dureeParChirurgien);
-		System.out.println("APRES : " + realisationsChirurgiens);
+	
+	public double getEcartTypeSalles() {
+		return this.ecartTypeSalles;
+	}
+	
+	public double getEcartTypeChirurgiens() {
+		return this.ecartTypeChirurgiens;
+	}
+	
+	public int getNbConflits() {
+		return this.nbConflits;
+	}
+	
+	public void comparer(Statistiques apresStats) {
+		System.out.println("Statistiques -- AVANT correction -- APRES correction");
+		System.out.println("Duree moyenne : " + this.dureeMoyenne + "\t" + apresStats.getDureeMoyenne());
+		System.out.println("Duree mediane : " + this.mediane + "\t" + apresStats.getMediane());
+		System.out.println("Premier quartile : " + this.premierQuartile + "\t" + apresStats.getPremierQuartile());
+		System.out.println("Dernier quartile : " + this.dernierQuartile + "\t" + apresStats.getDernierQuartile());
+		System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
+		System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
+		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
 	}
 }
 

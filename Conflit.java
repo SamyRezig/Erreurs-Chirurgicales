@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Scanner;
 
 public abstract class Conflit {
 
@@ -50,6 +51,17 @@ public abstract class Conflit {
 			this.secondChirurgie = tmp;
 		}
 	}
+	
+	private double tauxSuperposition() {
+		double premierTaux = (this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie() ) / this.getPremiereChirurgie().duree());
+		double deuxiemeTaux = (this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie() ) / this.getSecondeChirurgie().duree());
+		
+		double resultat = (premierTaux > deuxiemeTaux) ? deuxiemeTaux : premierTaux;
+		if (resultat > 0.8) {
+			//(new Scanner(System.in)).nextLine();
+		}
+		return resultat;
+	}
 
 
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
@@ -70,7 +82,8 @@ public abstract class Conflit {
 		Correcteur.normaliserDebut(this.getSecondeChirurgie());
 
 		// Resolution par decoupage
-		if (this.persiste() && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && !this.getPremiereChirurgie().courte() && !this.getSecondeChirurgie().courte()) {
+		double ts = this.tauxSuperposition();
+		if (this.persiste() && this.tauxSuperposition() > 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && !this.getPremiereChirurgie().courte() && !this.getSecondeChirurgie().courte()) {
 			System.out.println("----Decoupage des chirurgies");
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
 		} else {
@@ -98,6 +111,11 @@ public abstract class Conflit {
 		System.out.println("Voici le resultat final : ");
 		this.visualiser();
 		//(new Scanner(System.in)).nextLine();
+		
+		if (ts > 0.8 || this.getPremiereChirurgie().getId() == 9830) {
+			System.out.println("Taux de superposition trop grand.");
+			(new Scanner(System.in)).nextLine();
+		}
 
 	}
 

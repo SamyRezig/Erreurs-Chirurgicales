@@ -20,6 +20,10 @@ public class Chirurgie {
         this.corrige = false;
 	}
 	
+	public int getId() {
+		return this.identifiant;
+	}
+	
 	public void setCorrige() {
 		this.corrige = true;
 	}
@@ -198,6 +202,15 @@ public class Chirurgie {
                 return dureeInter;
             }
         }
+        
+    public boolean incoherente() {
+    	if (this.datesOperation.getDateDebut().isAfter(this.datesOperation.getDateFin())) {
+    		return true;
+    	} else if (this.duree() <= 0) {
+    		return true;
+    	}
+    	return false;
+    }
 
 
 	@Override

@@ -1,4 +1,5 @@
 import java.time.Duration;
+import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalTime;
@@ -42,16 +43,24 @@ public class Correcteur {
 			double tauxSuspect1 = premiere.tauxSuspect(dureeInter);
 			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
 			System.out.println(dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
+			
+			/*if ((tauxSuspect1 < (double) dureeInter / (double) (15 + dureeInter)) && (tauxSuspect2 < (double) dureeInter / (double) (15 + dureeInter))) {
+				System.out.println("--------Decoupage annule");
+				(new Scanner(System.in)).nextLine();
+				return;
+			}*/
 
                             if (tauxSuspect1 > tauxSuspect2) {
                                     Correcteur.reduireFin(premiere, dureeInter + 15);
                                     System.out.println(premiere);
                                     System.out.println("--------Reduction par la fin");
+                                    if (premiere.duree() <= 0)	throw new RuntimeException();
 
                             } else {
                                     Correcteur.reduireDebut(seconde, dureeInter + 15);
                                     System.out.println(seconde);
                                     System.out.println("--------Reduction par le debut");
+                                    if (seconde.duree() <= 0)	throw new RuntimeException();
                             }
 
 	}

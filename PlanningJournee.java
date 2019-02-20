@@ -127,6 +127,15 @@ public class PlanningJournee {
 			chrg.visualisation();
 		}
 	}
+	
+	public void verifierChirurgies() {
+		for (Chirurgie chrg : this.listeChirurgies) {
+			if (chrg.incoherente()) {
+				System.out.println(chrg);
+				chrg.visualisation();
+			}
+		}
+	}
 
 	@Override
 	public String toString() {

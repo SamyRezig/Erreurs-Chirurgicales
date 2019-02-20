@@ -220,21 +220,37 @@ public class Agenda {
 	}
 
 	public void resolution() {
+		System.out.println("Debut de la resolution des conflits.");
 		for (int i = 0; i < 10; i++) {
 			System.out.println("Nombre de conflits : " + this.nombreConflits());
 
 			(new Scanner(System.in)).nextLine();
 
 			this.resoudreTousConflits();
+			this.setPlanningParJournee(this.listeJournees());
 			this.recenserTousConflits();
 		}
+		System.out.println("Fin de la resolution des conflits.");
+	}
+	
+	public void descriptionCourante() {
+		Statistiques apresStats = new Statistiques(this.listeChirurgies, this.extraireConflits());
+		
 		this.visualiserConflits();
-		//System.out.println(this.listeChirurgies);
-		Statistiques.repartition(this.listeChirurgies);
-		System.out.println("Nombre de conflits restant : " + this.nombreConflits());
-
-		// Qualite de la resolution
-		this.stats.qualite(this.listeChirurgies);
+		this.stats.comparer(apresStats);
+	}
+	
+	public void resolutionCommentee() {
+		this.resolution();
+		this.descriptionCourante();
+	}
+	
+	public void verifierChirurgies() {
+		System.out.println("Chirurgies bizarres : ");
+		for (PlanningJournee contenuJour : this.planning.values()) {
+			contenuJour.verifierChirurgies();
+		}
+		System.out.println("Fin verification des chirurgies bizarres");
 	}
 
 	private int nombreConflits() {
