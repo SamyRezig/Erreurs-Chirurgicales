@@ -6,6 +6,11 @@ public abstract class Conflit {
 	private Chirurgie firstChirurgie;
 	private Chirurgie secondChirurgie;
 
+	public static int nbNormalisation = 0;
+	public static int nbDecoupage = 0;
+	public static int nbRess = 0;
+	public static int nbDecalage = 0;
+
 
 	public abstract boolean persiste();
 
@@ -51,15 +56,15 @@ public abstract class Conflit {
 			this.secondChirurgie = tmp;
 		}
 	}
-	
+
 	private double tauxSuperposition() {
-		double premierTaux = (this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie() ) / this.getPremiereChirurgie().duree());
-		double deuxiemeTaux = (this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie() ) / this.getSecondeChirurgie().duree());
-		
+		double dureeInter = this.getPremiereChirurgie().dureeIntersection(this.getSecondeChirurgie());
+		double premierTaux = dureeInter / (double) this.getPremiereChirurgie().duree();
+		double deuxiemeTaux = dureeInter / (double) this.getSecondeChirurgie().duree();
+
+		// Prend le minimun des deux taux
 		double resultat = (premierTaux > deuxiemeTaux) ? deuxiemeTaux : premierTaux;
-		if (resultat > 0.8) {
-			//(new Scanner(System.in)).nextLine();
-		}
+
 		return resultat;
 	}
 
@@ -83,27 +88,28 @@ public abstract class Conflit {
 
 		// Resolution par decoupage
 		double ts = this.tauxSuperposition();
-		if (this.persiste() && this.tauxSuperposition() > 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && !this.getPremiereChirurgie().courte() && !this.getSecondeChirurgie().courte()) {
-			System.out.println("----Decoupage des chirurgies");
+		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
+			System.out.println("----Decoupage des chirurgies -- ts = " + ts);
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
+			Conflit.nbDecoupage++;
 		} else {
-			System.out.println("----Pas de decoupage de chirurgies");
+			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
 		}
 
 		// Resolution par modification des ressources
 		if (this.persiste() && this.ressourcesSuffisantes(lc, ls)) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
+			Conflit.nbRess++;
 		} else {
 			System.out.println("----Pas de modification de ressource envisageable");
 		}
-
-
 
 		// Resolution par decalage
 		if (this.persiste()) {
 			System.out.println("----Decalage d'une chirurgie");
 			Correcteur.decalageChirurgie(this.getPremiereChirurgie(), this.getSecondeChirurgie());
+			Conflit.nbDecalage++;
 		} else {
 			System.out.println("----Pas de decalage de chirurgie");
 		}
@@ -111,11 +117,11 @@ public abstract class Conflit {
 		System.out.println("Voici le resultat final : ");
 		this.visualiser();
 		//(new Scanner(System.in)).nextLine();
-		
-		if (ts > 0.8 || this.getPremiereChirurgie().getId() == 9830) {
-			System.out.println("Taux de superposition trop grand.");
+
+		/*if (ts > 0.8 || this.getPremiereChirurgie().getId() == 9830) {
+			System.out.println("Taux de superposition trop grand : " + ts);
 			(new Scanner(System.in)).nextLine();
-		}
+		}*/
 
 	}
 

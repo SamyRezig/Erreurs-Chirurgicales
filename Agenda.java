@@ -9,18 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.SortedMap;
+import java.util.NavigableMap;
 
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
 	//private List<Conflit> listConflits;					// Liste contenant tous les conflits
-	private Map<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
+	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
 	public Statistiques stats;
 
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
 		//this.listConflits = new ArrayList<>();
-		this.planning = new HashMap<>();
+		this.planning = new TreeMap<>();
 	}
 
 	public Agenda(String nomFichier) {
@@ -171,7 +174,7 @@ public class Agenda {
 		//Map<LocalDate, List<Chirurgie>> mapJournee = new HashMap<>();
 		//Map<LocalDate, List<Chirurgien>> mapMedecins = new HashMap<>();
 
-		Map<LocalDate, PlanningJournee> mapJournees = new HashMap<>();
+		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
 
 		List<Chirurgie> tmp = new ArrayList<>(); // Liste des chirurgies pour une journee
@@ -232,19 +235,19 @@ public class Agenda {
 		}
 		System.out.println("Fin de la resolution des conflits.");
 	}
-	
+
 	public void descriptionCourante() {
 		Statistiques apresStats = new Statistiques(this.listeChirurgies, this.extraireConflits());
-		
+
 		this.visualiserConflits();
 		this.stats.comparer(apresStats);
 	}
-	
+
 	public void resolutionCommentee() {
 		this.resolution();
 		this.descriptionCourante();
 	}
-	
+
 	public void verifierChirurgies() {
 		System.out.println("Chirurgies bizarres : ");
 		for (PlanningJournee contenuJour : this.planning.values()) {
@@ -282,6 +285,10 @@ public class Agenda {
 			contenuJour.visualiserConflits();
 		}
     }
+
+	public Chirurgie derniereChirurgie() {
+		return this.planning.lastEntry().getValue().derniereChirurgie();
+	}
 
 
 }

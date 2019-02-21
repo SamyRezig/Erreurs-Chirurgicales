@@ -127,7 +127,7 @@ public class PlanningJournee {
 			chrg.visualisation();
 		}
 	}
-	
+
 	public void verifierChirurgies() {
 		for (Chirurgie chrg : this.listeChirurgies) {
 			if (chrg.incoherente()) {
@@ -135,6 +135,10 @@ public class PlanningJournee {
 				chrg.visualisation();
 			}
 		}
+	}
+
+	public Chirurgie derniereChirurgie() {
+		return this.listeChirurgies.get( this.listeChirurgies.size() - 1 );
 	}
 
 	@Override

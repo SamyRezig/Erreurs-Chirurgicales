@@ -44,26 +44,26 @@ public class Statistiques {
 		System.out.println("Chargement des outils statistiques...");
 		System.out.println("----Calcul des moyennes...");
 		this.dureeMoyenne = this.calculerDureeMoyenne();
-		
+
 		System.out.println("----Calcul des quartiles/mediane...");
 		this.premierQuartile = this.calculerPremierQuartile();
 		this.mediane = this.calculerMediane();
 		this.dernierQuartile = this.calculerDernierQuartile();
-		
+
 		System.out.println("----Calcul des heures des conflits les plus frequentes...");
 		this.heuresConflits = this.topHeuresConflits(listeConflits);
-		System.out.println(this.heuresConflits);
-		
+		//System.out.println(this.heuresConflits);
+
 		System.out.println("----Calcul des durees moyennes par chirurgien...");
 		this.dureeParChirurgien = this.dureeParChirurgien();
-		
+
 		System.out.println("----Calcul des durees moyennes par salle...");
 		this.dureeParSalle = this.dureeParSalle();
-		
+
 		System.out.println("----Calcul des ecart-types");
 		this.ecartTypeSalles = this.ecartType(this.dureeParSalle.values());
 		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());
-		
+
 		System.out.println("Fin du chargement des outils statistiques.");
 	}
 
@@ -114,9 +114,9 @@ public class Statistiques {
 			if (frequence == null)	tableFrequences.put(temps, 1);
 			else 					tableFrequences.put(temps, frequence + 1);
 		}
-		
+
 		tableFrequences = tableFrequences.entrySet().stream()
-										.sorted(Map.Entry.<LocalTime, Integer>comparingByValue().reversed()) 			
+										.sorted(Map.Entry.<LocalTime, Integer>comparingByValue().reversed())
 										.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
 												(oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
@@ -138,11 +138,11 @@ public class Statistiques {
 	public long getDernierQuartile() {
 		return this.dernierQuartile;
 	}
-	
+
 	public Map<Chirurgien, Double> getDureeParChirurgien() {
 		return this.dureeParChirurgien;
 	}
-	
+
 	public Map<Salle, Double> getDureeParSalle() {
 		return this.dureeParSalle;
 	}
@@ -156,11 +156,11 @@ public class Statistiques {
 	}
 
     public Map<Salle, Double> dureeParSalle() {
-		return this.dureeParSalle(this.operationsSansConflit);
+		return this.dureeParSalle(this.operations);
     }
 
 	public Map<Salle, Double> dureeParSalle(Collection<Chirurgie> chirurgies) {
-		List<Salle> salles = this.operationsSansConflit.stream()
+		List<Salle> salles = chirurgies.stream()
                                                 .map( x->x.getSalle() )
                                                 .collect(Collectors.toList());
 		Map<Salle, Double> dureeSalles = new HashMap<>();
@@ -182,11 +182,11 @@ public class Statistiques {
 	}
 
     public Map<Chirurgien, Double> dureeParChirurgien() {
-		return this.dureeParChirurgien(this.operationsSansConflit);
+		return this.dureeParChirurgien(this.operations);
     }
 
 	public Map<Chirurgien, Double> dureeParChirurgien(Collection<Chirurgie> chirurgies) {
-		List<Chirurgien> chirurgiens = this.operationsSansConflit.stream()
+		List<Chirurgien> chirurgiens = chirurgies.stream()
                                                 .map( x->x.getChirurgien() )
                                                 .collect(Collectors.toList());
 
@@ -262,7 +262,7 @@ public class Statistiques {
 
 		return Math.sqrt(somme / (double) realisationChirurgiens.keySet().size());
 	}
-	
+
 	// Calcule l'ecart-type entre les valeurs passees en parametre
 	public double ecartType(Collection<Double> valeurs) {
 		double moyenne = 0.0;
@@ -278,19 +278,19 @@ public class Statistiques {
 		}
 		return Math.sqrt(sommeCarrees / (double) valeurs.size());
 	}
-	
+
 	public double getEcartTypeSalles() {
 		return this.ecartTypeSalles;
 	}
-	
+
 	public double getEcartTypeChirurgiens() {
 		return this.ecartTypeChirurgiens;
 	}
-	
+
 	public int getNbConflits() {
 		return this.nbConflits;
 	}
-	
+
 	public void comparer(Statistiques apresStats) {
 		System.out.println("Statistiques -- AVANT correction -- APRES correction");
 		System.out.println("Duree moyenne : " + this.dureeMoyenne + "\t" + apresStats.getDureeMoyenne());
@@ -302,4 +302,3 @@ public class Statistiques {
 		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
 	}
 }
-
