@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
@@ -67,6 +68,37 @@ public class Agenda {
 	/*public List<Conflit> getListConflits() {
 		return this.listConflits;
 	}*/
+	
+	public void creerNouveauFichier() throws IOException {
+		FileWriter writer = new FileWriter("test.csv");
+		
+		 StringBuilder sb = new StringBuilder();
+	      sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");
+	      sb.append('\n');
+	      
+	     for(Map.Entry<LocalDate,PlanningJournee> ld : planning.entrySet()) {
+	    	 
+	    	 PlanningJournee tmp = ld.getValue();
+	    	 List<Chirurgie> tmpList = tmp.getListeChirurgie();
+	    	 for(Chirurgie c : tmpList) {
+	    		 sb.append(c.getId());
+	    		 sb.append(';');
+	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate());	    		 
+	    		 sb.append(';');
+	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalTime());	    		 
+	    		 sb.append(';');
+	    		 sb.append(c.getDatesOperation().getDateFin().toLocalTime());	    		 
+	    		 sb.append(';');
+	    		 sb.append(c.getSalle());
+	    		 sb.append(';');
+	    		 sb.append(c.getChirurgien().getNom());
+	    		 sb.append('\n');
+
+	    	 }
+	    	 
+	     }
+	}
+	
 
 	public Map<LocalDate, PlanningJournee> getPlanning() {
 		return this.planning;

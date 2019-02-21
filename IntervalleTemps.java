@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 public class IntervalleTemps {
 	private LocalDateTime dateDebut;
 	private LocalDateTime dateFin;
+	private String jourDeb;
 
 	public IntervalleTemps(String jourDebut, String horaireDebut, String jourFin, String horaireFin) {
 		// Concatenation des String pour avoir deux dates de la forme dd/MM/yyyy
@@ -25,6 +26,7 @@ public class IntervalleTemps {
         }
 	}
 
+	
 	public LocalDateTime getDateDebut() {
 		return this.dateDebut;
 	}

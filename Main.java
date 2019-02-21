@@ -1,11 +1,12 @@
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
 public class Main {
 
-	public static void main(String [] args) {
+	public static void main(String [] args) throws IOException {
 		Agenda a = new Agenda("Chirurgies_v2.csv");
 
 		System.out.println(a.getPlanning() + "\n");
@@ -30,6 +31,8 @@ public class Main {
 		System.out.println("Avant correction : " + dernier);
 		System.out.println("Apres correction : " + a.derniereChirurgie());
 
+		a.creerNouveauFichier();
+		/*
 		//Graphique.afficher(args);
 		Map<String, List<Integer>> map = a.dataConflits();
 		System.out.println(map);
@@ -38,7 +41,7 @@ public class Main {
 		Graphique.valeurs = map;
 		g.afficher(args);
 		//Fenetre.graphe = g;
-
+		 */
 		//Fenetre f = new Fenetre();
 		//f.afficher(args);
 

@@ -23,6 +23,10 @@ public class PlanningJournee {
 
 		this.nombresUbiquite = new ArrayList<>();
 	}
+	
+	public List<Chirurgie> getListeChirurgie(){
+		return this.listeChirurgies;
+	}
 
 	public List<Integer> getNombresUbiquite() {
 		return this.nombresUbiquite;
