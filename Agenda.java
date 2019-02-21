@@ -75,7 +75,8 @@ public class Agenda {
 		 StringBuilder sb = new StringBuilder();
 	      sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");
 	      sb.append('\n');
-	      
+	      writer.write(sb.toString());
+	      sb = new StringBuilder();
 	     for(Map.Entry<LocalDate,PlanningJournee> ld : planning.entrySet()) {
 	    	 
 	    	 PlanningJournee tmp = ld.getValue();
@@ -93,7 +94,8 @@ public class Agenda {
 	    		 sb.append(';');
 	    		 sb.append(c.getChirurgien().getNom());
 	    		 sb.append('\n');
-
+	    	     writer.write(sb.toString());
+	    	     sb = new StringBuilder();
 	    	 }
 	    	 
 	     }
