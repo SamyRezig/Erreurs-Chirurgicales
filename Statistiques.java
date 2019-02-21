@@ -9,6 +9,7 @@ import java.util.Map;
 import java.time.LocalTime;
 import java.util.stream.Collectors;
 import java.util.Collection;
+import java.util.Scanner;
 
 public class Statistiques {
 	private Set<Chirurgie> operations;
@@ -23,6 +24,16 @@ public class Statistiques {
 	private Map<Salle, Double> dureeParSalle;
 	private double ecartTypeSalles;
 	private double ecartTypeChirurgiens;
+
+	public static int nbNormalisation = 0;
+	public static int nbDecoupage = 0;
+	public static int nbRess = 0;
+	public static int nbDecalage = 0;
+
+	public static List<Integer> nombresUbiquite = new ArrayList<>();
+	public static List<Integer> nombresInterference = new ArrayList<>();
+	public static List<Integer> nombresChevauchement = new ArrayList<>();
+	public static List<Integer> nombresConflits = new ArrayList<>();
 
 	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits) {
 		this.nbConflits = listeConflits.size();
@@ -300,5 +311,36 @@ public class Statistiques {
 		System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
 		System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
+	}
+
+	public static void recenser(Conflit c) {
+		Integer nb;
+
+		nb = Statistiques.nombresConflits.remove( Statistiques.nombresConflits.size() - 1 ) + 1;
+		Statistiques.nombresConflits.add(nb);
+
+		if (c.getClass().toString().equals("class Ubiquite")) {
+			nb = Statistiques.nombresUbiquite.remove( Statistiques.nombresUbiquite.size() - 1 ) + 1;
+			Statistiques.nombresUbiquite.add(nb);
+
+		} else if (c.getClass().toString().equals("class Interference")) {
+			nb = Statistiques.nombresInterference.remove( Statistiques.nombresInterference.size() - 1 ) + 1;
+			Statistiques.nombresInterference.add(nb);
+
+		} else if (c.getClass().toString().equals("class Chevauchement")) {
+			nb = Statistiques.nombresChevauchement.remove( Statistiques.nombresChevauchement.size() - 1 ) + 1;
+			Statistiques.nombresChevauchement.add(nb);
+
+		} else {
+			System.out.println("WTF ? " + c.getClass().toString());
+			(new Scanner(System.in)).nextLine();
+		}
+	}
+
+	public static void nouvelleIteration() {
+		Statistiques.nombresUbiquite.add(0);
+		Statistiques.nombresInterference.add(0);
+		Statistiques.nombresChevauchement.add(0);
+		Statistiques.nombresConflits.add(0);
 	}
 }

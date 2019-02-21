@@ -6,10 +6,7 @@ public abstract class Conflit {
 	private Chirurgie firstChirurgie;
 	private Chirurgie secondChirurgie;
 
-	public static int nbNormalisation = 0;
-	public static int nbDecoupage = 0;
-	public static int nbRess = 0;
-	public static int nbDecalage = 0;
+
 
 
 	public abstract boolean persiste();
@@ -91,7 +88,7 @@ public abstract class Conflit {
 		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
 			System.out.println("----Decoupage des chirurgies -- ts = " + ts);
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
-			Conflit.nbDecoupage++;
+			Statistiques.nbDecoupage++;
 		} else {
 			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
 		}
@@ -100,7 +97,7 @@ public abstract class Conflit {
 		if (this.persiste() && this.ressourcesSuffisantes(lc, ls)) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
-			Conflit.nbRess++;
+			Statistiques.nbRess++;
 		} else {
 			System.out.println("----Pas de modification de ressource envisageable");
 		}
@@ -109,28 +106,14 @@ public abstract class Conflit {
 		if (this.persiste()) {
 			System.out.println("----Decalage d'une chirurgie");
 			Correcteur.decalageChirurgie(this.getPremiereChirurgie(), this.getSecondeChirurgie());
-			Conflit.nbDecalage++;
+			Statistiques.nbDecalage++;
 		} else {
 			System.out.println("----Pas de decalage de chirurgie");
 		}
 
 		System.out.println("Voici le resultat final : ");
 		this.visualiser();
-		//(new Scanner(System.in)).nextLine();
-
-		/*if (ts > 0.8 || this.getPremiereChirurgie().getId() == 9830) {
-			System.out.println("Taux de superposition trop grand : " + ts);
-			(new Scanner(System.in)).nextLine();
-		}*/
 
 	}
-
-	// Pour resoudre un conflit :
-	// les deux chirurgies sont toujours en conflit ?
-	// non : return;
-	// On examine les durees des deux chirurgies
-	// Changer celle qui sont suspectes
-	// Verifier si le conflit persiste toujours
-	// si oui : changer de salles/chirurgiens
 
 }

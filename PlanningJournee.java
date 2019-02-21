@@ -12,12 +12,20 @@ public class PlanningJournee {
 	private List<Chirurgien> listeChirurgiens;
 	private List<Conflit> listeConflits;
 
+	private List<Integer> nombresUbiquite;
+
 	public PlanningJournee(List<Chirurgie> lc,List<Salle> ls, List<Salle> lsu,  List<Chirurgien> lch) {
 		this.listeChirurgies = lc;
 		this.listeSalles = ls;
 		this.listeChirurgiens = lch;
         this.listeSallesUrgence = lsu;
 		this.listeConflits = new ArrayList<>();
+
+		this.nombresUbiquite = new ArrayList<>();
+	}
+
+	public List<Integer> getNombresUbiquite() {
+		return this.nombresUbiquite;
 	}
 
 	public List<Conflit> getListeConflits() {
@@ -39,6 +47,7 @@ public class PlanningJournee {
 				if (nouveauConflit != null) {
 					//System.out.println(nouveauConflit);
 					this.listeConflits.add(nouveauConflit);
+					Statistiques.recenser(nouveauConflit);
 				}
 
 			}

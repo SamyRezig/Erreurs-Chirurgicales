@@ -43,7 +43,7 @@ public class Correcteur {
 			double tauxSuspect1 = premiere.tauxSuspect(dureeInter);
 			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
 			System.out.println(dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
-			
+
 			/*if ((tauxSuspect1 < (double) dureeInter / (double) (15 + dureeInter)) && (tauxSuspect2 < (double) dureeInter / (double) (15 + dureeInter))) {
 				System.out.println("--------Decoupage annule");
 				(new Scanner(System.in)).nextLine();
@@ -101,6 +101,9 @@ public class Correcteur {
 
 		// Couper la duree
 		if (indesirables.contains(debut) && courante.dureeSuspecte()) {
+			// MAJ Stats
+			Statistiques.nbNormalisation++;
+
 			System.out.println("----Normalisation du debut : " + debut);
 			long dureeTotale = courante.duree();
 			long dureeFinale = 134;		// Dernier quartile des durees
@@ -134,6 +137,9 @@ public class Correcteur {
 
 		// Couper la duree
 		if (indesirables.contains(fin) && courante.dureeSuspecte()) {
+			// MAJ Stats
+			Statistiques.nbNormalisation++;
+			
 			System.out.println("----Normalisation de la fin : " + fin);
 			long dureeTotale = courante.duree();
 			long dureeFinale = 134;		// Dernier quartile des durees
@@ -149,15 +155,15 @@ public class Correcteur {
 		long dureeChevauchement = premiere.dureeIntersection(seconde);
 		Correcteur.translater(seconde, dureeChevauchement + 15);
 	}
-	
-	
-	
+
+
+
 	/**
-	 * Comparer ancienne liste de conflits avec les conflits restant 
+	 * Comparer ancienne liste de conflits avec les conflits restant
 	 * Si les conflits restant ne sont pas dans l'ancienne liste de conflits
 	 * 	On applique une autre strat de correction
-	 * Sinon 
+	 * Sinon
 	 * 	On applique correction basique
-	 * 
+	 *
 	 */
 }

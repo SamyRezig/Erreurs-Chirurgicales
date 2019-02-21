@@ -16,7 +16,7 @@ import java.util.NavigableMap;
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
-	//private List<Conflit> listConflits;					// Liste contenant tous les conflits
+	private int nbIterations = 10;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
 	public Statistiques stats;
 
@@ -199,7 +199,7 @@ public class Agenda {
 
 	public void recenserTousConflits() {
 		//List<Conflit> conflitsDuJour;
-
+		Statistiques.nouvelleIteration();
 		// Pour jour, rescenser les conflits de ce jour
 		// Ajouter tous les conflits dans la liste ListConflits
 		for (PlanningJournee contenuJour : this.planning.values()) {
@@ -224,7 +224,7 @@ public class Agenda {
 
 	public void resolution() {
 		System.out.println("Debut de la resolution des conflits.");
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < this.nbIterations; i++) {
 			System.out.println("Nombre de conflits : " + this.nombreConflits());
 
 			(new Scanner(System.in)).nextLine();
@@ -232,6 +232,7 @@ public class Agenda {
 			this.resoudreTousConflits();
 			this.setPlanningParJournee(this.listeJournees());
 			this.recenserTousConflits();
+
 		}
 		System.out.println("Fin de la resolution des conflits.");
 	}
@@ -268,6 +269,17 @@ public class Agenda {
 		}
 
 		return tousConflits;
+	}
+
+	public Map<String, List<Integer>> dataConflits() {
+		Map<String, List<Integer>> data = new HashMap<>();
+
+		data.put("Ubiquite", Statistiques.nombresUbiquite);
+		data.put("Interference", Statistiques.nombresInterference);
+		data.put("Chevauchement", Statistiques.nombresChevauchement);
+		data.put("Total", Statistiques.nombresConflits);
+
+		return data;
 	}
 
 	public void statistiques() {
