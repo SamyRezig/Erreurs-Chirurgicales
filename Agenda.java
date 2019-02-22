@@ -70,18 +70,15 @@ public class Agenda {
 	}*/
 	
 	public void creerNouveauFichier() throws IOException {
-		FileWriter writer = new FileWriter("test.csv");
+		FileWriter writer = new FileWriter("ChirurgieCorrige.csv");
 		
 		 StringBuilder sb = new StringBuilder();
 	      sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");
 	      sb.append('\n');
 	      writer.write(sb.toString());
 	      sb = new StringBuilder();
-	     for(Map.Entry<LocalDate,PlanningJournee> ld : planning.entrySet()) {
-	    	 
-	    	 PlanningJournee tmp = ld.getValue();
-	    	 List<Chirurgie> tmpList = tmp.getListeChirurgie();
-	    	 for(Chirurgie c : tmpList) {
+	    
+	    	 for(Chirurgie c : this.listeChirurgies) {
 	    		 sb.append(c.getId());
 	    		 sb.append(';');
 	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate());	    		 
@@ -96,9 +93,12 @@ public class Agenda {
 	    		 sb.append('\n');
 	    	     writer.write(sb.toString());
 	    	     sb = new StringBuilder();
+	    	     
 	    	 }
+	    	 writer.flush();
+	    	 writer.close();
 	    	 
-	     }
+	     
 	}
 	
 
