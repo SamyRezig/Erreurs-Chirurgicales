@@ -17,7 +17,7 @@ import java.util.NavigableMap;
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
-	private int nbIterations = 10;
+	private int nbIterations = 20;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
 	public Statistiques stats;
 
@@ -68,24 +68,24 @@ public class Agenda {
 	/*public List<Conflit> getListConflits() {
 		return this.listConflits;
 	}*/
-	
+
 	public void creerNouveauFichier() throws IOException {
 		FileWriter writer = new FileWriter("ChirurgieCorrige.csv");
-		
+
 		 StringBuilder sb = new StringBuilder();
 	      sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");
 	      sb.append('\n');
 	      writer.write(sb.toString());
 	      sb = new StringBuilder();
-	    
+
 	    	 for(Chirurgie c : this.listeChirurgies) {
 	    		 sb.append(c.getId());
 	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate());	    		 
+	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate());
 	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalTime());	    		 
+	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalTime());
 	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateFin().toLocalTime());	    		 
+	    		 sb.append(c.getDatesOperation().getDateFin().toLocalTime());
 	    		 sb.append(';');
 	    		 sb.append(c.getSalle());
 	    		 sb.append(';');
@@ -93,14 +93,14 @@ public class Agenda {
 	    		 sb.append('\n');
 	    	     writer.write(sb.toString());
 	    	     sb = new StringBuilder();
-	    	     
+
 	    	 }
 	    	 writer.flush();
 	    	 writer.close();
-	    	 
-	     
+
+
 	}
-	
+
 
 	public Map<LocalDate, PlanningJournee> getPlanning() {
 		return this.planning;
@@ -261,7 +261,7 @@ public class Agenda {
 		for (int i = 0; i < this.nbIterations; i++) {
 			System.out.println("Nombre de conflits : " + this.nombreConflits());
 
-			(new Scanner(System.in)).nextLine();
+			//(new Scanner(System.in)).nextLine();
 
 			this.resoudreTousConflits();
 			this.setPlanningParJournee(this.listeJournees());

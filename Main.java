@@ -32,7 +32,7 @@ public class Main {
 		System.out.println("Apres correction : " + a.derniereChirurgie());
 
 		a.creerNouveauFichier();
-		/*
+
 		//Graphique.afficher(args);
 		Map<String, List<Integer>> map = a.dataConflits();
 		System.out.println(map);
@@ -40,10 +40,6 @@ public class Main {
 		Graphique g = new Graphique();
 		Graphique.valeurs = map;
 		g.afficher(args);
-		//Fenetre.graphe = g;
-		 */
-		//Fenetre f = new Fenetre();
-		//f.afficher(args);
 
 	}
 

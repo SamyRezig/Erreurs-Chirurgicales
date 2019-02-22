@@ -4,18 +4,14 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.geometry.Point2D;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
 import java.util.List;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
-import javafx.embed.swing.JFXPanel;
 
 public class Graphique extends Application {
-    //final JFXPanel fxPanel = new JFXPanel();
     private double largeur = 700;
     private double hauteur = 500;
     public static Map<String, List<Integer>> valeurs;
@@ -29,18 +25,18 @@ public class Graphique extends Application {
 
     private void initialiserAxes(Group root) {
         System.out.println("Initialisation des axes");
-        //Defining X axis
-        NumberAxis xAxis = new NumberAxis(0, 12, 1);
-        xAxis.setLabel("Iteration");
+        // Definir l'axe x
+        NumberAxis xAxe = new NumberAxis(0, 20, 1);
+        xAxe.setLabel("Iteration");
 
-        //Defining y axis
-        NumberAxis yAxis = new NumberAxis(0, 400, 10);
-        yAxis.setLabel("Nombre de conflits");
+        // Definir l'axe y
+        NumberAxis yAxe = new NumberAxis(0, 40, 10);
+        yAxe.setLabel("Nombre de conflits");
 
-        this.graphe = new LineChart(xAxis, yAxis);
+        this.graphe = new LineChart(xAxe, yAxe);
 
-        root.getChildren().add(xAxis);
-        root.getChildren().add(yAxis);
+        root.getChildren().add(xAxe);
+        root.getChildren().add(yAxe);
         root.getChildren().add(this.graphe);
     }
 
@@ -53,7 +49,7 @@ public class Graphique extends Application {
             series.getData().add(new XYChart.Data(i, nuagePoints.get(i)));
         }
 
-        //Setting the data to Line chart
+        // Ajouter les data au graphique
         this.graphe.getData().add(series);
     }
 

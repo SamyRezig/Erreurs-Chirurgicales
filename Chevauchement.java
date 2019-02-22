@@ -24,7 +24,7 @@ public class Chevauchement extends Conflit {
 		Chirurgien tmpChirurgien = null;
         Salle tmpSalle = null;
 
-		if(lc.size() != 1){
+		if(lc.size() >= 2){
 			for(Chirurgien c : lc) {
 				if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
 					tmpChirurgien = c;
@@ -35,7 +35,7 @@ public class Chevauchement extends Conflit {
 			}
 		}
 
-		if (ls.size() != 1) {
+		if (ls.size() >= 2) {
 			for(Salle s : ls) {
 				if(!this.getPremiereChirurgie().getSalle().equals(s)) {
 					tmpSalle = s;
