@@ -19,7 +19,7 @@ import java.util.Set;
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
-	private int nbIterations = 23;
+	private int nbIterations = 30;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
 	public Statistiques stats;
 

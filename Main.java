@@ -22,10 +22,16 @@ public class Main {
 		System.out.println("Nombre de modifs ressources : " + Statistiques.nbRess);
 		System.out.println("Nombre de decalages : " + Statistiques.nbDecalage);
 
+		int nbC = Statistiques.nbNormalisation + Statistiques.nbDecoupage + Statistiques.nbRess + Statistiques.nbDecalage;
+		System.out.println(" === Nombre de corrections : " + nbC);
+
 		a.creerNouveauFichier();
 
 		Map<String, List<Integer>> map = a.dataConflits();
-		System.out.println(map);
+		System.out.println("Chevauchement : " + map.get("Chevauchement"));
+		System.out.println("Interference : " + map.get("Interference"));
+		System.out.println("Ubiquite : " + map.get("Ubiquite"));
+		System.out.println("Total : " + map.get("Total"));
 
 		Graphique g = new Graphique();
 		Graphique.valeurs = map;

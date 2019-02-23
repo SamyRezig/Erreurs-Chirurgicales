@@ -28,64 +28,6 @@ public class Ressources {
         return this.listeSallesUrgence;
     }
 
-    /*public void trierListes(List<Chirurgie> listeChirurgies) {
-        Collections.shuffle(this.listeChirurgiens);
-        Collections.shuffle(this.listeSalles);
-        Collections.shuffle(this.listeSallesUrgence);
-    }*/
-
-    public void trierListes(List<Chirurgie> listeChirurgies) {
-		Map<Chirurgien, Integer> mapChirurgiens = new HashMap<>();
-		Map<Salle, Integer> mapSalles = new HashMap<>();
-		Map<Salle, Integer> mapSallesUrgentes = new HashMap<>();
-		Integer nbChrg = null;
-
-		for (Chirurgie courante : listeChirurgies) {
-			// Gestion des chirurgiens
-			nbChrg = mapChirurgiens.get(courante.getChirurgien());
-			if (nbChrg == null) {
-				mapChirurgiens.put(courante.getChirurgien(), 1);
-			} else {
-				mapChirurgiens.put(courante.getChirurgien(), nbChrg + 1);
-			}
-
-			// Gestion des salles
-			if (!courante.estUrgente()) {
-				// Gestion des salles classiques
-				nbChrg = mapSalles.get(courante.getSalle());
-				if (nbChrg == null) {
-					mapSalles.put(courante.getSalle(), 1);
-				} else {
-					mapSalles.put(courante.getSalle(), nbChrg + 1);
-				}
-
-			} else {
-				// Gestion des salles urgentes
-				nbChrg = mapSallesUrgentes.get(courante.getSalle());
-				if (nbChrg == null) {
-					mapSallesUrgentes.put(courante.getSalle(), 1);
-				} else {
-					mapSallesUrgentes.put(courante.getSalle(), nbChrg + 1);
-				}
-			}
-		}
-		// Conversion des chirurgiens en une liste
-		this.listeChirurgiens = mapChirurgiens.entrySet().stream()
-									.sorted(Map.Entry.comparingByValue())
-									.map( x->x.getKey() )
-									.collect(Collectors.toList());
-		// Conversion des salles classiques en une liste
-		this.listeSalles = mapSalles.entrySet().stream()
-									.sorted(Map.Entry.comparingByValue())
-									.map(x->x.getKey())
-									.collect(Collectors.toList());
-		// Conversion des salles d'urgence en une liste
-		this.listeSallesUrgence = mapSallesUrgentes.entrySet().stream()
-										.sorted(Map.Entry.comparingByValue())
-										.map(x->x.getKey())
-										.collect(Collectors.toList());
-	}
-
     public void trierListes3(List<Chirurgie> listeChirurgies) {
 		Map<Chirurgien, Long> mapChirurgiens = new HashMap<>();
 		Map<Salle, Long> mapSalles = new HashMap<>();
@@ -137,6 +79,65 @@ public class Ressources {
 										.map(x->x.getKey())
 										.collect(Collectors.toList());
 	}
+
+    public void trierListes2(List<Chirurgie> listeChirurgies) {
+        Map<Chirurgien, Integer> mapChirurgiens = new HashMap<>();
+        Map<Salle, Integer> mapSalles = new HashMap<>();
+        Map<Salle, Integer> mapSallesUrgentes = new HashMap<>();
+        Integer nbChrg = null;
+
+        for (Chirurgie courante : listeChirurgies) {
+            // Gestion des chirurgiens
+            nbChrg = mapChirurgiens.get(courante.getChirurgien());
+            if (nbChrg == null) {
+                mapChirurgiens.put(courante.getChirurgien(), 1);
+            } else {
+                mapChirurgiens.put(courante.getChirurgien(), nbChrg + 1);
+            }
+
+            // Gestion des salles
+            if (!courante.estUrgente()) {
+                // Gestion des salles classiques
+                nbChrg = mapSalles.get(courante.getSalle());
+                if (nbChrg == null) {
+                    mapSalles.put(courante.getSalle(), 1);
+                } else {
+                    mapSalles.put(courante.getSalle(), nbChrg + 1);
+                }
+
+            } else {
+                // Gestion des salles urgentes
+                nbChrg = mapSallesUrgentes.get(courante.getSalle());
+                if (nbChrg == null) {
+                    mapSallesUrgentes.put(courante.getSalle(), 1);
+                } else {
+                    mapSallesUrgentes.put(courante.getSalle(), nbChrg + 1);
+                }
+            }
+        }
+        // Conversion des chirurgiens en une liste
+        this.listeChirurgiens = mapChirurgiens.entrySet().stream()
+                                    .sorted(Map.Entry.comparingByValue())
+                                    .map( x->x.getKey() )
+                                    .collect(Collectors.toList());
+        // Conversion des salles classiques en une liste
+        this.listeSalles = mapSalles.entrySet().stream()
+                                    .sorted(Map.Entry.comparingByValue())
+                                    .map(x->x.getKey())
+                                    .collect(Collectors.toList());
+        // Conversion des salles d'urgence en une liste
+        this.listeSallesUrgence = mapSallesUrgentes.entrySet().stream()
+                                        .sorted(Map.Entry.comparingByValue())
+                                        .map(x->x.getKey())
+                                        .collect(Collectors.toList());
+    }
+
+
+    public void trierListes(List<Chirurgie> listeChirurgies) {
+        Collections.shuffle(this.listeChirurgiens);
+        Collections.shuffle(this.listeSalles);
+        Collections.shuffle(this.listeSallesUrgence);
+    }
 
     @Override
     public String toString() {

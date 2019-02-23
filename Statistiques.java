@@ -325,13 +325,7 @@ public class Statistiques {
 		int card = 0;
 
 		for (LocalDate jour : planningApres.keySet()) {
-			//System.out.println(planningApres.get(jour) + " -- " + this.dureeJournees.get(jour));
-
 			ecartMoyen += (planningApres.get(jour) - this.dureeJournees.get(jour));
-			/*if (planningApres.get(jour) - this.dureeJournees.get(jour) != 0) {
-				System.out.println("Negatif : " + jour);
-				(new Scanner(System.in)).nextLine();
-			}*/
 			card++;
 		}
 
@@ -347,7 +341,7 @@ public class Statistiques {
 		System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
 		System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
-		System.out.println("Duree moyenne d'allongement des journee en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
+		System.out.println("Duree moyenne d'allongement des journees en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
 	}
 
 	public static void recenser(Conflit c) {

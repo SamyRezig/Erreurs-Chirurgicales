@@ -27,7 +27,7 @@ public class Graphique extends Application {
     private void initialiserAxes(Group root) {
         System.out.println("Initialisation des axes");
         // Definir l'axe x
-        NumberAxis xAxe = new NumberAxis(0, 25, 1);
+        NumberAxis xAxe = new NumberAxis(0, 31, 1);
         xAxe.setLabel("Iteration");
 
         // Definir l'axe y

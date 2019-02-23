@@ -13,6 +13,7 @@ public class PlanningJournee {
 	private List<Chirurgie> listeChirurgies;
 	private Ressources disponibilites;
 	private List<Conflit> listeConflits;
+	public static int cpt = 0;
 
 	private List<Integer> nombresUbiquite;
 
@@ -73,8 +74,12 @@ public class PlanningJournee {
 						} else {
 							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSalles());
                         }
-						this.disponibilites.trierListes(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
-                }
+						if (PlanningJournee.cpt++ >= 15) {
+							this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
+						} else {
+							this.disponibilites.trierListes2(this.listeChirurgies);
+						}
+				}
 	}
 
 	public void visualiserConflits() {
