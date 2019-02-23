@@ -4,24 +4,23 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
 
 public class PlanningJournee {
 
 	private List<Chirurgie> listeChirurgies;
-	private List<Salle> listeSalles; // Salle classique
-    private List<Salle> listeSallesUrgence; // Salle urgence
-	private List<Chirurgien> listeChirurgiens;
+	private Ressources disponibilites;
 	private List<Conflit> listeConflits;
 
 	private List<Integer> nombresUbiquite;
 
 	public PlanningJournee(List<Chirurgie> lc,List<Salle> ls, List<Salle> lsu,  List<Chirurgien> lch) {
 		this.listeChirurgies = lc;
-		this.listeSalles = ls;
-		this.listeChirurgiens = lch;
-        this.listeSallesUrgence = lsu;
+		//Collections.sort(this.listeChirurgies);		// Trie les chirurgies par date de debut du plus tot au plus tard
+		this.disponibilites = new Ressources(lch, ls, lsu);
 		this.listeConflits = new ArrayList<>();
-
 		this.nombresUbiquite = new ArrayList<>();
 	}
 
@@ -65,67 +64,16 @@ public class PlanningJournee {
 							.forEach(System.out::println);
 	}
 
-	public void trierListes() {
-		Map<Chirurgien, Long> mapChirurgiens = new HashMap<>();
-		Map<Salle, Long> mapSalles = new HashMap<>();
-		Map<Salle, Long> mapSallesUrgentes = new HashMap<>();
-		Long duree = null;
-
-		for (Chirurgie courante : this.listeChirurgies) {
-			// Gestion des chirurgiens
-			duree = mapChirurgiens.get(courante.getChirurgien());
-			if (duree == null) {
-				mapChirurgiens.put(courante.getChirurgien(), courante.getDatesOperation().duree());
-			} else {
-				mapChirurgiens.put(courante.getChirurgien(), duree + courante.getDatesOperation().duree());
-			}
-
-			// Gestion des salles
-			if (!courante.estUrgente()) {
-				// Gestion des salles classiques
-				duree = mapSalles.get(courante.getSalle());
-				if (duree == null) {
-					mapSalles.put(courante.getSalle(), courante.getDatesOperation().duree());
-				} else {
-					mapSalles.put(courante.getSalle(), courante.getDatesOperation().duree() + duree);
-				}
-
-			} else {
-				// Gestion des salles urgentes
-				duree = mapSallesUrgentes.get(courante.getSalle());
-				if (duree == null) {
-					mapSallesUrgentes.put(courante.getSalle(), courante.getDatesOperation().duree());
-				} else {
-					mapSallesUrgentes.put(courante.getSalle(), courante.getDatesOperation().duree() + duree);
-				}
-			}
-		}
-		// Conversion des chirurgiens en une liste
-		this.listeChirurgiens = mapChirurgiens.entrySet().stream()
-									.sorted(Map.Entry.comparingByValue())
-									.map( x->x.getKey() )
-									.collect(Collectors.toList());
-		// Conversion des salles classiques en une liste
-		this.listeSalles = mapSalles.entrySet().stream()
-									.sorted(Map.Entry.comparingByValue())
-									.map(x->x.getKey())
-									.collect(Collectors.toList());
-		// Conversion des salles d'urgence en une liste
-		this.listeSallesUrgence = mapSallesUrgentes.entrySet().stream()
-										.sorted(Map.Entry.comparingByValue())
-										.map(x->x.getKey())
-										.collect(Collectors.toList());
-	}
-
 	public void resoudreConflits() {
 
 		for(Conflit conflitCourant : this.listeConflits) {
-                        if(conflitCourant.getPremiereChirurgie().estUrgente()){
-                            conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSallesUrgence);
-                        }else{
-							conflitCourant.resoudreConflit(this.listeChirurgiens, this.listeSalles);
+                        if (conflitCourant.getPremiereChirurgie().estUrgente()){
+							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSallesUrgence());
+
+						} else {
+							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSalles());
                         }
-						this.trierListes();	// On reordonne les listes des salles et des chirurgiens disponibles
+						this.disponibilites.trierListes(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
                 }
 	}
 
@@ -143,12 +91,27 @@ public class PlanningJournee {
 	}
 
 	public void verifierChirurgies() {
+		Set<Chirurgie> enConflit = this.chirurgiesEnConflit();
+
 		for (Chirurgie chrg : this.listeChirurgies) {
 			if (chrg.incoherente()) {
+				if (enConflit.contains(chrg))	System.out.println("EN CONFLIT : ");
 				System.out.println(chrg);
 				chrg.visualisation();
 			}
 		}
+	}
+
+	private Set<Chirurgie> chirurgiesEnConflit() {
+		Set<Chirurgie> enConflit = new HashSet<>();
+		List<Conflit> tousConflits  = this.listeConflits;
+
+		for (Conflit c : tousConflits) {
+			enConflit.add(c.getPremiereChirurgie());
+			enConflit.add(c.getSecondeChirurgie());
+		}
+
+		return enConflit;
 	}
 
 	public Chirurgie derniereChirurgie() {
@@ -167,8 +130,7 @@ public class PlanningJournee {
 		StringBuilder strb = new StringBuilder();
 
 		strb.append(listeChirurgies.toString());
-		strb.append(listeSalles.toString());
-		strb.append(listeChirurgiens.toString());
+		strb.append(this.disponibilites.toString());
 
 		return strb.toString();
 	}

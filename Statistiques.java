@@ -320,16 +320,18 @@ public class Statistiques {
 		return this.nbConflits;
 	}
 
-	private double ecartMoyenAllongement(Map<LocalDate, Long> planning) {
+	private double ecartMoyenAllongement(Map<LocalDate, Long> planningApres) {
 		double ecartMoyen = 0;
 		int card = 0;
 
-		for (LocalDate jour : planning.keySet()) {
-			ecartMoyen += (planning.get(jour) - this.dureeJournees.get(jour));
-			if (planning.get(jour) - this.dureeJournees.get(jour) < 0) {
+		for (LocalDate jour : planningApres.keySet()) {
+			//System.out.println(planningApres.get(jour) + " -- " + this.dureeJournees.get(jour));
+
+			ecartMoyen += (planningApres.get(jour) - this.dureeJournees.get(jour));
+			/*if (planningApres.get(jour) - this.dureeJournees.get(jour) != 0) {
 				System.out.println("Negatif : " + jour);
 				(new Scanner(System.in)).nextLine();
-			}
+			}*/
 			card++;
 		}
 

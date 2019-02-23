@@ -2,8 +2,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalTime;
 
-public class Chirurgie {
+public class Chirurgie implements Comparable<Chirurgie> {
 	private int identifiant;
 	private IntervalleTemps datesOperation;
 	private Salle salle;
@@ -19,15 +20,15 @@ public class Chirurgie {
         this.urgence = this.salle.estUrgence();
         this.corrige = false;
 	}
-	
+
 	public int getId() {
 		return this.identifiant;
 	}
-	
+
 	public void setCorrige() {
 		this.corrige = true;
 	}
-	
+
 	public boolean getCorrige() {
 		return this.corrige;
 	}
@@ -141,10 +142,10 @@ public class Chirurgie {
 		System.out.println();
 
 	}
-	
+
 	public boolean courte() {
 		return this.datesOperation.duree() < 61;
-		
+
 	}
 
 	public boolean dureeSuspecte() {
@@ -202,15 +203,24 @@ public class Chirurgie {
                 return dureeInter;
             }
         }
-        
+
     public boolean incoherente() {
     	if (this.datesOperation.getDateDebut().isAfter(this.datesOperation.getDateFin())) {
     		return true;
     	} else if (this.duree() <= 0) {
     		return true;
-    	}
+    	} else if (this.duree() >= 60 * 5) {
+			return true;
+		} else if (this.datesOperation.getDateFin().toLocalTime().equals( LocalTime.of(0, 0) )) {
+			return true;
+		}
     	return false;
     }
+
+	@Override
+	public int compareTo(Chirurgie autre) {
+		return this.datesOperation.getDateDebut().compareTo(autre.datesOperation.getDateDebut());
+	}
 
 
 	@Override

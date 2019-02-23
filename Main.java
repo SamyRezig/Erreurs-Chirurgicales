@@ -13,27 +13,17 @@ public class Main {
 
 		String dernier = a.derniereChirurgie().toString();
 
-		System.out.println("moyenne : " + a.stats.getDureeMoyenne());
-		System.out.println("premier quartile : " + a.stats.getPremierQuartile());
-		System.out.println("mediane : " + a.stats.getMediane());
-		System.out.println("dernier quartile : " + a.stats.getDernierQuartile());
-		System.out.println();
-
-        a.resolutionCommentee();
-        a.verifierChirurgies();
+        a.resolution();
+		//a.verifierChirurgies();
+		a.descriptionCourante();
 
 		System.out.println("Nombre de normalisation : " + Statistiques.nbNormalisation);
 		System.out.println("Nombre de decoupages : " + Statistiques.nbDecoupage);
 		System.out.println("Nombre de modifs ressources : " + Statistiques.nbRess);
 		System.out.println("Nombre de decalages : " + Statistiques.nbDecalage);
 
-		System.out.println("\nLa derniere chirurgie :");
-		System.out.println("Avant correction : " + dernier);
-		System.out.println("Apres correction : " + a.derniereChirurgie());
-
 		a.creerNouveauFichier();
 
-		//Graphique.afficher(args);
 		Map<String, List<Integer>> map = a.dataConflits();
 		System.out.println(map);
 

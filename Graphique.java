@@ -23,10 +23,11 @@ public class Graphique extends Application {
         Application.launch(args);
     }
 
+    @SuppressWarnings("unchecked")
     private void initialiserAxes(Group root) {
         System.out.println("Initialisation des axes");
         // Definir l'axe x
-        NumberAxis xAxe = new NumberAxis(0, 20, 1);
+        NumberAxis xAxe = new NumberAxis(0, 25, 1);
         xAxe.setLabel("Iteration");
 
         // Definir l'axe y
@@ -40,6 +41,7 @@ public class Graphique extends Application {
         root.getChildren().add(this.graphe);
     }
 
+    @SuppressWarnings("unchecked")
     private void tracer(List<Integer> nuagePoints, String nom) {
         System.out.println("Tracer une courbe");
         Series series = new XYChart.Series();

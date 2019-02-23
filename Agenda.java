@@ -13,11 +13,13 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.SortedMap;
 import java.util.NavigableMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
-	private int nbIterations = 20;
+	private int nbIterations = 23;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
 	public Statistiques stats;
 
@@ -229,14 +231,11 @@ public class Agenda {
 	}
 
 	public void recenserTousConflits() {
-		//List<Conflit> conflitsDuJour;
 		Statistiques.nouvelleIteration();
 		// Pour jour, rescenser les conflits de ce jour
 		// Ajouter tous les conflits dans la liste ListConflits
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.setConflits();
-			//conflitsDuJour = contenuJour.getListeConflits();
-			//this.listConflits.addAll(conflitsDuJour);
 		}
 	}
 
