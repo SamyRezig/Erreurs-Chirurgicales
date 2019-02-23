@@ -98,7 +98,6 @@ public class Agenda {
 	    	 writer.flush();
 	    	 writer.close();
 
-
 	}
 
 
@@ -205,8 +204,6 @@ public class Agenda {
 	}
 
 	public void setPlanningParJournee(List<LocalDate> ld) {
-		//Map<LocalDate, List<Chirurgie>> mapJournee = new HashMap<>();
-		//Map<LocalDate, List<Chirurgien>> mapMedecins = new HashMap<>();
 
 		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
@@ -214,7 +211,7 @@ public class Agenda {
 		List<Chirurgie> tmp = new ArrayList<>(); // Liste des chirurgies pour une journee
 		List<Chirurgien> listeMedecins = new ArrayList<>();
 		List<Salle> listeSalles = null;
-        List<Salle> listeSallesUrgence=null;
+        List<Salle> listeSallesUrgence = null;
 
 		for (LocalDate l : ld) {
 			// Obtention des listes de chirurgiens et salles
@@ -272,7 +269,7 @@ public class Agenda {
 	}
 
 	public void descriptionCourante() {
-		Statistiques apresStats = new Statistiques(this.listeChirurgies, this.extraireConflits());
+		Statistiques apresStats = new Statistiques(this.listeChirurgies, this.extraireConflits(), this.planning);
 
 		this.visualiserConflits();
 		this.stats.comparer(apresStats);
@@ -317,7 +314,7 @@ public class Agenda {
 	}
 
 	public void statistiques() {
-		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits());
+		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits(), this.planning);
 	}
 
 	public void visualiser() {

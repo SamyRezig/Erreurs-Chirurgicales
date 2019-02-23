@@ -10,6 +10,8 @@ import java.time.LocalTime;
 import java.util.stream.Collectors;
 import java.util.Collection;
 import java.util.Scanner;
+import java.util.NavigableMap;
+import java.time.LocalDate;
 
 public class Statistiques {
 	private Set<Chirurgie> operations;
@@ -22,6 +24,7 @@ public class Statistiques {
 	private Map<LocalTime, Integer> heuresConflits;
 	private Map<Chirurgien, Double> dureeParChirurgien;
 	private Map<Salle, Double> dureeParSalle;
+	private Map<LocalDate, Long> dureeJournees;
 	private double ecartTypeSalles;
 	private double ecartTypeChirurgiens;
 
@@ -35,7 +38,7 @@ public class Statistiques {
 	public static List<Integer> nombresChevauchement = new ArrayList<>();
 	public static List<Integer> nombresConflits = new ArrayList<>();
 
-	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits) {
+	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits, NavigableMap<LocalDate, PlanningJournee> planning) {
 		this.nbConflits = listeConflits.size();
 
 		// Extraction des chirurgies en conflits
@@ -75,7 +78,22 @@ public class Statistiques {
 		this.ecartTypeSalles = this.ecartType(this.dureeParSalle.values());
 		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());
 
+		System.out.println("----Calcul des durees pour chaque journee.");
+		this.dureeJournees = this.dureeJournees(planning);
+
 		System.out.println("Fin du chargement des outils statistiques.");
+	}
+
+	private Map<LocalDate, Long> dureeJournees(Map<LocalDate, PlanningJournee> planning) {
+		Map<LocalDate, Long> resultat = new HashMap<>();
+		PlanningJournee contenuJour;
+
+		for (LocalDate jour : planning.keySet()) {
+			contenuJour = planning.get(jour);
+			resultat.put(jour, contenuJour.dureeTotale());
+		}
+
+		return resultat;
 	}
 
 	private long calculerDureeMoyenne() {
@@ -302,6 +320,22 @@ public class Statistiques {
 		return this.nbConflits;
 	}
 
+	private double ecartMoyenAllongement(Map<LocalDate, Long> planning) {
+		double ecartMoyen = 0;
+		int card = 0;
+
+		for (LocalDate jour : planning.keySet()) {
+			ecartMoyen += (planning.get(jour) - this.dureeJournees.get(jour));
+			if (planning.get(jour) - this.dureeJournees.get(jour) < 0) {
+				System.out.println("Negatif : " + jour);
+				(new Scanner(System.in)).nextLine();
+			}
+			card++;
+		}
+
+		return ecartMoyen / (double) card;
+	}
+
 	public void comparer(Statistiques apresStats) {
 		System.out.println("Statistiques -- AVANT correction -- APRES correction");
 		System.out.println("Duree moyenne : " + this.dureeMoyenne + "\t" + apresStats.getDureeMoyenne());
@@ -311,6 +345,7 @@ public class Statistiques {
 		System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
 		System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
+		System.out.println("Duree moyenne d'allongement des journee en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
 	}
 
 	public static void recenser(Conflit c) {

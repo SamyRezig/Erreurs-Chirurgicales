@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
+import java.time.Duration;
 
 public class PlanningJournee {
 
@@ -23,7 +24,7 @@ public class PlanningJournee {
 
 		this.nombresUbiquite = new ArrayList<>();
 	}
-	
+
 	public List<Chirurgie> getListeChirurgie(){
 		return this.listeChirurgies;
 	}
@@ -152,6 +153,13 @@ public class PlanningJournee {
 
 	public Chirurgie derniereChirurgie() {
 		return this.listeChirurgies.get( this.listeChirurgies.size() - 1 );
+	}
+
+	public long dureeTotale() {
+		Chirurgie premiere = this.listeChirurgies.get(0);
+		Chirurgie derniere = this.derniereChirurgie();
+
+		return Duration.between(premiere.getDatesOperation().getDateDebut(), derniere.getDatesOperation().getDateFin()).toMinutes();
 	}
 
 	@Override
