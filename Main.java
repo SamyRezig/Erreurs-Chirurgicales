@@ -28,10 +28,10 @@ public class Main {
 		a.creerNouveauFichier();
 
 		Map<String, List<Integer>> map = a.dataConflits();
-		System.out.println("Chevauchement : " + map.get("Chevauchement"));
-		System.out.println("Interference : " + map.get("Interference"));
-		System.out.println("Ubiquite : " + map.get("Ubiquite"));
-		System.out.println("Total : " + map.get("Total"));
+		System.out.println("Chevauchement :" + map.get("Chevauchement"));
+		System.out.println("Interference : \t" + map.get("Interference"));
+		System.out.println("Ubiquite : \t" + map.get("Ubiquite"));
+		System.out.println("Total : \t" + map.get("Total"));
 
 		Graphique g = new Graphique();
 		Graphique.valeurs = map;
