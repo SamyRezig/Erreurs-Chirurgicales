@@ -45,6 +45,7 @@ public class Agenda {
 		try {
 			// Ouverture du flux sur le fichier
 			fluxTexte = new BufferedReader(new InputStreamReader(new FileInputStream(nomFichier)));
+			System.out.println("Chargement de la base de donnees.");
 			// Lecture de la premiere ligne
 			fluxTexte.readLine();
 
@@ -56,7 +57,7 @@ public class Agenda {
 				this.listeChirurgies.add(operation);
 
 			}
-			System.out.println("Fin de la lecture des chirurgies");
+			System.out.println("Fin de la lecture des chirurgies.");
 			//System.out.println(listeChirurgies);
 
 		} catch (IOException e) {

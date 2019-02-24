@@ -19,13 +19,13 @@ public class PlanningJournee {
 
 	public PlanningJournee(List<Chirurgie> lc,List<Salle> ls, List<Salle> lsu,  List<Chirurgien> lch) {
 		this.listeChirurgies = lc;
-		//Collections.sort(this.listeChirurgies);		// Trie les chirurgies par date de debut du plus tot au plus tard
+		Collections.sort(this.listeChirurgies);		// Trie les chirurgies par date de debut du plus tot au plus tard
 		this.disponibilites = new Ressources(lch, ls, lsu);
 		this.listeConflits = new ArrayList<>();
 		this.nombresUbiquite = new ArrayList<>();
 	}
 
-	public List<Chirurgie> getListeChirurgie(){
+	public List<Chirurgie> getListeChirurgies(){
 		return this.listeChirurgies;
 	}
 
@@ -50,7 +50,6 @@ public class PlanningJournee {
 				nouveauConflit = this.listeChirurgies.get(i).enConflit(this.listeChirurgies.get(j));
 
 				if (nouveauConflit != null) {
-					//System.out.println(nouveauConflit);
 					this.listeConflits.add(nouveauConflit);
 					Statistiques.recenser(nouveauConflit);
 				}
@@ -76,8 +75,10 @@ public class PlanningJournee {
                         }
 						if (PlanningJournee.cpt++ >= 15) {
 							this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
-						} else {
+						} else if (PlanningJournee.cpt != 23) {
 							this.disponibilites.trierListes2(this.listeChirurgies);
+						} else {
+							this.disponibilites.trierListes(this.listeChirurgies);
 						}
 				}
 	}
@@ -128,6 +129,15 @@ public class PlanningJournee {
 		Chirurgie derniere = this.derniereChirurgie();
 
 		return Duration.between(premiere.getDatesOperation().getDateDebut(), derniere.getDatesOperation().getDateFin()).toMinutes();
+	}
+
+	public boolean travaille(Chirurgien medecin) {
+		for (Chirurgie operation : this.listeChirurgies) {
+			if (operation.getChirurgien().equals(medecin)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

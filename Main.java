@@ -9,7 +9,7 @@ public class Main {
 	public static void main(String [] args) throws IOException {
 		Agenda a = new Agenda("Chirurgies_v2.csv");
 
-		System.out.println(a.getPlanning() + "\n");
+
 
 		String dernier = a.derniereChirurgie().toString();
 
@@ -28,7 +28,7 @@ public class Main {
 		a.creerNouveauFichier();
 
 		Map<String, List<Integer>> map = a.dataConflits();
-		System.out.println("Chevauchement :" + map.get("Chevauchement"));
+		System.out.println("Chevauchement :\t" + map.get("Chevauchement"));
 		System.out.println("Interference : \t" + map.get("Interference"));
 		System.out.println("Ubiquite : \t" + map.get("Ubiquite"));
 		System.out.println("Total : \t" + map.get("Total"));

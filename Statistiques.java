@@ -68,7 +68,7 @@ public class Statistiques {
 		this.heuresConflits = this.topHeuresConflits(listeConflits);
 		//System.out.println(this.heuresConflits);
 
-		System.out.println("----Calcul des durees moyennes par chirurgien...");
+		/*System.out.println("----Calcul des durees moyennes par chirurgien...");
 		this.dureeParChirurgien = this.dureeParChirurgien();
 
 		System.out.println("----Calcul des durees moyennes par salle...");
@@ -79,9 +79,46 @@ public class Statistiques {
 		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());
 
 		System.out.println("----Calcul des durees pour chaque journee.");
-		this.dureeJournees = this.dureeJournees(planning);
+		this.dureeJournees = this.dureeJournees(planning);*/
+
+		System.out.println("EDT par chirurgien");
+		this.afficherJoursTravail(planning);
 
 		System.out.println("Fin du chargement des outils statistiques.");
+	}
+
+	public void afficherJoursTravail(NavigableMap<LocalDate, PlanningJournee> planning) {
+		char lettre;		// Stocke chaque lettre des noms des chirurgiens pour leur affichage
+		List<Chirurgien> listeChirurgiens =  this.operations.stream()
+                                                .map( x->x.getChirurgien() )
+												.distinct()
+                                                .collect(Collectors.toList());
+
+		// Afficher le nom des chirurgiens
+		for (int i = 0; i < 16; i++) {
+			System.out.print("\t\t");
+			for (Chirurgien medecin : listeChirurgiens) {
+				lettre = (i < medecin.toString().length()) ? medecin.toString().charAt(i) : ' ';
+				System.out.print(lettre + "\t");
+			}
+			System.out.println();
+		}
+
+		// Afficher leur jour de travail
+		for (LocalDate jour : planning.keySet()) {
+			System.out.print(jour + " : ");
+			for (Chirurgien medecin : listeChirurgiens) {
+
+				if (planning.get(jour).travaille(medecin)) {
+					System.out.print("\t*");
+
+				} else {
+					System.out.print("\t|");
+				}
+			}
+			System.out.print("  " + planning.get(jour).getListeChirurgies().size());
+			System.out.println();
+		}
 	}
 
 	private Map<LocalDate, Long> dureeJournees(Map<LocalDate, PlanningJournee> planning) {
@@ -332,16 +369,20 @@ public class Statistiques {
 		return ecartMoyen / (double) card;
 	}
 
+	public void joursChirurgiensInsuffisant(Map<LocalDate, PlanningJournee> planning) {
+
+	}
+
 	public void comparer(Statistiques apresStats) {
 		System.out.println("Statistiques -- AVANT correction -- APRES correction");
 		System.out.println("Duree moyenne : " + this.dureeMoyenne + "\t" + apresStats.getDureeMoyenne());
 		System.out.println("Duree mediane : " + this.mediane + "\t" + apresStats.getMediane());
 		System.out.println("Premier quartile : " + this.premierQuartile + "\t" + apresStats.getPremierQuartile());
 		System.out.println("Dernier quartile : " + this.dernierQuartile + "\t" + apresStats.getDernierQuartile());
-		System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
-		System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
+		//System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
+		//System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
-		System.out.println("Duree moyenne d'allongement des journees en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
+		//System.out.println("Duree moyenne d'allongement des journees en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
 	}
 
 	public static void recenser(Conflit c) {
