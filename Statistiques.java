@@ -81,8 +81,8 @@ public class Statistiques {
 		System.out.println("----Calcul des durees pour chaque journee.");
 		this.dureeJournees = this.dureeJournees(planning);*/
 
-		System.out.println("EDT par chirurgien");
-		this.afficherJoursTravail(planning);
+		System.out.println("EDT par salle");
+		this.afficherJoursTravailSalles(planning);
 
 		System.out.println("Jours avec chirurgiens insuffisants : ");
 		this.afficherJoursChirurgiensInsuffisants(planning);
@@ -113,6 +113,40 @@ public class Statistiques {
 			for (Chirurgien medecin : listeChirurgiens) {
 
 				if (planning.get(jour).travaille(medecin)) {
+					System.out.print("\t*");
+
+				} else {
+					System.out.print("\t|");
+				}
+			}
+			System.out.print("  " + planning.get(jour).getListeChirurgies().size());
+			System.out.println();
+		}
+	}
+
+	public void afficherJoursTravailSalles(NavigableMap<LocalDate, PlanningJournee> planning) {
+		char lettre;		// Stocke chaque lettre des noms des chirurgiens pour leur affichage
+		List<Salle> listeSalles =  this.operations.stream()
+                                                .map( x->x.getSalle() )
+												.distinct()
+                                                .collect(Collectors.toList());
+
+		// Afficher le nom des chirurgiens
+		for (int i = 0; i < 9; i++) {
+			System.out.print("\t\t");
+			for (Salle bloc : listeSalles) {
+				lettre = (i < bloc.toString().length()) ? bloc.toString().charAt(i) : ' ';
+				System.out.print(lettre + "\t");
+			}
+			System.out.println();
+		}
+
+		// Afficher leur jour de travail
+		for (LocalDate jour : planning.keySet()) {
+			System.out.print(jour + " : ");
+			for (Salle bloc : listeSalles) {
+
+				if (planning.get(jour).occupe(bloc)) {
 					System.out.print("\t*");
 
 				} else {
