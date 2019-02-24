@@ -28,6 +28,10 @@ public class Ressources {
         return this.listeSallesUrgence;
     }
 
+    public int nbChirurgiensDispos() {
+        return this.listeChirurgiens.size();
+    }
+
     public void trierListes3(List<Chirurgie> listeChirurgies) {
 		Map<Chirurgien, Long> mapChirurgiens = new HashMap<>();
 		Map<Salle, Long> mapSalles = new HashMap<>();

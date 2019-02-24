@@ -95,7 +95,7 @@ public abstract class Conflit {
 		}
 
 		// Resolution par modification des ressources
-		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85 ) ) {
+		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85 + 3 ) ) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
 			Statistiques.nbRess++;

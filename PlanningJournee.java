@@ -140,6 +140,14 @@ public class PlanningJournee {
 		return false;
 	}
 
+	public int nbChirurgies() {
+		return this.listeChirurgies.size();
+	}
+
+	public int nbChirurgiensDispos() {
+		return this.disponibilites.nbChirurgiensDispos();
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder strb = new StringBuilder();

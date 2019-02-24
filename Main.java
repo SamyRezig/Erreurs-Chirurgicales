@@ -10,9 +10,6 @@ public class Main {
 		Agenda a = new Agenda("Chirurgies_v2.csv");
 
 
-
-		String dernier = a.derniereChirurgie().toString();
-
         a.resolution();
 		//a.verifierChirurgies();
 		a.descriptionCourante();
@@ -36,6 +33,8 @@ public class Main {
 		Graphique g = new Graphique();
 		Graphique.valeurs = map;
 		g.afficher(args);
+
+		a.afficherJoursConflit();
 
 	}
 

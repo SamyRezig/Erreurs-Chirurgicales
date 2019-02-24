@@ -84,6 +84,9 @@ public class Statistiques {
 		System.out.println("EDT par chirurgien");
 		this.afficherJoursTravail(planning);
 
+		System.out.println("Jours avec chirurgiens insuffisants : ");
+		this.afficherJoursChirurgiensInsuffisants(planning);
+
 		System.out.println("Fin du chargement des outils statistiques.");
 	}
 
@@ -369,8 +372,21 @@ public class Statistiques {
 		return ecartMoyen / (double) card;
 	}
 
-	public void joursChirurgiensInsuffisant(Map<LocalDate, PlanningJournee> planning) {
+	public void afficherJoursChirurgiensInsuffisants(NavigableMap<LocalDate, PlanningJournee> planning) {
+		PlanningJournee contenuJour;
+		int seuilChirurgiens;
+		int nbChirurgiens;
 
+		for (LocalDate jour : planning.keySet()) {
+			contenuJour = planning.get(jour);
+			seuilChirurgiens = contenuJour.getListeChirurgies().size() / 4 ;		// 4 = nombre de chirurgies qu'un seul chirurgien peut gerer
+			nbChirurgiens = contenuJour.nbChirurgiensDispos();
+
+			if (nbChirurgiens < seuilChirurgiens) {
+				System.out.println(jour + " : " + nbChirurgiens + " chirurgiens disponibles pour " + contenuJour.getListeChirurgies().size() + " chirurgies.");
+			}
+
+		}
 	}
 
 	public void comparer(Statistiques apresStats) {

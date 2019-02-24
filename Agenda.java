@@ -333,5 +333,18 @@ public class Agenda {
 		return this.planning.lastEntry().getValue().derniereChirurgie();
 	}
 
+	public void afficherJoursConflit() {
+		PlanningJournee contenuJour;
+
+		for (LocalDate jour : this.planning.keySet()) {
+			contenuJour = this.planning.get(jour);
+				if (contenuJour.getListeConflits().size() > 0) {
+					System.out.print(jour + " : " + contenuJour.getListeConflits().size() + " conflits restant, ");
+					System.out.print(contenuJour.nbChirurgiensDispos() + " chirurgiens disponibles, ");
+					System.out.print(contenuJour.nbChirurgies() + " chirurgies.");
+					System.out.println();
+				}
+		}
+	}
 
 }
