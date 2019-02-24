@@ -28,7 +28,7 @@ public class Graphique extends Application {
         System.out.println("Initialisation des axes");
         // Definir l'axe x
         NumberAxis xAxe = new NumberAxis(0, 31, 1);
-        xAxe.setLabel("Iteration");
+        xAxe.setLabel("Iterations");
 
         // Definir l'axe y
         NumberAxis yAxe = new NumberAxis(0, 40, 10);

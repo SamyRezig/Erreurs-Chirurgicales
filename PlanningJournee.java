@@ -141,6 +141,15 @@ public class PlanningJournee {
 		return false;
 	}
 
+	public boolean occupe(Salle bloc) {
+		for (Chirurgie operation : this.listeChirurgies) {
+			if (operation.getSalle().equals(bloc)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public int nbChirurgies() {
 		return this.listeChirurgies.size();
 	}

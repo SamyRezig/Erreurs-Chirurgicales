@@ -74,7 +74,7 @@ public class Agenda {
 	}*/
 
 	public void creerNouveauFichier() throws IOException {
-		FileWriter writer = new FileWriter("ChirurgieCorrige.csv");
+		FileWriter writer = new FileWriter("ChirurgiesCorrigees.csv");
 		DateTimeFormatter formateurDate = DateTimeFormatter.ofPattern("dd/LL/yyyy");
 		DateTimeFormatter formateurHeure = DateTimeFormatter.ofPattern("HH:mm:ss");
 
@@ -195,7 +195,7 @@ public class Agenda {
 
 	public List<Salle> getSallesJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
-							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && !x.estUrgente())
+							.filter( x -> /*x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) &&*/ !x.estUrgente())
 							.map( x->x.getSalle() )
 							.distinct()
 							.collect(Collectors.toList());
@@ -203,7 +203,7 @@ public class Agenda {
 
     public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
-							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && x.estUrgente())
+							.filter( x -> /*x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) &&*/ x.estUrgente())
 							.map( x->x.getSalle() )
 							.distinct()
 							.collect(Collectors.toList());

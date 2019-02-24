@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalTime;
 
 public class Correcteur {
+	private static int dureePause = 15;
 	// Methodes pour corriger une chirurgie.
 
 	// Translater l'intervalle de temps d'une chirurgie
@@ -44,20 +45,14 @@ public class Correcteur {
 			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
 			System.out.println(dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
 
-			/*if ((tauxSuspect1 < (double) dureeInter / (double) (15 + dureeInter)) && (tauxSuspect2 < (double) dureeInter / (double) (15 + dureeInter))) {
-				System.out.println("--------Decoupage annule");
-				(new Scanner(System.in)).nextLine();
-				return;
-			}*/
-
                             if (tauxSuspect1 > tauxSuspect2) {
-                                    Correcteur.reduireFin(premiere, dureeInter + 15);
+                                    Correcteur.reduireFin(premiere, dureeInter + Correcteur.dureePause);
                                     System.out.println(premiere);
                                     System.out.println("--------Reduction par la fin");
                                     if (premiere.duree() <= 0)	throw new RuntimeException();
 
                             } else {
-                                    Correcteur.reduireDebut(seconde, dureeInter + 15);
+                                    Correcteur.reduireDebut(seconde, dureeInter + Correcteur.dureePause);
                                     System.out.println(seconde);
                                     System.out.println("--------Reduction par le debut");
                                     if (seconde.duree() <= 0)	throw new RuntimeException();
@@ -69,15 +64,15 @@ public class Correcteur {
             if(premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
                 if(premiere.duree() > seconde.duree()){
                     long duree = Duration.between(premiere.getDatesOperation().getDateDebut(), seconde.getDatesOperation().getDateFin()).toMinutes();
-                    Correcteur.translater(premiere, duree + 15);
+                    Correcteur.translater(premiere, duree + Correcteur.dureePause);
                 }else{
                     long duree = Duration.between(seconde.getDatesOperation().getDateDebut(), premiere.getDatesOperation().getDateFin()).toMinutes();
-                    Correcteur.translater(seconde, duree + 15);
+                    Correcteur.translater(seconde, duree + Correcteur.dureePause);
             }
             }else{
 				Correcteur.translation(premiere, seconde);
         }
-        }
+    }
 
 	public static void normaliserDebut(Chirurgie courante) {
 		LocalTime debut = LocalTime.from(courante.getDatesOperation().getDateDebut());
@@ -139,7 +134,7 @@ public class Correcteur {
 		if (indesirables.contains(fin) && courante.dureeSuspecte()) {
 			// MAJ Stats
 			Statistiques.nbNormalisation++;
-			
+
 			System.out.println("----Normalisation de la fin : " + fin);
 			long dureeTotale = courante.duree();
 			long dureeFinale = 134;		// Dernier quartile des durees
