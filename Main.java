@@ -30,11 +30,13 @@ public class Main {
 		System.out.println("Ubiquite : \t" + map.get("Ubiquite"));
 		System.out.println("Total : \t" + map.get("Total"));
 
+		a.afficherJoursConflit();
+
 		Graphique g = new Graphique();
 		Graphique.valeurs = map;
 		g.afficher(args);
 
-		a.afficherJoursConflit();
+
 
 	}
 

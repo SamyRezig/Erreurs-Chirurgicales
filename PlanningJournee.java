@@ -67,6 +67,7 @@ public class PlanningJournee {
 	public void resoudreConflits() {
 
 		for(Conflit conflitCourant : this.listeConflits) {
+
                         if (conflitCourant.getPremiereChirurgie().estUrgente()){
 							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSallesUrgence());
 

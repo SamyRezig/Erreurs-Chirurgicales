@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.Set;
 
 public abstract class Conflit {
 
@@ -14,8 +15,7 @@ public abstract class Conflit {
 
 	public abstract boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls);
 
-	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls); // Mettre le code de
-																					// resolutionClonflit() dedans
+	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls);
 
 	public Conflit(Chirurgie first, Chirurgie second) {
 		this.firstChirurgie = first;
@@ -95,7 +95,7 @@ public abstract class Conflit {
 		}
 
 		// Resolution par modification des ressources
-		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85 + 3 ) ) {
+		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85) ) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
 			Statistiques.nbRess++;
