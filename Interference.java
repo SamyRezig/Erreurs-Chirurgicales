@@ -25,8 +25,6 @@ public class Interference extends Conflit {
         for (Salle s : ls) {
             if (!this.getPremiereChirurgie().getSalle().equals(s)) {
                 tmpSalle = s;
-                ls.remove(tmpSalle);
-                ls.add(tmpSalle);
                 break;
             }
         }

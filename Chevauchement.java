@@ -28,8 +28,6 @@ public class Chevauchement extends Conflit {
 			for(Chirurgien c : lc) {
 				if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
 					tmpChirurgien = c;
-					lc.remove(tmpChirurgien);
-					lc.add(tmpChirurgien);
 					break;
 				}
 			}
@@ -39,8 +37,6 @@ public class Chevauchement extends Conflit {
 			for(Salle s : ls) {
 				if(!this.getPremiereChirurgie().getSalle().equals(s)) {
 					tmpSalle = s;
-					ls.remove(tmpSalle);
-					ls.add(tmpSalle);
 					break;
 				}
 			}
