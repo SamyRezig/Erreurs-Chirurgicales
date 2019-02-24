@@ -193,6 +193,10 @@ public class Agenda {
 		return listeMedecins;
 	}
 
+	/*
+	*######################################################## Attention : changement temporaire
+	*/
+
 	public List<Salle> getSallesJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
 							.filter( x -> /*x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) &&*/ !x.estUrgente())
