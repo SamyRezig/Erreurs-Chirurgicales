@@ -15,6 +15,7 @@ import java.util.SortedMap;
 import java.util.NavigableMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.time.format.DateTimeFormatter;
 
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
@@ -74,6 +75,8 @@ public class Agenda {
 
 	public void creerNouveauFichier() throws IOException {
 		FileWriter writer = new FileWriter("ChirurgieCorrige.csv");
+		DateTimeFormatter formateurDate = DateTimeFormatter.ofPattern("dd/LL/yyyy");
+		DateTimeFormatter formateurHeure = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 		 StringBuilder sb = new StringBuilder();
 	      sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");
@@ -84,11 +87,11 @@ public class Agenda {
 	    	 for(Chirurgie c : this.listeChirurgies) {
 	    		 sb.append(c.getId());
 	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate());
+	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate().format(formateurDate));
 	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalTime());
+	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalTime().format(formateurHeure));
 	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateFin().toLocalTime());
+	    		 sb.append(c.getDatesOperation().getDateFin().toLocalTime().format(formateurHeure));
 	    		 sb.append(';');
 	    		 sb.append(c.getSalle());
 	    		 sb.append(';');
