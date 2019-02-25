@@ -12,26 +12,57 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 
 public class Graphique extends Application {
-    private double largeur = 700;
-    private double hauteur = 500;
+    private double largeur = 1600;
+    private double hauteur = 900;
     public static Map<String, List<Integer>> valeurs;
     private LineChart graphe;
+    public static int iterationMax;
+    public static int  conflitMax;
 
     private Group root;
 
-    public void afficher(String [] args) {
-        Application.launch(args);
+    public int getIterationMax() {
+    	return Graphique.iterationMax;
+    }
+    
+    public int getConflitMax() {
+    	return Graphique.conflitMax;
+    }
+    
+    public void afficher(String [] args, int nbIteration, int nbConflit) {
+    	this.setIterationMax(nbIteration);
+    	this.setConflitMax(nbConflit);
+    	System.out.println( "Nb iteration max : " + Graphique.iterationMax);
+    	System.out.println( "Nb conflit max : " + Graphique.conflitMax);
+        Application.launch();
     }
 
+    public void setIterationMax(int nb) {
+    	Graphique.iterationMax = nb;
+    }
+    
+    public void setConflitMax(int nb) {
+    	Graphique.conflitMax = nb;
+    }
+    
     @SuppressWarnings("unchecked")
     private void initialiserAxes(Group root) {
+    	
+    	
+    	
         System.out.println("Initialisation des axes");
         // Definir l'axe x
-        NumberAxis xAxe = new NumberAxis(0, 31, 1);
+        System.out.println( "Nb iteration max : " + this.getIterationMax());
+        NumberAxis xAxe = new NumberAxis(0, this.iterationMax, 1);
+        //NumberAxis xAxe = new NumberAxis(0, 31, 1);
+
         xAxe.setLabel("Iterations");
 
         // Definir l'axe y
-        NumberAxis yAxe = new NumberAxis(0, 40, 10);
+        System.out.println("Nb conflit max : " + this.getConflitMax());
+        NumberAxis yAxe = new NumberAxis(0, this.conflitMax, 10);
+        //NumberAxis yAxe = new NumberAxis(0, 350, 10);
+
         yAxe.setLabel("Nombre de conflits");
 
         this.graphe = new LineChart(xAxe, yAxe);
@@ -75,9 +106,12 @@ public class Graphique extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Nombre de conflits en fonction du temps");
         Group root = null;
+  
         this.initGroup();
 
         if (this.graphe != null) {
+        	graphe.setPrefHeight(this.hauteur);
+        	graphe.setPrefWidth(this.largeur);
             root = this.getGroup();
             System.out.println("Root initialise !");
         } else {
@@ -89,5 +123,7 @@ public class Graphique extends Application {
         primaryStage.setScene(sc);
         primaryStage.show();
     }
+    
+    
 
 }

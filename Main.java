@@ -28,14 +28,15 @@ public class Main {
 
 		// Le nombre de conflits restant par journee
 		a.afficherJoursConflit();
-
-		// Appeler la methode pour afficher le graphique !
 		
-		/*Graphique g = new Graphique();
+		
+		/*
+		Graphique g = new Graphique();
 		Graphique.valeurs = map;
-		g.afficher(args);*/
-
-
+		g.afficher(args);
+		*/
+		// Appeler la methode pour afficher le graphique !
+		a.afficherGraphique(args);
 
 	}
 

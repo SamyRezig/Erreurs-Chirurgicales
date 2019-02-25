@@ -37,11 +37,11 @@ public class IntervalleTemps {
 	}
 
 	public boolean intersect(IntervalleTemps secondInterv) {
-		if (this.dateFin.compareTo(secondInterv.dateDebut) > 0 && this.dateDebut.compareTo(secondInterv.dateFin) < 0) {
+		if (this.dateFin.compareTo(secondInterv.dateDebut) >= 0 && this.dateDebut.compareTo(secondInterv.dateFin) <= 0) {
 			return true;
 
-		} else if (secondInterv.dateFin.compareTo(this.dateDebut) > 0
-				&& secondInterv.dateDebut.compareTo(this.dateFin) < 0) {
+		} else if (secondInterv.dateFin.compareTo(this.dateDebut) >= 0
+				&& secondInterv.dateDebut.compareTo(this.dateFin) <= 0) {
 			return true;
 
 		} else {

@@ -27,7 +27,7 @@ public class Statistiques {
 	private Map<LocalDate, Long> dureeJournees;
 	private double ecartTypeSalles;
 	private double ecartTypeChirurgiens;
-	
+
 	private static long dureeTotaleDecalage;
 	public static int nbNormalisation = 0;
 	public static int nbDecoupage = 0;
@@ -41,7 +41,8 @@ public class Statistiques {
 	public static List<Integer> nombresConflits = new ArrayList<>();
 	public static List<Integer> nombresConflitsCorriges = new ArrayList<>();
 
-	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits, NavigableMap<LocalDate, PlanningJournee> planning) {
+	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits,
+			NavigableMap<LocalDate, PlanningJournee> planning) {
 		this.nbConflits = listeConflits.size();
 
 		// Extraction des chirurgies en conflits
@@ -69,17 +70,17 @@ public class Statistiques {
 
 		System.out.println("----Calcul des heures des conflits les plus frequentes...");
 		this.heuresConflits = this.topHeuresConflits(listeConflits);
-		//System.out.println(this.heuresConflits);
+		// System.out.println(this.heuresConflits);
 
-		/*System.out.println("----Calcul des durees moyennes par chirurgien...");
-		this.dureeParChirurgien = this.dureeParChirurgien();
-
-		System.out.println("----Calcul des durees moyennes par salle...");
-		this.dureeParSalle = this.dureeParSalle();
-
-		System.out.println("----Calcul des ecart-types");
-		this.ecartTypeSalles = this.ecartType(this.dureeParSalle.values());
-		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());*/
+		/*
+		 * System.out.println("----Calcul des durees moyennes par chirurgien...");
+		 * this.dureeParChirurgien = this.dureeParChirurgien();
+		 * System.out.println("----Calcul des durees moyennes par salle...");
+		 * this.dureeParSalle = this.dureeParSalle();
+		 * System.out.println("----Calcul des ecart-types"); this.ecartTypeSalles =
+		 * this.ecartType(this.dureeParSalle.values()); this.ecartTypeChirurgiens =
+		 * this.ecartType(this.dureeParChirurgien.values());
+		 */
 
 		System.out.println("----Calcul des durees pour chaque journee.");
 		this.dureeJournees = this.dureeJournees(planning);
@@ -94,11 +95,9 @@ public class Statistiques {
 	}
 
 	public void afficherJoursTravail(NavigableMap<LocalDate, PlanningJournee> planning) {
-		char lettre;		// Stocke chaque lettre des noms des chirurgiens pour leur affichage
-		List<Chirurgien> listeChirurgiens =  this.operations.stream()
-                                                .map( x->x.getChirurgien() )
-												.distinct()
-                                                .collect(Collectors.toList());
+		char lettre; // Stocke chaque lettre des noms des chirurgiens pour leur affichage
+		List<Chirurgien> listeChirurgiens = this.operations.stream().map(x -> x.getChirurgien()).distinct()
+				.collect(Collectors.toList());
 
 		// Afficher le nom des chirurgiens
 		for (int i = 0; i < 16; i++) {
@@ -128,11 +127,9 @@ public class Statistiques {
 	}
 
 	public void afficherJoursTravailSalles(NavigableMap<LocalDate, PlanningJournee> planning) {
-		char lettre;		// Stocke chaque lettre des noms des chirurgiens pour leur affichage
-		List<Salle> listeSalles =  this.operations.stream()
-                                                .map( x->x.getSalle() )
-												.distinct()
-                                                .collect(Collectors.toList());
+		char lettre; // Stocke chaque lettre des noms des chirurgiens pour leur affichage
+		List<Salle> listeSalles = this.operations.stream().map(x -> x.getSalle()).distinct()
+				.collect(Collectors.toList());
 
 		// Afficher le nom des chirurgiens
 		for (int i = 0; i < 9; i++) {
@@ -172,22 +169,22 @@ public class Statistiques {
 
 		return resultat;
 	}
-	
+
 	public static void plusDecoupe() {
 		Statistiques.nbDecoupage++;
 		Statistiques.nbCorrection++;
 	}
-	
+
 	public static void plusModifRessource() {
 		Statistiques.nbRess++;
 		Statistiques.nbCorrection++;
 	}
-	
+
 	public static void plusDecalage() {
 		Statistiques.nbDecalage++;
 		Statistiques.nbCorrection++;
 	}
-	
+
 	public static void plusNormalisation() {
 		Statistiques.nbNormalisation++;
 		Statistiques.nbCorrection++;
@@ -237,14 +234,15 @@ public class Statistiques {
 
 		for (LocalTime temps : listeTemps) {
 			frequence = tableFrequences.get(temps);
-			if (frequence == null)	tableFrequences.put(temps, 1);
-			else 					tableFrequences.put(temps, frequence + 1);
+			if (frequence == null)
+				tableFrequences.put(temps, 1);
+			else
+				tableFrequences.put(temps, frequence + 1);
 		}
 
 		tableFrequences = tableFrequences.entrySet().stream()
-										.sorted(Map.Entry.<LocalTime, Integer>comparingByValue().reversed())
-										.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-												(oldValue, newValue) -> oldValue, LinkedHashMap::new));
+				.sorted(Map.Entry.<LocalTime, Integer>comparingByValue().reversed()).collect(Collectors.toMap(
+						Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
 		return tableFrequences;
 	}
@@ -281,55 +279,42 @@ public class Statistiques {
 		return new ArrayList<>(this.heuresConflits.keySet());
 	}
 
-    public Map<Salle, Double> dureeParSalle() {
+	public Map<Salle, Double> dureeParSalle() {
 		return this.dureeParSalle(this.operations);
-    }
+	}
 
 	public Map<Salle, Double> dureeParSalle(Collection<Chirurgie> chirurgies) {
-		List<Salle> salles = chirurgies.stream()
-                                                .map( x->x.getSalle() )
-                                                .collect(Collectors.toList());
+		List<Salle> salles = chirurgies.stream().map(x -> x.getSalle()).collect(Collectors.toList());
 		Map<Salle, Double> dureeSalles = new HashMap<>();
-        long sum;
-        long card;
+		long sum;
+		long card;
 
-        for (Salle salleCourante : salles) {
-            sum = chirurgies.stream()
-                                    .filter( x->x.getSalle().equals(salleCourante) )
-                                    .mapToLong( x->x.duree() )
-                                    .sum();
-            card = chirurgies.stream()
-                                    .filter( x->x.getSalle().equals(salleCourante) )
-                                    .count();
-            dureeSalles.put(salleCourante, (double)sum / (double)card);
-        }
+		for (Salle salleCourante : salles) {
+			sum = chirurgies.stream().filter(x -> x.getSalle().equals(salleCourante)).mapToLong(x -> x.duree()).sum();
+			card = chirurgies.stream().filter(x -> x.getSalle().equals(salleCourante)).count();
+			dureeSalles.put(salleCourante, (double) sum / (double) card);
+		}
 
 		return dureeSalles;
 	}
 
-    public Map<Chirurgien, Double> dureeParChirurgien() {
+	public Map<Chirurgien, Double> dureeParChirurgien() {
 		return this.dureeParChirurgien(this.operations);
-    }
+	}
 
 	public Map<Chirurgien, Double> dureeParChirurgien(Collection<Chirurgie> chirurgies) {
-		List<Chirurgien> chirurgiens = chirurgies.stream()
-                                                .map( x->x.getChirurgien() )
-                                                .collect(Collectors.toList());
+		List<Chirurgien> chirurgiens = chirurgies.stream().map(x -> x.getChirurgien()).collect(Collectors.toList());
 
 		Map<Chirurgien, Double> dureeChirurgien = new HashMap<>();
-        long sum;
-        long card;
+		long sum;
+		long card;
 
-        for (Chirurgien chgCourante : chirurgiens) {
-            sum = chirurgies.stream()
-                                    .filter( x->x.getChirurgien().equals(chgCourante) )
-                                    .mapToLong( x->x.duree() )
-                                    .sum();
-            card = chirurgies.stream()
-                                    .filter( x->x.getChirurgien().equals(chgCourante) )
-                                    .count();
-            dureeChirurgien.put(chgCourante, (double)sum / (double)card);
-        }
+		for (Chirurgien chgCourante : chirurgiens) {
+			sum = chirurgies.stream().filter(x -> x.getChirurgien().equals(chgCourante)).mapToLong(x -> x.duree())
+					.sum();
+			card = chirurgies.stream().filter(x -> x.getChirurgien().equals(chgCourante)).count();
+			dureeChirurgien.put(chgCourante, (double) sum / (double) card);
+		}
 
 		return dureeChirurgien;
 	}
@@ -348,7 +333,7 @@ public class Statistiques {
 				mapChirurgien.put(courante.getChirurgien(), cpt + courante.getDatesOperation().duree());
 			}
 
-			//MAJ des salles
+			// MAJ des salles
 			cpt = mapSalle.get(courante.getSalle());
 			if (cpt == null) {
 				mapSalle.put(courante.getSalle(), courante.getDatesOperation().duree());
@@ -361,7 +346,8 @@ public class Statistiques {
 		System.out.println("Repartition par salle en minutes:\n" + mapSalle);
 	}
 
-	// Moyenne des ecarts au carre entre les durees d'utilisation des salles avant correction et apres correction de la base de donnees
+	// Moyenne des ecarts au carre entre les durees d'utilisation des salles avant
+	// correction et apres correction de la base de donnees
 	public double ecartSalles(Map<Salle, Double> realisationSalles) {
 		Map<Salle, Double> dureeSallesCorrectes = this.dureeParSalle;
 		double somme = 0;
@@ -373,7 +359,8 @@ public class Statistiques {
 		return Math.sqrt(somme / (double) realisationSalles.keySet().size());
 	}
 
-	// Moyenne des ecarts au carre entre les durees de travail des chirurgiens avant correction et apres correction de la base de donnees
+	// Moyenne des ecarts au carre entre les durees de travail des chirurgiens avant
+	// correction et apres correction de la base de donnees
 	public double ecartChirurgiens(Map<Chirurgien, Double> realisationChirurgiens) {
 		Map<Chirurgien, Double> dureesChirurgiensCorrectes = this.dureeParChirurgien;
 		double somme = 0;
@@ -432,11 +419,13 @@ public class Statistiques {
 
 		for (LocalDate jour : planning.keySet()) {
 			contenuJour = planning.get(jour);
-			seuilChirurgiens = contenuJour.getListeChirurgies().size() / 4 ;	// 4 = nombre de chirurgies qu'un seul chirurgien peut gerer
+			seuilChirurgiens = contenuJour.getListeChirurgies().size() / 4; // 4 = nombre de chirurgies qu'un seul
+																			// chirurgien peut gerer
 			nbChirurgiens = contenuJour.nbChirurgiensDispos();
 
 			if (nbChirurgiens < seuilChirurgiens) {
-				System.out.println(jour + " : " + nbChirurgiens + " chirurgiens disponibles pour " + contenuJour.getListeChirurgies().size() + " chirurgies.");
+				System.out.println(jour + " : " + nbChirurgiens + " chirurgiens disponibles pour "
+						+ contenuJour.getListeChirurgies().size() + " chirurgies.");
 			}
 
 		}
@@ -448,31 +437,35 @@ public class Statistiques {
 		System.out.println("Duree mediane : \t\t" + this.mediane + "\t\t" + apresStats.getMediane());
 		System.out.println("Premier quartile : \t\t" + this.premierQuartile + "\t\t" + apresStats.getPremierQuartile());
 		System.out.println("Dernier quartile : \t\t" + this.dernierQuartile + "\t\t" + apresStats.getDernierQuartile());
-		//System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
-		//System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
+		// System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles +
+		// "\t" + apresStats.getEcartTypeSalles());
+		// System.out.println("Ecart-type duree par chirurgiens : " +
+		// this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant :\t" + this.nbConflits + "\t\t" + apresStats.getNbConflits());
-		System.out.println("Duree moyenne d'allongement des journees : " + this.ecartMoyenAllongement(apresStats.dureeJournees) + " minutes");
-		
-		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats) + " conflits corriges par correction");
+		System.out.println("Duree moyenne d'allongement des journees : "
+				+ this.ecartMoyenAllongement(apresStats.dureeJournees) + " minutes");
+
+		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats)
+				+ " conflits corriges par correction");
 		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes");
 	}
 
 	public static void recenser(Conflit c) {
 		Integer nb;
 
-		nb = Statistiques.nombresConflits.remove( Statistiques.nombresConflits.size() - 1 ) + 1;
+		nb = Statistiques.nombresConflits.remove(Statistiques.nombresConflits.size() - 1) + 1;
 		Statistiques.nombresConflits.add(nb);
 
 		if (c.getClass().toString().equals("class Ubiquite")) {
-			nb = Statistiques.nombresUbiquite.remove( Statistiques.nombresUbiquite.size() - 1 ) + 1;
+			nb = Statistiques.nombresUbiquite.remove(Statistiques.nombresUbiquite.size() - 1) + 1;
 			Statistiques.nombresUbiquite.add(nb);
 
 		} else if (c.getClass().toString().equals("class Interference")) {
-			nb = Statistiques.nombresInterference.remove( Statistiques.nombresInterference.size() - 1 ) + 1;
+			nb = Statistiques.nombresInterference.remove(Statistiques.nombresInterference.size() - 1) + 1;
 			Statistiques.nombresInterference.add(nb);
 
 		} else if (c.getClass().toString().equals("class Chevauchement")) {
-			nb = Statistiques.nombresChevauchement.remove( Statistiques.nombresChevauchement.size() - 1 ) + 1;
+			nb = Statistiques.nombresChevauchement.remove(Statistiques.nombresChevauchement.size() - 1) + 1;
 			Statistiques.nombresChevauchement.add(nb);
 
 		} else {
@@ -488,20 +481,20 @@ public class Statistiques {
 		Statistiques.nombresConflits.add(0);
 		Statistiques.nombresConflitsCorriges.add(0);
 	}
-	
+
 	public static void mettreAJourDureeTotaleDecalage(long dureeTranslation) {
 		Statistiques.dureeTotaleDecalage += dureeTranslation;
 	}
-	
+
 	public static void setNombresConflitsCorriges(int nombreConflitsCorriges) {
-		Statistiques.nombresConflitsCorriges.remove( Statistiques.nombresConflitsCorriges.size() - 1);
+		Statistiques.nombresConflitsCorriges.remove(Statistiques.nombresConflitsCorriges.size() - 1);
 		Statistiques.nombresConflitsCorriges.add(nombreConflitsCorriges);
 	}
-	
+
 	public static double dureeMoyenneDecalage() {
 		return (double) Statistiques.dureeTotaleDecalage / Statistiques.nbDecalage;
 	}
-	
+
 	public double mesurerPertinance(Statistiques apresCorrection) {
 		return ((double) (this.nbConflits - apresCorrection.nbConflits)) / ((double) Statistiques.nbCorrection);
 	}

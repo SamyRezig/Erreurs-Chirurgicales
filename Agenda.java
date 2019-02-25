@@ -365,4 +365,15 @@ public class Agenda {
 		System.out.println("Nombre de conflits corriges :\t" + Statistiques.nombresConflitsCorriges);
 	}
 
+
+	
+	public void afficherGraphique(String [] args) {
+		Map<String, List<Integer>> map = this.dataConflits();
+		Graphique g = new Graphique();
+		
+		Graphique.valeurs = map;
+
+		g.afficher(args, this.nbIterations, 370);
+	}
+
 }
