@@ -64,10 +64,14 @@ public class Correcteur {
             if(premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
                 if(premiere.duree() > seconde.duree()){
                     long duree = Duration.between(premiere.getDatesOperation().getDateDebut(), seconde.getDatesOperation().getDateFin()).toMinutes();
-                    Correcteur.translater(premiere, duree + Correcteur.dureePause);
+                    long dureeTranslation = duree + Correcteur.dureePause;
+                    Correcteur.translater(premiere, dureeTranslation);
+                    Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
                 }else{
                     long duree = Duration.between(seconde.getDatesOperation().getDateDebut(), premiere.getDatesOperation().getDateFin()).toMinutes();
-                    Correcteur.translater(seconde, duree + Correcteur.dureePause);
+                    long dureeTranslation = duree + Correcteur.dureePause;
+                    Correcteur.translater(seconde, dureeTranslation);
+                    Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
             }
             }else{
 				Correcteur.translation(premiere, seconde);
@@ -97,7 +101,8 @@ public class Correcteur {
 		// Couper la duree
 		if (indesirables.contains(debut) && courante.dureeSuspecte()) {
 			// MAJ Stats
-			Statistiques.nbNormalisation++;
+			//Statistiques.nbNormalisation++;
+			Statistiques.plusNormalisation();
 
 			System.out.println("----Normalisation du debut : " + debut);
 			long dureeTotale = courante.duree();
@@ -133,7 +138,8 @@ public class Correcteur {
 		// Couper la duree
 		if (indesirables.contains(fin) && courante.dureeSuspecte()) {
 			// MAJ Stats
-			Statistiques.nbNormalisation++;
+			//Statistiques.nbNormalisation++;
+			Statistiques.plusNormalisation();
 
 			System.out.println("----Normalisation de la fin : " + fin);
 			long dureeTotale = courante.duree();
@@ -141,6 +147,7 @@ public class Correcteur {
 
 			// dureeSuspecte() assure que dureeTotale > dureeFinale
 			Correcteur.reduireFin(courante, dureeTotale - dureeFinale);
+			
 		} else {
 			System.out.println("----Pas de normalisation a faire sur la fin");
 		}
@@ -151,14 +158,4 @@ public class Correcteur {
 		Correcteur.translater(seconde, dureeChevauchement + 15);
 	}
 
-
-
-	/**
-	 * Comparer ancienne liste de conflits avec les conflits restant
-	 * Si les conflits restant ne sont pas dans l'ancienne liste de conflits
-	 * 	On applique une autre strat de correction
-	 * Sinon
-	 * 	On applique correction basique
-	 *
-	 */
 }

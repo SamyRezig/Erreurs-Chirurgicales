@@ -7,20 +7,18 @@ import java.util.HashMap;
 public class Main {
 
 	public static void main(String [] args) throws IOException {
-		Agenda a = new Agenda("Chirurgies_v2.csv");
+		Agenda a = new Agenda("MiniBase(1).csv");
 
 
         a.resolution();
 		//a.verifierChirurgies();
 		a.descriptionCourante();
 
-		System.out.println("Nombre de normalisation : " + Statistiques.nbNormalisation);
-		System.out.println("Nombre de decoupages : " + Statistiques.nbDecoupage);
-		System.out.println("Nombre de modifs ressources : " + Statistiques.nbRess);
-		System.out.println("Nombre de decalages : " + Statistiques.nbDecalage);
-
-		int nbC = Statistiques.nbNormalisation + Statistiques.nbDecoupage + Statistiques.nbRess + Statistiques.nbDecalage;
-		System.out.println(" === Nombre de corrections : " + nbC);
+		System.out.println("Nombre de normalisation : \t" + Statistiques.nbNormalisation);
+		System.out.println("Nombre de decoupages : \t\t" + Statistiques.nbDecoupage);
+		System.out.println("Nombre de modifs ressources : \t" + Statistiques.nbRess);
+		System.out.println("Nombre de decalages : \t\t" + Statistiques.nbDecalage);
+		System.out.println(" === Nombre de corrections : \t" + Statistiques.nbCorrection);
 
 		a.creerNouveauFichier();
 

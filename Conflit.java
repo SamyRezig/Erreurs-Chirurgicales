@@ -5,12 +5,10 @@ import java.util.Set;
 
 public abstract class Conflit {
 
-	private Chirurgie firstChirurgie;
-	private Chirurgie secondChirurgie;
+	private Chirurgie premiereChirurgie;
+	private Chirurgie secondeChirurgie;
 
-
-
-
+	
 	public abstract boolean persiste();
 
 	public abstract boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls);
@@ -18,30 +16,30 @@ public abstract class Conflit {
 	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls);
 
 	public Conflit(Chirurgie first, Chirurgie second) {
-		this.firstChirurgie = first;
-		this.secondChirurgie = second;
-		this.firstChirurgie.setCorrige();
-		this.secondChirurgie.setCorrige();
+		this.premiereChirurgie = first;
+		this.secondeChirurgie = second;
+		this.premiereChirurgie.setCorrige();
+		this.secondeChirurgie.setCorrige();
 	}
 
 	public String toString() {
-		return this.getClass() + " -- " + this.firstChirurgie + " avec " + this.secondChirurgie;
+		return this.getClass() + " -- " + this.premiereChirurgie + " avec " + this.secondeChirurgie;
 	}
 
 	public Chirurgie getPremiereChirurgie() {
-		return this.firstChirurgie;
+		return this.premiereChirurgie;
 	}
 
 	public Chirurgie getSecondeChirurgie() {
-		return this.secondChirurgie;
+		return this.secondeChirurgie;
 	}
 
 	public void visualiser() {
-		System.out.print(this.getClass() + "\n" + this.firstChirurgie);
-		this.firstChirurgie.visualisation();
+		System.out.print(this.getClass() + "\n" + this.premiereChirurgie);
+		this.premiereChirurgie.visualisation();
 
-		System.out.print(this.secondChirurgie);
-		this.secondChirurgie.visualisation();
+		System.out.print(this.secondeChirurgie);
+		this.secondeChirurgie.visualisation();
 
 		System.out.println();
 	}
@@ -50,8 +48,8 @@ public abstract class Conflit {
 		Chirurgie tmp = null;
 		if (! this.getPremiereChirurgie().commenceAvant(this.getSecondeChirurgie())) {
 			tmp = this.getPremiereChirurgie();
-			this.firstChirurgie = this.getSecondeChirurgie();
-			this.secondChirurgie = tmp;
+			this.premiereChirurgie = this.getSecondeChirurgie();
+			this.secondeChirurgie = tmp;
 		}
 	}
 
@@ -89,16 +87,17 @@ public abstract class Conflit {
 		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
 			System.out.println("----Decoupage des chirurgies -- ts = " + ts);
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
-			Statistiques.nbDecoupage++;
+			Statistiques.plusDecoupe();
+			//Statistiques.nbDecoupage++;
 		} else {
 			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
 		}
 
 		// Resolution par modification des ressources
-		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85) ) {
+		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85 + 3) ) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
-			Statistiques.nbRess++;
+			Statistiques.plusModifRessource();
 		} else {
 			System.out.println("----Pas de modification de ressource envisageable");
 		}
@@ -107,7 +106,7 @@ public abstract class Conflit {
 		if (this.persiste()) {
 			System.out.println("----Decalage d'une chirurgie");
 			Correcteur.decalageChirurgie(this.getPremiereChirurgie(), this.getSecondeChirurgie());
-			Statistiques.nbDecalage++;
+			Statistiques.plusDecalage();
 		} else {
 			System.out.println("----Pas de decalage de chirurgie");
 		}

@@ -27,11 +27,13 @@ public class Statistiques {
 	private Map<LocalDate, Long> dureeJournees;
 	private double ecartTypeSalles;
 	private double ecartTypeChirurgiens;
-
+	
+	private static long dureeTotaleDecalage;
 	public static int nbNormalisation = 0;
 	public static int nbDecoupage = 0;
 	public static int nbRess = 0;
 	public static int nbDecalage = 0;
+	public static int nbCorrection = 0;
 
 	public static List<Integer> nombresUbiquite = new ArrayList<>();
 	public static List<Integer> nombresInterference = new ArrayList<>();
@@ -76,10 +78,10 @@ public class Statistiques {
 
 		System.out.println("----Calcul des ecart-types");
 		this.ecartTypeSalles = this.ecartType(this.dureeParSalle.values());
-		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());
+		this.ecartTypeChirurgiens = this.ecartType(this.dureeParChirurgien.values());*/
 
 		System.out.println("----Calcul des durees pour chaque journee.");
-		this.dureeJournees = this.dureeJournees(planning);*/
+		this.dureeJournees = this.dureeJournees(planning);
 
 		System.out.println("EDT par salle");
 		this.afficherJoursTravailSalles(planning);
@@ -168,6 +170,26 @@ public class Statistiques {
 		}
 
 		return resultat;
+	}
+	
+	public static void plusDecoupe() {
+		Statistiques.nbDecoupage++;
+		Statistiques.nbCorrection++;
+	}
+	
+	public static void plusModifRessource() {
+		Statistiques.nbRess++;
+		Statistiques.nbCorrection++;
+	}
+	
+	public static void plusDecalage() {
+		Statistiques.nbDecalage++;
+		Statistiques.nbCorrection++;
+	}
+	
+	public static void plusNormalisation() {
+		Statistiques.nbNormalisation++;
+		Statistiques.nbCorrection++;
 	}
 
 	private long calculerDureeMoyenne() {
@@ -311,10 +333,6 @@ public class Statistiques {
 		return dureeChirurgien;
 	}
 
-	/*public void afficheTout() {
-		this.operationsSansConflit.stream().mapToLong(chrg -> chrg.duree()).sorted().forEach(System.out::println);
-	}*/
-
 	public static void repartition(List<Chirurgie> listeChirurgies) {
 		Map<Chirurgien, Long> mapChirurgien = new HashMap<>();
 		Map<Salle, Long> mapSalle = new HashMap<>();
@@ -413,7 +431,7 @@ public class Statistiques {
 
 		for (LocalDate jour : planning.keySet()) {
 			contenuJour = planning.get(jour);
-			seuilChirurgiens = contenuJour.getListeChirurgies().size() / 4 ;		// 4 = nombre de chirurgies qu'un seul chirurgien peut gerer
+			seuilChirurgiens = contenuJour.getListeChirurgies().size() / 4 ;	// 4 = nombre de chirurgies qu'un seul chirurgien peut gerer
 			nbChirurgiens = contenuJour.nbChirurgiensDispos();
 
 			if (nbChirurgiens < seuilChirurgiens) {
@@ -432,7 +450,10 @@ public class Statistiques {
 		//System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
 		//System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
-		//System.out.println("Duree moyenne d'allongement des journees en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
+		System.out.println("Duree moyenne d'allongement des journees en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
+		
+		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats) + " conflits corriges par correction");
+		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes");
 	}
 
 	public static void recenser(Conflit c) {
@@ -464,5 +485,17 @@ public class Statistiques {
 		Statistiques.nombresInterference.add(0);
 		Statistiques.nombresChevauchement.add(0);
 		Statistiques.nombresConflits.add(0);
+	}
+	
+	public static void mettreAJourDureeTotaleDecalage(long dureeTranslation) {
+		Statistiques.dureeTotaleDecalage += dureeTranslation;
+	}
+	
+	public static double dureeMoyenneDecalage() {
+		return (double) Statistiques.dureeTotaleDecalage / Statistiques.nbDecalage;
+	}
+	
+	public double mesurerPertinance(Statistiques apresCorrection) {
+		return ((double) (this.nbConflits - apresCorrection.nbConflits)) / ((double) Statistiques.nbCorrection);
 	}
 }
