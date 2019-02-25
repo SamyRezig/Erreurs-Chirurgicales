@@ -23,6 +23,7 @@ public class Agenda {
 	private int nbIterations = 30;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
 	public Statistiques stats;
+	private Ressources ressourcesExistantes;
 
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
@@ -57,6 +58,7 @@ public class Agenda {
 				this.listeChirurgies.add(operation);
 
 			}
+			this.definirRessourcesExistants();
 			System.out.println("Fin de la lecture des chirurgies.");
 			//System.out.println(listeChirurgies);
 
@@ -68,9 +70,13 @@ public class Agenda {
 		this.setPlanningParJournee(this.listeJournees());
 	}
 
-	/*public List<Conflit> getListConflits() {
-		return this.listConflits;
-	}*/
+	private void definirRessourcesExistants() {
+		List<Chirurgien> listeChirurgiens = this.extraireListeChirurgiens();
+		List<Salle> listeSalles = this.extraireListeSalles();
+		List<Salle> listeSallesUrgence = this.extraireListeSallesUrgence();
+
+		this.ressourcesExistantes = new Ressources(listeChirurgiens, listeSalles, listeSallesUrgence);
+	}
 
 	public void creerNouveauFichier() throws IOException {
 		String nomFichier = "ChirurgiesCorrigees.csv";
@@ -142,7 +148,32 @@ public class Agenda {
 		return this.listeChirurgies.size();
 	}
 
-	public List<Salle> getListeSalles(){
+	public List<Chirurgien> getListeChirurgiens() {
+		return this.ressourcesExistantes.getListeChirurgiens();
+	}
+
+	public List<Salle> getListeSalles() {
+		return this.ressourcesExistantes.getListeSalles();
+	}
+
+	public List<Salle> getListeSallesUrgence() {
+		return this.ressourcesExistantes.getListeSallesUrgence();
+	}
+
+	public List<Chirurgien> extraireListeChirurgiens() {
+		List<Chirurgien> lc = new ArrayList<>();
+
+		for(Chirurgie c : this.listeChirurgies) {
+
+			if(!lc.contains(c.getChirurgien())) {
+				lc.add(c.getChirurgien());
+			}
+
+		}
+		return lc;
+	}
+
+	public List<Salle> extraireListeSalles(){
 		List<Salle> ls = new ArrayList<>();
 		for(Chirurgie c : this.listeChirurgies) {
 			if(!ls.contains(c.getSalle()) && !c.getSalle().estUrgence()) {
@@ -152,7 +183,7 @@ public class Agenda {
 		return ls;
 	}
 
-    public List<Salle> getListeSallesUrgence(){
+    public List<Salle> extraireListeSallesUrgence(){
         List<Salle> lsu = new ArrayList<>();
             for(Chirurgie c : this.listeChirurgies) {
 				if(!lsu.contains(c.getSalle()) && c.getSalle().estUrgence()) {
@@ -226,7 +257,7 @@ public class Agenda {
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
 			listeMedecins = this.getChirurgienJournee(tmp);
-			listeSalles = this.getSallesJournee(l);
+			listeSalles = this.getListeSalles();					// Recuperation des salles existantes !
             listeSallesUrgence= this.getSallesUrgenceJournee(l);
 			// Creer un objet PlanningJournee
 			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
@@ -270,7 +301,7 @@ public class Agenda {
 			this.resoudreTousConflits();
 			this.setPlanningParJournee(this.listeJournees());
 			this.recenserTousConflits();
-			
+
 			Statistiques.setNombresConflitsCorriges(nbConflitsPrec - this.nombreConflits());
 
 		}
@@ -355,7 +386,7 @@ public class Agenda {
 				}
 		}
 	}
-	
+
 	public void afficherConflitsTotaux() {
 		Map<String, List<Integer>> map = this.dataConflits();
 		System.out.println("Chevauchement :\t\t\t" + map.get("Chevauchement"));
@@ -366,11 +397,11 @@ public class Agenda {
 	}
 
 
-	
+
 	public void afficherGraphique(String [] args) {
 		Map<String, List<Integer>> map = this.dataConflits();
 		Graphique g = new Graphique();
-		
+
 		Graphique.valeurs = map;
 
 		g.afficher(args, this.nbIterations, 40);
