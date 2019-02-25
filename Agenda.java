@@ -26,7 +26,6 @@ public class Agenda {
 
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
-		//this.listConflits = new ArrayList<>();
 		this.planning = new TreeMap<>();
 	}
 
@@ -74,7 +73,8 @@ public class Agenda {
 	}*/
 
 	public void creerNouveauFichier() throws IOException {
-		FileWriter writer = new FileWriter("ChirurgiesCorrigees.csv");
+		String nomFichier = "ChirurgiesCorrigees.csv";
+		FileWriter writer = new FileWriter(nomFichier);
 		DateTimeFormatter formateurDate = DateTimeFormatter.ofPattern("dd/LL/yyyy");
 		DateTimeFormatter formateurHeure = DateTimeFormatter.ofPattern("HH:mm:ss");
 
@@ -103,9 +103,8 @@ public class Agenda {
 	    	 }
 	    	 writer.flush();
 	    	 writer.close();
-
+	    	 System.out.println("Un fichier " + nomFichier + " a ete genere.");
 	}
-
 
 	public Map<LocalDate, PlanningJournee> getPlanning() {
 		return this.planning;
@@ -261,15 +260,18 @@ public class Agenda {
 	}
 
 	public void resolution() {
+		int nbConflitsPrec = 0;
+		int i = 0;
 		System.out.println("Debut de la resolution des conflits.");
-		for (int i = 0; i < this.nbIterations; i++) {
-			System.out.println("Nombre de conflits : " + this.nombreConflits());
-
-			//(new Scanner(System.in)).nextLine();
+		while (this.nombreConflits() > 0 && i++ < this.nbIterations) {
+			nbConflitsPrec = this.nombreConflits();
+			System.out.println("Nombre de conflits : " + nbConflitsPrec);
 
 			this.resoudreTousConflits();
 			this.setPlanningParJournee(this.listeJournees());
 			this.recenserTousConflits();
+			
+			Statistiques.setNombresConflitsCorriges(nbConflitsPrec - this.nombreConflits());
 
 		}
 		System.out.println("Fin de la resolution des conflits.");
@@ -352,6 +354,15 @@ public class Agenda {
 					System.out.println();
 				}
 		}
+	}
+	
+	public void afficherConflitsTotaux() {
+		Map<String, List<Integer>> map = this.dataConflits();
+		System.out.println("Chevauchement :\t\t\t" + map.get("Chevauchement"));
+		System.out.println("Interference : \t\t\t" + map.get("Interference"));
+		System.out.println("Ubiquite : \t\t\t" + map.get("Ubiquite"));
+		System.out.println("Total : \t\t\t" + map.get("Total"));
+		System.out.println("Nombre de conflits corriges :\t" + Statistiques.nombresConflitsCorriges);
 	}
 
 }

@@ -7,11 +7,12 @@ import java.util.HashMap;
 public class Main {
 
 	public static void main(String [] args) throws IOException {
-		Agenda a = new Agenda("MiniBase(1).csv");
-
+		Agenda a = new Agenda("Chirurgies_v2.csv");
 
         a.resolution();
 		//a.verifierChirurgies();
+        
+        // Description statistique
 		a.descriptionCourante();
 
 		System.out.println("Nombre de normalisation : \t" + Statistiques.nbNormalisation);
@@ -22,17 +23,17 @@ public class Main {
 
 		a.creerNouveauFichier();
 
-		Map<String, List<Integer>> map = a.dataConflits();
-		System.out.println("Chevauchement :\t" + map.get("Chevauchement"));
-		System.out.println("Interference : \t" + map.get("Interference"));
-		System.out.println("Ubiquite : \t" + map.get("Ubiquite"));
-		System.out.println("Total : \t" + map.get("Total"));
+		// Liste avec les nombres de conflits a chaque iteration
+		a.afficherConflitsTotaux();
 
+		// Le nombre de conflits restant par journee
 		a.afficherJoursConflit();
 
-		Graphique g = new Graphique();
+		// Appeler la methode pour afficher le graphique !
+		
+		/*Graphique g = new Graphique();
 		Graphique.valeurs = map;
-		g.afficher(args);
+		g.afficher(args);*/
 
 
 

@@ -39,6 +39,7 @@ public class Statistiques {
 	public static List<Integer> nombresInterference = new ArrayList<>();
 	public static List<Integer> nombresChevauchement = new ArrayList<>();
 	public static List<Integer> nombresConflits = new ArrayList<>();
+	public static List<Integer> nombresConflitsCorriges = new ArrayList<>();
 
 	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits, NavigableMap<LocalDate, PlanningJournee> planning) {
 		this.nbConflits = listeConflits.size();
@@ -442,15 +443,15 @@ public class Statistiques {
 	}
 
 	public void comparer(Statistiques apresStats) {
-		System.out.println("Statistiques -- AVANT correction -- APRES correction");
-		System.out.println("Duree moyenne : " + this.dureeMoyenne + "\t" + apresStats.getDureeMoyenne());
-		System.out.println("Duree mediane : " + this.mediane + "\t" + apresStats.getMediane());
-		System.out.println("Premier quartile : " + this.premierQuartile + "\t" + apresStats.getPremierQuartile());
-		System.out.println("Dernier quartile : " + this.dernierQuartile + "\t" + apresStats.getDernierQuartile());
+		System.out.println("Statistiques \t\t AVANT correction \t APRES correction");
+		System.out.println("Duree moyenne : \t\t" + this.dureeMoyenne + "\t\t" + apresStats.getDureeMoyenne());
+		System.out.println("Duree mediane : \t\t" + this.mediane + "\t\t" + apresStats.getMediane());
+		System.out.println("Premier quartile : \t\t" + this.premierQuartile + "\t\t" + apresStats.getPremierQuartile());
+		System.out.println("Dernier quartile : \t\t" + this.dernierQuartile + "\t\t" + apresStats.getDernierQuartile());
 		//System.out.println("Ecart-type duree par salle : " + this.ecartTypeSalles + "\t" + apresStats.getEcartTypeSalles());
 		//System.out.println("Ecart-type duree par chirurgiens : " + this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
-		System.out.println("Nombre de conflits restant : " + this.nbConflits + "\t" + apresStats.getNbConflits());
-		System.out.println("Duree moyenne d'allongement des journees en minute : " + this.ecartMoyenAllongement(apresStats.dureeJournees));
+		System.out.println("Nombre de conflits restant :\t" + this.nbConflits + "\t\t" + apresStats.getNbConflits());
+		System.out.println("Duree moyenne d'allongement des journees : " + this.ecartMoyenAllongement(apresStats.dureeJournees) + " minutes");
 		
 		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats) + " conflits corriges par correction");
 		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes");
@@ -475,7 +476,7 @@ public class Statistiques {
 			Statistiques.nombresChevauchement.add(nb);
 
 		} else {
-			System.out.println("WTF ? " + c.getClass().toString());
+			System.out.println("Type de conflit inexistant !" + c.getClass().toString());
 			(new Scanner(System.in)).nextLine();
 		}
 	}
@@ -485,10 +486,16 @@ public class Statistiques {
 		Statistiques.nombresInterference.add(0);
 		Statistiques.nombresChevauchement.add(0);
 		Statistiques.nombresConflits.add(0);
+		Statistiques.nombresConflitsCorriges.add(0);
 	}
 	
 	public static void mettreAJourDureeTotaleDecalage(long dureeTranslation) {
 		Statistiques.dureeTotaleDecalage += dureeTranslation;
+	}
+	
+	public static void setNombresConflitsCorriges(int nombreConflitsCorriges) {
+		Statistiques.nombresConflitsCorriges.remove( Statistiques.nombresConflitsCorriges.size() - 1);
+		Statistiques.nombresConflitsCorriges.add(nombreConflitsCorriges);
 	}
 	
 	public static double dureeMoyenneDecalage() {
