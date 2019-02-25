@@ -495,6 +495,36 @@ public class Statistiques {
 		return (double) Statistiques.dureeTotaleDecalage / Statistiques.nbDecalage;
 	}
 
+	public double tauxExistenceChevauchement() {
+		long survieChevauchement = Statistiques.nombresChevauchement.stream()
+													.filter( x -> !x.equals(0) )
+													.count();
+
+		return (double) survieChevauchement / (double) Statistiques.nombresChevauchement.size();
+	}
+
+	public double tauxExistenceInterference() {
+		long survieInterference = Statistiques.nombresInterference.stream()
+													.filter( x -> !x.equals(0) )
+													.count();
+
+		return (double) survieInterference / (double) Statistiques.nombresInterference.size();
+	}
+
+	public double tauxExistenceUbiquite() {
+		long survieUbiquite = Statistiques.nombresUbiquite.stream()
+													.filter( x -> !x.equals(0) )
+													.count();
+
+		return (double) survieUbiquite / (double) Statistiques.nombresUbiquite.size();
+	}
+
+	public void afficherTauxSurvie() {
+		System.out.println("Taux d'existence des chevauchements : \t" + this.tauxExistenceChevauchement());
+		System.out.println("Taux d'existence des interferences : \t" + this.tauxExistenceInterference());
+		System.out.println("Taux d'existence des ubiquites : \t" + this.tauxExistenceUbiquite());
+	}
+
 	public double mesurerPertinance(Statistiques apresCorrection) {
 		return ((double) (this.nbConflits - apresCorrection.nbConflits)) / ((double) Statistiques.nbCorrection);
 	}

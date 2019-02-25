@@ -223,13 +223,9 @@ public class Agenda {
 		return listeMedecins;
 	}
 
-	/*
-	*######################################################## Attention : changement temporaire
-	*/
-
 	public List<Salle> getSallesJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
-							.filter( x -> /*x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) &&*/ !x.estUrgente())
+							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && !x.estUrgente())
 							.map( x->x.getSalle() )
 							.distinct()
 							.collect(Collectors.toList());
@@ -237,7 +233,7 @@ public class Agenda {
 
     public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
 		return this.listeChirurgies.stream()
-							.filter( x -> /*x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) &&*/ x.estUrgente())
+							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && x.estUrgente())
 							.map( x->x.getSalle() )
 							.distinct()
 							.collect(Collectors.toList());
@@ -254,11 +250,13 @@ public class Agenda {
         List<Salle> listeSallesUrgence = null;
 
 		for (LocalDate l : ld) {
+
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
-			listeMedecins = this.getChirurgienJournee(tmp);
+			listeMedecins = this.getChirurgienJournee(tmp); //this.getListeChirurgiens();
 			listeSalles = this.getListeSalles();					// Recuperation des salles existantes !
-            listeSallesUrgence= this.getSallesUrgenceJournee(l);
+            listeSallesUrgence= this.getListeSallesUrgence();		// Recuperation des salles d'urgence existantes !
+
 			// Creer un objet PlanningJournee
 			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
 			// Mettre dans Map
@@ -294,7 +292,7 @@ public class Agenda {
 		int nbConflitsPrec = 0;
 		int i = 0;
 		System.out.println("Debut de la resolution des conflits.");
-		while (this.nombreConflits() > 0 && i++ < this.nbIterations) {
+		while (this.nombreConflits() > 0 && ++i < this.nbIterations) {
 			nbConflitsPrec = this.nombreConflits();
 			System.out.println("Nombre de conflits : " + nbConflitsPrec);
 
@@ -394,8 +392,16 @@ public class Agenda {
 		System.out.println("Ubiquite : \t\t\t" + map.get("Ubiquite"));
 		System.out.println("Total : \t\t\t" + map.get("Total"));
 		System.out.println("Nombre de conflits corriges :\t" + Statistiques.nombresConflitsCorriges);
-	}
 
+		int nbIterNecessaires = (map.get("Total").get( map.get("Total").size() - 1 ).equals(0)) ?
+										map.get("Total").size() - 1
+										:
+										map.get("Total").size();
+
+		System.out.println("Nombre d'iterations necessaires : \t" + nbIterNecessaires);
+
+		this.stats.afficherTauxSurvie();
+	}
 
 
 	public void afficherGraphique(String [] args) {
