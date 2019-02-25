@@ -74,9 +74,9 @@ public class PlanningJournee {
 						} else {
 							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSalles());
                         }
-						if (PlanningJournee.cpt++ >= 15) {
+						if (PlanningJournee.cpt++ >= 15 && PlanningJournee.cpt != 8) {
 							this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
-						} else if (PlanningJournee.cpt != 23) {
+						} else if (PlanningJournee.cpt != 8) {
 							this.disponibilites.trierListes2(this.listeChirurgies);
 						} else {
 							this.disponibilites.trierListes(this.listeChirurgies);

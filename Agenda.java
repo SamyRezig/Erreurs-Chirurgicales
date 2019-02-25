@@ -373,7 +373,7 @@ public class Agenda {
 		
 		Graphique.valeurs = map;
 
-		g.afficher(args, this.nbIterations, 370);
+		g.afficher(args, this.nbIterations, 40);
 	}
 
 }

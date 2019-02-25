@@ -10,7 +10,7 @@ public class Main {
 		Agenda a = new Agenda("Chirurgies_v2.csv");
 
         a.resolution();
-		//a.verifierChirurgies();
+		
         
         // Description statistique
 		a.descriptionCourante();
@@ -30,12 +30,7 @@ public class Main {
 		a.afficherJoursConflit();
 		
 		
-		/*
-		Graphique g = new Graphique();
-		Graphique.valeurs = map;
-		g.afficher(args);
-		*/
-		// Appeler la methode pour afficher le graphique !
+		//a.verifierChirurgies();
 		a.afficherGraphique(args);
 
 	}

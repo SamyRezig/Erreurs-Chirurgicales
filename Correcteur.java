@@ -6,7 +6,6 @@ import java.time.LocalTime;
 
 public class Correcteur {
 	private static int dureePause = 15;
-	// Methodes pour corriger une chirurgie.
 
 	// Translater l'intervalle de temps d'une chirurgie
 	public static void translater(Chirurgie courante, long biaisMinutes) {
