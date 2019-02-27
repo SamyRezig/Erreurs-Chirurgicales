@@ -65,7 +65,7 @@ public abstract class Conflit {
 	}
 
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		this.reordonner();
+		this.reordonner();      // Reordonner les deux chirurgies en conflit
 
 		if (!this.persiste()) {
 			System.out.println("Ce conflit n'existe plus.");
@@ -73,6 +73,12 @@ public abstract class Conflit {
 		}
 		System.out.println("RESOLUTION DU CONFLIT avec :");
 		System.out.println(lc);
+                
+                /*if (lc.contains(new Chirurgien("ROBERT CHASE"))) {
+                    System.out.println("STOP !");
+                    (new Scanner(System.in)).nextLine();
+                }*/
+                
 		System.out.println(ls);
 		this.visualiser();
 

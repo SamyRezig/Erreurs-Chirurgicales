@@ -41,8 +41,12 @@ public class Statistiques {
 	public static List<Integer> nombresConflits = new ArrayList<>();
 	public static List<Integer> nombresConflitsCorriges = new ArrayList<>();
 
-	public Statistiques(List<Chirurgie> listeBase, List<Conflit> listeConflits,
-			NavigableMap<LocalDate, PlanningJournee> planning) {
+	public Statistiques(Agenda a) {
+            
+            List<Chirurgie> listeBase = a.getListeChirurgies();
+            List<Conflit> listeConflits = a.extraireConflits();
+            NavigableMap<LocalDate, PlanningJournee> planning = a.getPlanning();
+            
 		this.nbConflits = listeConflits.size();
 
 		// Extraction des chirurgies en conflits

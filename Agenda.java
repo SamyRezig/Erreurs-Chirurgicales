@@ -16,27 +16,69 @@ import java.util.NavigableMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
 	private int nbIterations = 30;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
+    private Map<LocalDate, Ressources> joursRessources;
 	public Statistiques stats;
 	private Ressources ressourcesExistantes;
 
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
 		this.planning = new TreeMap<>();
+        this.joursRessources = new HashMap<>();
 	}
 
 	public Agenda(String nomFichier) {
 		this();
 		this.remplirDepuisFichier(nomFichier);
+        this.definirRessources();
+
+        System.out.println(this.joursRessources);
+
 		this.setPlanningParJournee(this.listeJournees());
 		this.recenserTousConflits();
         this.statistiques();
 	}
+
+	private void definirRessources() {
+        List<LocalDate> tousJours = this.listeJournees();
+        Ressources dispoJour;
+        List<Chirurgien> chirurgiensDispos;
+        List<Salle> sallesDispos;
+        List<Salle> sallesUrgenceDispos;
+
+        for (LocalDate jour : tousJours) {
+            chirurgiensDispos = this.extraireListeChirurgiensDispos(jour);
+            sallesDispos = this.ressourcesExistantes.getListeSalles();
+            sallesUrgenceDispos = this.ressourcesExistantes.getListeSallesUrgence();
+            dispoJour = new Ressources(chirurgiensDispos, sallesDispos, sallesUrgenceDispos);
+            this.joursRessources.put(jour, dispoJour);
+        }
+    }
+
+    private List<Chirurgien> extraireListeChirurgiensDispos(LocalDate jour) {
+        List<Chirurgien> chirurgiensDispos = new ArrayList<>();
+
+        chirurgiensDispos = this.listeChirurgies.stream()
+												.filter( x -> x.getDatesOperation().getDateDebut().equals((jour)) )
+												.map( x -> x.getChirurgien() )
+												.collect( Collectors.toList() );
+
+        return chirurgiensDispos;
+    }
+
+    public List<Chirurgie> getListeChirurgies() {
+        return this.listeChirurgies;
+    }
+
+    public NavigableMap<LocalDate, PlanningJournee> getPlanning() {
+        return this.planning;
+    }
 
 	private void remplirDepuisFichier(String nomFichier) {
 		BufferedReader fluxTexte = null;
@@ -67,7 +109,7 @@ public class Agenda {
 		}
 
 		// Definition des chirurgiens disponibles et des salles.
-		this.setPlanningParJournee(this.listeJournees());
+		//this.setPlanningParJournee(this.listeJournees());
 	}
 
 	private void definirRessourcesExistants() {
@@ -110,10 +152,6 @@ public class Agenda {
 	    	 writer.flush();
 	    	 writer.close();
 	    	 System.out.println("Un fichier " + nomFichier + " a ete genere.");
-	}
-
-	public Map<LocalDate, PlanningJournee> getPlanning() {
-		return this.planning;
 	}
 
 	public Chirurgie creationChirurgie(String[] infoSeparees) {
@@ -244,18 +282,23 @@ public class Agenda {
 		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
 
-		List<Chirurgie> tmp = new ArrayList<>(); // Liste des chirurgies pour une journee
-		List<Chirurgien> listeMedecins = new ArrayList<>();
+		List<Chirurgie> tmp = null; // Liste des chirurgies pour une journee
+		List<Chirurgien> listeMedecins = null;
 		List<Salle> listeSalles = null;
         List<Salle> listeSallesUrgence = null;
 
+        Ressources ressourcesJour;
+
 		for (LocalDate l : ld) {
+            ressourcesJour = this.joursRessources.get(l);
+            //System.out.println(ressourcesJour);
 
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
-			listeMedecins = this.getChirurgienJournee(tmp); //this.getListeChirurgiens();
-			listeSalles = this.getListeSalles();					// Recuperation des salles existantes !
-            listeSallesUrgence= this.getListeSallesUrgence();		// Recuperation des salles d'urgence existantes !
+
+			listeMedecins = /*ressourcesJour.getListeChirurgiens();*/this.getChirurgienJournee(tmp); //this.getListeChirurgiens();
+			listeSalles = ressourcesJour.getListeSalles();//this.getListeSalles();                            // Recuperation des salles existantes !
+            listeSallesUrgence = ressourcesJour.getListeSallesUrgence();//this.getListeSallesUrgence();		// Recuperation des salles d'urgence existantes !
 
 			// Creer un objet PlanningJournee
 			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
@@ -307,7 +350,7 @@ public class Agenda {
 	}
 
 	public void descriptionCourante() {
-		Statistiques apresStats = new Statistiques(this.listeChirurgies, this.extraireConflits(), this.planning);
+		Statistiques apresStats = new Statistiques(this);
 
 		this.visualiserConflits();
 		this.stats.comparer(apresStats);
@@ -352,7 +395,7 @@ public class Agenda {
 	}
 
 	public void statistiques() {
-		this.stats = new Statistiques(this.listeChirurgies, this.extraireConflits(), this.planning);
+		this.stats = new Statistiques(this);
 	}
 
 	public void visualiser() {

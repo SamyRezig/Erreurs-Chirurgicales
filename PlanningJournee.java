@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class PlanningJournee {
 
@@ -66,22 +67,26 @@ public class PlanningJournee {
 
 	public void resoudreConflits() {
 
-		for(Conflit conflitCourant : this.listeConflits) {
+    	for(Conflit conflitCourant : this.listeConflits) {
 
-                        if (conflitCourant.getPremiereChirurgie().estUrgente()){
-							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSallesUrgence());
+        	if (conflitCourant.getPremiereChirurgie().estUrgente()){
+            	conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSallesUrgence());
 
-						} else {
-							conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSalles());
-                        }
-						if (PlanningJournee.cpt++ >= 15 && PlanningJournee.cpt != 8) {
-							this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
-						} else if (PlanningJournee.cpt != 8) {
-							this.disponibilites.trierListes2(this.listeChirurgies);
-						} else {
-							this.disponibilites.trierListes(this.listeChirurgies);
-						}
-				}
+			} else {
+            	conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSalles());
+        	}
+
+        	// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
+			if (1 == 1 && (PlanningJournee.cpt++ >= 15 && PlanningJournee.cpt != 8)) {
+	            this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
+
+	        } else if (PlanningJournee.cpt != 8) {
+	            this.disponibilites.trierListes2(this.listeChirurgies);
+
+	        } else {
+	            this.disponibilites.trierListes(this.listeChirurgies);
+			}
+        }
 	}
 
 	public void visualiserConflits() {
