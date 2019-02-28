@@ -16,9 +16,8 @@ public class Ubiquite extends Conflit {
 	}
 
 	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
-		return (lc.size() >= 3);
+		return (lc.size() >= 1);	// La liste de chirurgiens n'est pas censee contenir le chirurgien qu'on veut changer
 	}
-
 
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
 		Chirurgien tmpChirurgien = null;
@@ -30,9 +29,5 @@ public class Ubiquite extends Conflit {
 			}
 		}
 		if (tmpChirurgien != null)	Correcteur.changerChirurgien(this.getSecondeChirurgie(),  tmpChirurgien);
-
-
 	}
-
-
 }

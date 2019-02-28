@@ -16,10 +16,9 @@ public class Chevauchement extends Conflit {
 
 	@Override
 	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
-		return (lc.size() >= 3) || (ls.size() >= 3);
+		// Les listes de chirurgiens/salles ne sont pas censees contenir le chirurgien / la salle a modifier
+		return (lc.size() >= 1) || (ls.size() >= 1);
 	}
-
-
 
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
 		Chirurgien tmpChirurgien = null;

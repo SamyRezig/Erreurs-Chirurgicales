@@ -17,7 +17,7 @@ public class Interference extends Conflit {
 
     @Override
     public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
-		return (ls.size() >= 3);
+		return (ls.size() >= 1);  // La liste de salles n'est pas censee contenir la salle qu'on veut changer
 	}
 
     @Override

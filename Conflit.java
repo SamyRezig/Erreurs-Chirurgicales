@@ -4,15 +4,11 @@ import java.util.Random;
 import java.util.Set;
 
 public abstract class Conflit {
-
 	private Chirurgie premiereChirurgie;
 	private Chirurgie secondeChirurgie;
 
-
 	public abstract boolean persiste();
-
 	public abstract boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls);
-
 	public abstract void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls);
 
 	public Conflit(Chirurgie first, Chirurgie second) {
@@ -20,10 +16,6 @@ public abstract class Conflit {
 		this.secondeChirurgie = second;
 		this.premiereChirurgie.setCorrige();
 		this.secondeChirurgie.setCorrige();
-	}
-
-	public String toString() {
-		return this.getClass() + " -- " + this.premiereChirurgie + " avec " + this.secondeChirurgie;
 	}
 
 	public Chirurgie getPremiereChirurgie() {
@@ -65,9 +57,7 @@ public abstract class Conflit {
 	}
 
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		//this.reordonner();      // Reordonner au dernier moment, les chirurgies peuvent changer entre temps
-
-		if (!this.persiste()) {
+		if (!this.persiste()) {		// Le conflit a pu etre resolu entre temps
 			System.out.println("Ce conflit n'existe plus.");
 			return;
 		}
@@ -83,16 +73,16 @@ public abstract class Conflit {
 		// Resolution par decoupage
 		double ts = this.tauxSuperposition();
 		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
-			System.out.println("----Decoupage des chirurgies -- ts = " + ts);
+			System.out.println("----Decoupage des chirurgies -- taux de superposition = " + ts);
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
 			Statistiques.plusDecoupe();
-			//Statistiques.nbDecoupage++;
 		} else {
 			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
 		}
 
 		// Resolution par modification des ressources
-		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85 + 3) ) {
+		// Les listes de chirurgiens/salles ne sont pas censees contenir le chirurgien / la salle a modifier !
+		if (this.persiste() && this.ressourcesSuffisantes(lc, ls)) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
 			Statistiques.plusModifRessource();
@@ -112,7 +102,10 @@ public abstract class Conflit {
 		System.out.println("\nVoici le resultat final : ");
 		this.visualiser();
 		System.out.println();
-
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass() + " -- " + this.premiereChirurgie + " avec " + this.secondeChirurgie;
+	}
 }
