@@ -93,6 +93,10 @@ public class Statistiques {
 		System.out.println("----Jours avec chirurgiens insuffisants : ");
 		this.afficherJoursChirurgiensInsuffisants(planning);
 
+		System.out.println("----Nombre de chirurgies normales le soir : ");
+		System.out.println(this.nombreChirurgiesNormalesSoir(listeBase));
+		//(new Scanner(System.in)).nextLine();
+
 		System.out.println("Fin du chargement des outils statistiques.");
 	}
 
@@ -131,6 +135,7 @@ public class Statistiques {
 				lettre = (i < medecin.toString().length()) ? medecin.toString().charAt(i) : ' ';
 				System.out.print(lettre + "\t");
 			}
+			System.out.println();
 		}
 		// Legende
 		System.out.println("Legende : ");
@@ -138,7 +143,7 @@ public class Statistiques {
 		System.out.println("\t + : chirurgien disponible mais n'a pas travaille");
 		System.out.println("\t ? : chirurgien non disponible mais a travaille");
 		System.out.println("\t | : chirurgien non disponible et n'a pas travaille");
-		System.out.println("\tLes nombre sur le cote correspondent au nombre de chirurgies dans la journees.");
+		System.out.println("\tLes nombres sur le cote correspondent au nombre de chirurgies dans la journees.");
 	}
 
 	public void afficherJoursTravailChirurgiens(Agenda a) {
@@ -169,13 +174,13 @@ public class Statistiques {
 				lettre = (i < medecin.toString().length()) ? medecin.toString().charAt(i) : ' ';
 				System.out.print(lettre + "\t");
 			}
-			//System.out.println();
+			System.out.println();
 		}
 		// Legende
 		System.out.println("Legende : ");
 		System.out.println("\t * : chirurgien a travaille");
 		System.out.println("\t | : chirurgien n'a pas travaille");
-		System.out.println("\tLes nombre sur le cote correspondent au nombre de chirurgies dans la journees.");
+		System.out.println("\tLes nombres sur le cote correspondent au nombre de chirurgies dans la journees.");
 	}
 
 	public void afficherJoursTravailSalles(Agenda a) {
@@ -213,7 +218,7 @@ public class Statistiques {
 		System.out.println("Legende : ");
 		System.out.println("\t * : salle occupee");
 		System.out.println("\t | : salle libre");
-		System.out.println("\tLes nombre sur le cote correspondent au nombre de chirurgies dans la journees.");
+		System.out.println("\tLes nombres sur le cote correspondent au nombre de chirurgies dans la journees.");
 	}
 
 	private Map<LocalDate, Long> dureeJournees(Map<LocalDate, PlanningJournee> planning) {
@@ -506,7 +511,7 @@ public class Statistiques {
 		System.out.println("Ecart-type duree des salles : :\t"
 				+ (float) this.ecartTypeSalles + "\t"
 				+ (float) apresStats.getEcartTypeSalles());
-		System.out.println("Ecart-type duree des chirurgiens :\t"
+		System.out.println("Ecart-type duree chirurgiens :\t"
 				+ (float) this.ecartTypeChirurgiens + "\t"
 				+ (float) apresStats.getEcartTypeChirurgiens());
 
@@ -524,8 +529,7 @@ public class Statistiques {
 		System.out.println("Duree moyenne de decalage : \t"
 				+ Statistiques.dureeMoyenneDecalage()
 				+ " minutes par decalage soit un decalage de "
-				+ (float) Statistiques.dureeTotaleDecalage / 60
-				+ " heures hors normalisation");
+				+ (float) Statistiques.dureeTotaleDecalage / 60 + " heures");
 
 		System.out.println("Duree moyenne de decoupage : \t"
 				+ Statistiques.dureeMoyenneDecoupage()
@@ -536,8 +540,8 @@ public class Statistiques {
 
 	public void afficherNombreCorrections() {
 		System.out.println("Nombre de normalisation : \t" + Statistiques.nbNormalisation);
-		System.out.println("Nombre de decoupages : \t\t" + Statistiques.nbDecoupage);
 		System.out.println("Nombre de modifs ressources : \t" + Statistiques.nbRess);
+		System.out.println("Nombre de decoupages : \t\t" + Statistiques.nbDecoupage);
 		System.out.println("Nombre de decalages : \t\t" + Statistiques.nbDecalage);
 		System.out.println(" === Nombre de corrections : \t" + Statistiques.nbCorrection);
 	}
@@ -616,6 +620,19 @@ public class Statistiques {
 		System.out.println("Taux d'existence des chevauchements : \t" + this.tauxExistenceChevauchement());
 		System.out.println("Taux d'existence des interferences : \t" + this.tauxExistenceInterference());
 		System.out.println("Taux d'existence des ubiquites : \t" + this.tauxExistenceUbiquite());
+	}
+
+	public long nombreChirurgiesNormalesSoir(Collection<Chirurgie> chirurgies) {
+		this.afficherChirurgiesSoir(chirurgies);
+		return chirurgies.stream()
+						.filter( x -> !x.dansJournee() && !x.estUrgente())
+						.count();
+	}
+
+	public void afficherChirurgiesSoir(Collection<Chirurgie> chirurgies) {
+		chirurgies.stream()
+					.filter( x->!x.dansJournee() && !x.estUrgente())
+					.forEach(System.out::print);
 	}
 
 	public double mesurerPertinance(Statistiques apresCorrection) {

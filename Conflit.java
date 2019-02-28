@@ -70,16 +70,6 @@ public abstract class Conflit {
 		Correcteur.normaliserFin(this.getPremiereChirurgie());
 		Correcteur.normaliserDebut(this.getSecondeChirurgie());
 
-		// Resolution par decoupage
-		double ts = this.tauxSuperposition();
-		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
-			System.out.println("----Decoupage des chirurgies -- taux de superposition = " + ts);
-			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
-			Statistiques.plusDecoupe();
-		} else {
-			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
-		}
-
 		// Resolution par modification des ressources
 		// Les listes de chirurgiens/salles ne sont pas censees contenir le chirurgien / la salle a modifier !
 		if (this.persiste() && this.ressourcesSuffisantes(lc, ls)) {
@@ -88,6 +78,16 @@ public abstract class Conflit {
 			Statistiques.plusModifRessource();
 		} else {
 			System.out.println("----Pas de modification de ressource envisageable");
+		}
+
+		// Resolution par decoupage
+		double ts = this.tauxSuperposition();
+		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
+			System.out.println("----Decoupage des chirurgies -- taux de superposition = " + ts);
+			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
+			Statistiques.plusDecoupe();
+		} else {
+			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
 		}
 
 		// Resolution par decalage

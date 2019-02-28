@@ -141,17 +141,16 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	}
 
 	public boolean courte() {
-		return this.datesOperation.duree() < 61;	// Duree moyenne de la grande BD
-
+		return this.datesOperation.duree() < 61;	// Duree moyenne de la grande BD 61
 	}
 
 	public boolean dureeSuspecte() {
-		return this.duree() > 134;	// dernier quartile de la grande base de donnees
+		return this.duree() > 134;	// dernier quartile de la grande base de donnees 134
 	}
 
-        public boolean heureSuspecte() {
-            return this.heureDebutSuspecte() || this.heureFinSuspecte();
-        }
+    public boolean heureSuspecte() {
+        return this.heureDebutSuspecte() || this.heureFinSuspecte();
+    }
 
 	public boolean heureDebutSuspecte() {
 		List<LocalDateTime> heuresSuspectes = new ArrayList<>();
@@ -177,29 +176,33 @@ public class Chirurgie implements Comparable<Chirurgie> {
 		return 1 - ((double) chevauchement / (double) this.datesOperation.duree());
 	}
 
-        public boolean estImbrique(Chirurgie chg){
-            if ( (chg.getDatesOperation().getDateDebut().isBefore(this.getDatesOperation().getDateDebut())
-				|| chg.getDatesOperation().getDateDebut().equals(this.getDatesOperation().getDateDebut()))
+    public boolean estImbrique(Chirurgie chg){
+        if ( (chg.getDatesOperation().getDateDebut().isBefore(this.getDatesOperation().getDateDebut())
+			|| chg.getDatesOperation().getDateDebut().equals(this.getDatesOperation().getDateDebut()))
 
-                  && (chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())
-				  || chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())) ) {
-                return true;
-            }
-            return false;
+              && (chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())
+			  || chg.getDatesOperation().getDateFin().isAfter(this.getDatesOperation().getDateFin())) ) {
+            return true;
         }
+        return false;
+    }
 
-        public long dureeIntersection(Chirurgie chg){
-            long dureeInter = 0;
-            if (this.estImbrique(chg)){
-                return this.duree();
-            } else if (chg.estImbrique(this)){
-                return chg.duree();
-            } else {
-                dureeInter = Duration.between(chg.getDatesOperation().getDateDebut(), this.getDatesOperation().getDateFin())
-			.toMinutes();
-                return dureeInter;
-            }
+    public long dureeIntersection(Chirurgie chg){
+        long dureeInter = 0;
+
+        if (this.estImbrique(chg)){
+            return this.duree();
+
+        } else if (chg.estImbrique(this)){
+        return chg.duree();
+
+        } else {
+            dureeInter = Duration.between(chg.getDatesOperation().getDateDebut()
+						, this.getDatesOperation().getDateFin())
+						.toMinutes();
+            return dureeInter;
         }
+    }
 
     public boolean incoherente() {
     	if (this.datesOperation.getDateDebut().isAfter(this.datesOperation.getDateFin())) {
@@ -213,6 +216,14 @@ public class Chirurgie implements Comparable<Chirurgie> {
 		}
     	return false;
     }
+
+	public boolean dansJournee() {
+		LocalTime debutJournee = LocalTime.of(6, 59);
+		LocalTime finJournee = LocalTime.of(20, 0);
+		LocalTime debutOperation = this.getDatesOperation().getDateDebut().toLocalTime();
+
+		return (debutOperation.isAfter(debutJournee) && debutOperation.isBefore(finJournee));
+	}
 
 	@Override
 	public int compareTo(Chirurgie autre) {
@@ -246,5 +257,4 @@ public class Chirurgie implements Comparable<Chirurgie> {
 		strb.append("\n");
 		return strb.toString();
 	}
-
 }

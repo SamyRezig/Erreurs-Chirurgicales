@@ -7,14 +7,16 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.time.DayOfWeek;
 import java.util.Arrays;
+import java.time.LocalTime;
 
 public class Main {
 
 	public static void main(String [] args) throws IOException {
-		/*System.out.println( Arrays.asList(DayOfWeek.values()) );
-		(new Scanner(System.in)).nextLine();*/
-
 		Agenda a = new Agenda("Chirurgies_v2.csv");
+
+		/*a.getListeChirurgies().stream()
+								.filter( x->x.dansJournee() && !x.estUrgente())
+								.forEach(System.out::print);*/
 
         a.resolution();
 
