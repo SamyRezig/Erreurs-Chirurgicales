@@ -28,7 +28,8 @@ public class Statistiques {
 	private double ecartTypeSalles;
 	private double ecartTypeChirurgiens;
 
-	private static long dureeTotaleDecalage;
+	private static long dureeTotaleDecalage = 0;
+	private static long dureeTotaleDecoupage = 0;
 	public static int nbNormalisation = 0;
 	public static int nbDecoupage = 0;
 	public static int nbRess = 0;
@@ -89,7 +90,7 @@ public class Statistiques {
 		this.dureeJournees = this.dureeJournees(planning);
 
 		System.out.println("EDT par chirurgien");
-		this.afficherJoursTravailPlannifie(planning);
+		this.afficherJoursTravailSalles(planning);
 		(new Scanner(System.in)).nextLine();
 
 		System.out.println("Jours avec chirurgiens insuffisants : ");
@@ -140,6 +141,13 @@ public class Statistiques {
 				System.out.print(lettre + "\t");
 			}
 		}
+		// Legende
+		System.out.println("Legende : ");
+		System.out.println("\t * : chirurgien disponible et a travaille");
+		System.out.println("\t + : chirurgien disponible mais n'a pas travaille");
+		System.out.println("\t ? : chirurgien non disponible mais a travaille");
+		System.out.println("\t | : chirurgien non disponible et n'a pas travaille");
+		System.out.println("\tLes nombre sur le cote correspondent au nombre de chirurgies dans la journees.");
 
 	}
 
@@ -148,16 +156,6 @@ public class Statistiques {
 		List<Chirurgien> listeChirurgiens = this.operations.stream()
 														.map(x -> x.getChirurgien()).distinct()
 														.collect(Collectors.toList());
-		// Afficher le nom des chirurgiens
-		for (int i = 0; i < 16; i++) {
-			System.out.print("\t\t");
-			for (Chirurgien medecin : listeChirurgiens) {
-				lettre = (i < medecin.toString().length()) ? medecin.toString().charAt(i) : ' ';
-				System.out.print(lettre + "\t");
-			}
-			System.out.println();
-		}
-
 		// Afficher leur jour de travail
 		for (LocalDate jour : planning.keySet()) {
 			System.out.print(jour + " : ");
@@ -173,6 +171,22 @@ public class Statistiques {
 			System.out.print("  " + planning.get(jour).getListeChirurgies().size());
 			System.out.println();
 		}
+
+		// Afficher le nom des chirurgiens
+		System.out.println();
+		for (int i = 0; i < 16; i++) {
+			System.out.print("\t\t");
+			for (Chirurgien medecin : listeChirurgiens) {
+				lettre = (i < medecin.toString().length()) ? medecin.toString().charAt(i) : ' ';
+				System.out.print(lettre + "\t");
+			}
+			//System.out.println();
+		}
+		// Legende
+		System.out.println("Legende : ");
+		System.out.println("\t * : chirurgien a travaille");
+		System.out.println("\t | : chirurgien n'a pas travaille");
+		System.out.println("\tLes nombre sur le cote correspondent au nombre de chirurgies dans la journees.");
 	}
 
 	public void afficherJoursTravailSalles(NavigableMap<LocalDate, PlanningJournee> planning) {
@@ -180,16 +194,6 @@ public class Statistiques {
 		List<Salle> listeSalles = this.operations.stream()
 											.map(x -> x.getSalle()).distinct()
 											.collect(Collectors.toList());
-		// Afficher le nom des chirurgiens
-		for (int i = 0; i < 9; i++) {
-			System.out.print("\t\t");
-			for (Salle bloc : listeSalles) {
-				lettre = (i < bloc.toString().length()) ? bloc.toString().charAt(i) : ' ';
-				System.out.print(lettre + "\t");
-			}
-			System.out.println();
-		}
-
 		// Afficher leur jour de travail
 		for (LocalDate jour : planning.keySet()) {
 			System.out.print(jour + " : ");
@@ -205,6 +209,22 @@ public class Statistiques {
 			System.out.print("  " + planning.get(jour).getListeChirurgies().size());
 			System.out.println();
 		}
+
+		// Afficher le nom des chirurgiens
+		System.out.println();
+		for (int i = 0; i < 9; i++) {
+			System.out.print("\t\t");
+			for (Salle bloc : listeSalles) {
+				lettre = (i < bloc.toString().length()) ? bloc.toString().charAt(i) : ' ';
+				System.out.print(lettre + "\t");
+			}
+			System.out.println();
+		}
+		// Legende
+		System.out.println("Legende : ");
+		System.out.println("\t * : salle occupee");
+		System.out.println("\t | : salle libre");
+		System.out.println("\tLes nombre sur le cote correspondent au nombre de chirurgies dans la journees.");
 	}
 
 	private Map<LocalDate, Long> dureeJournees(Map<LocalDate, PlanningJournee> planning) {
@@ -217,6 +237,10 @@ public class Statistiques {
 		}
 
 		return resultat;
+	}
+
+	public static void plusDureeDecoupage(long duree) {
+		Statistiques.dureeTotaleDecoupage += duree;
 	}
 
 	public static void plusDecoupe() {
@@ -462,14 +486,14 @@ public class Statistiques {
 
 	private double ecartMoyenAllongement(Map<LocalDate, Long> planningApres) {
 		double ecartMoyen = 0;
-		int card = 0;
+		int nbJours = 0;
 
 		for (LocalDate jour : planningApres.keySet()) {
 			ecartMoyen += (planningApres.get(jour) - this.dureeJournees.get(jour));
-			card++;
+			nbJours++;
 		}
 
-		return ecartMoyen / (double) card;
+		return ecartMoyen / (double) nbJours;
 	}
 
 	public void afficherJoursChirurgiensInsuffisants(NavigableMap<LocalDate, PlanningJournee> planning) {
@@ -502,12 +526,17 @@ public class Statistiques {
 		// System.out.println("Ecart-type duree par chirurgiens : " +
 		// this.ecartTypeChirurgiens + "\t" + apresStats.getEcartTypeChirurgiens());
 		System.out.println("Nombre de conflits restant :\t" + this.nbConflits + "\t\t" + apresStats.getNbConflits());
-		System.out.println("Duree moyenne d'allongement des journees : "
-				+ this.ecartMoyenAllongement(apresStats.dureeJournees) + " minutes");
+		System.out.println("Allongement des journees : "
+				+ this.ecartMoyenAllongement(apresStats.dureeJournees) + " minutes de plus par jour");
 
 		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats)
 				+ " conflits corriges par correction");
-		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes");
+		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes par decalage soit un decalage de " + Statistiques.dureeTotaleDecalage/60 + " heures hors normalisation");
+		System.out.println("Duree moyenne de decoupage : \t" + Statistiques.dureeMoyenneDecoupage() + " minutes par decoupage soit " + Statistiques.dureeTotaleDecoupage/60 + " heures decoupees hors normalisation");
+	}
+
+	private static double dureeMoyenneDecoupage() {
+		return (double) Statistiques.dureeTotaleDecoupage / (double) Statistiques.nbDecoupage;
 	}
 
 	public static void recenser(Conflit c) {

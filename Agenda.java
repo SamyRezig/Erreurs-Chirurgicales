@@ -460,7 +460,8 @@ public class Agenda {
 										:
 										map.get("Total").size();
 
-		System.out.println("Nombre d'iterations necessaires : \t" + nbIterNecessaires);
+		String plus = (this.nombreConflits() == 0) ? "" : "+";
+		System.out.println("Nombre d'iterations necessaires : \t" + nbIterNecessaires + plus);
 
 		this.stats.afficherTauxSurvie();
 	}

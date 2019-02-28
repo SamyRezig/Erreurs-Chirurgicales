@@ -33,9 +33,7 @@ public class Correcteur {
 		courante.setSalle(s);
 	}
 
-	// premiere doit commencer avant seconde
 	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
-
 			// Si les chirurgies ne se chevauchent pas completement
 
 			long dureeInter = premiere.dureeIntersection(seconde);
@@ -46,14 +44,16 @@ public class Correcteur {
 
                             if (tauxSuspect1 > tauxSuspect2) {
                                     Correcteur.reduireFin(premiere, dureeInter + Correcteur.dureePause);
-                                    System.out.println(premiere);
+                                    System.out.println("-------- a ete decoupee : " + premiere);
                                     System.out.println("--------Reduction par la fin");
+									Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
                                     if (premiere.duree() <= 0)	throw new RuntimeException();
 
                             } else {
                                     Correcteur.reduireDebut(seconde, dureeInter + Correcteur.dureePause);
-                                    System.out.println(seconde);
+                                    System.out.println("-------- a ete decoupee : " + seconde);
                                     System.out.println("--------Reduction par le debut");
+									Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
                                     if (seconde.duree() <= 0)	throw new RuntimeException();
                             }
 
@@ -146,7 +146,7 @@ public class Correcteur {
 
 			// dureeSuspecte() assure que dureeTotale > dureeFinale
 			Correcteur.reduireFin(courante, dureeTotale - dureeFinale);
-			
+
 		} else {
 			System.out.println("----Pas de normalisation a faire sur la fin");
 		}
