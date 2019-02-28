@@ -1,13 +1,30 @@
-import java.util.Map;
-import java.util.HashMap;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Log {
-    private Map<Integer, List<String>> mapEtats;
+    private NavigableMap<Integer, List<String>> mapEtats;
 
     public Log() {
-        this.mapEtats = new HashMap<>();
+        this.mapEtats = new TreeMap<>();
+    }
+
+    public void afficher() {
+        for (Integer id : mapEtats.keySet()) {
+            this.afficherEtats(id);
+        }
+    }
+
+    public void afficherEtats(int id) {
+        List<String> etats = mapEtats.get(id);
+
+        if (etats == null) {
+            System.out.println("L'identifiant " + id + " ne correspond pas a une chirurgie qui a ete modifiee.");
+
+        } else {
+            System.out.println(etats);
+        }
     }
 
     public void ajouter(Chirurgie operation) {
