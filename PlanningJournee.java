@@ -65,22 +65,70 @@ public class PlanningJournee {
 							.forEach(System.out::println);
 	}
 
+	private List<Chirurgie> chirurgiesIntersectent(Chirurgie base) {
+		List<Chirurgie> intersectent = new ArrayList<>();
+
+		for (Chirurgie operation : this.listeChirurgies) {
+			if (!base.equals(operation) && base.getDatesOperation().intersect(operation.getDatesOperation())) {
+				intersectent.add(operation);
+			}
+		}
+
+		return intersectent;
+	}
+
+	private List<Chirurgien> chirurgiensUtilisables(List<Chirurgie> chirurgies) {
+		List<Chirurgien> chirurgiensUtilisables;
+		List<Chirurgien> chirurgiensUtilises = chirurgies.stream()
+													.map( x->x.getChirurgien() )
+													.collect(Collectors.toList());
+
+		chirurgiensUtilisables = new ArrayList<>(this.disponibilites.getListeChirurgiens());
+		chirurgiensUtilisables.removeAll(chirurgiensUtilises);
+
+		return chirurgiensUtilisables;
+	}
+
+	private List<Salle> sallesUtilisables(List<Chirurgie> chirurgies, List<Salle> salles) {
+		List<Salle> sallesUtilisables;
+		List<Salle> sallesUtilises = chirurgies.stream()
+													.map( x->x.getSalle() )
+													.collect(Collectors.toList());
+
+		sallesUtilisables = new ArrayList<>(salles);
+		sallesUtilisables.removeAll(sallesUtilises);
+
+		return sallesUtilisables;
+	}
+
 	public void resoudreConflits() {
+		List<Chirurgie> intersectent;
+		List<Chirurgien> chirurgiensUtilisables;
+		List<Salle> sallesUtilisables;
 
     	for(Conflit conflitCourant : this.listeConflits) {
+			conflitCourant.reordonner();
 
-        	if (conflitCourant.getPremiereChirurgie().estUrgente()){
-            	conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSallesUrgence());
+			// Definir les ressources utilisabales
+			intersectent = this.chirurgiesIntersectent(conflitCourant.getSecondeChirurgie());
 
+			System.out.println(conflitCourant.getSecondeChirurgie());
+			chirurgiensUtilisables = this.chirurgiensUtilisables(intersectent);
+
+			// Choix des salles
+        	if (conflitCourant.getPremiereChirurgie().estUrgente()) {
+				sallesUtilisables = this.sallesUtilisables(intersectent, this.disponibilites.getListeSallesUrgence());
 			} else {
-            	conflitCourant.resoudreConflit(this.disponibilites.getListeChirurgiens(), this.disponibilites.getListeSalles());
+				sallesUtilisables = this.sallesUtilisables(intersectent, this.disponibilites.getListeSalles());
         	}
+			// Correction du conflit
+			conflitCourant.resoudreConflit(chirurgiensUtilisables, sallesUtilisables);
 
         	// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-			if (1 != 1 && PlanningJournee.cpt++ >= 15) {
+			if (true || PlanningJournee.cpt++ >= 15) {
 	            this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
 
-	        } else if (1 != 1 && PlanningJournee.cpt != 8) {
+	        } else if (PlanningJournee.cpt != 8) {
 	            this.disponibilites.trierListes2(this.listeChirurgies);
 
 	        } else {

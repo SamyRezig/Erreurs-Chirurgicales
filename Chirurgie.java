@@ -193,11 +193,11 @@ public class Chirurgie implements Comparable<Chirurgie> {
 
         public long dureeIntersection(Chirurgie chg){
             long dureeInter = 0;
-            if(this.estImbrique(chg)){
+            if (this.estImbrique(chg)){
                 return this.duree();
-            }else if(chg.estImbrique(this)){
+            } else if (chg.estImbrique(this)){
                 return chg.duree();
-            }else{
+            } else {
                 dureeInter = Duration.between(chg.getDatesOperation().getDateDebut(), this.getDatesOperation().getDateFin())
 			.toMinutes();
                 return dureeInter;

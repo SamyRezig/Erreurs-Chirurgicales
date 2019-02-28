@@ -44,7 +44,7 @@ public abstract class Conflit {
 		System.out.println();
 	}
 
-	private void reordonner() {
+	public void reordonner() {
 		Chirurgie tmp = null;
 		if (! this.getPremiereChirurgie().commenceAvant(this.getSecondeChirurgie())) {
 			tmp = this.getPremiereChirurgie();
@@ -65,21 +65,14 @@ public abstract class Conflit {
 	}
 
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		this.reordonner();      // Reordonner les deux chirurgies en conflit
+		this.reordonner();      // Reordonner au dernier moment, les chirurgies peuvent changer entre temps
 
 		if (!this.persiste()) {
 			System.out.println("Ce conflit n'existe plus.");
 			return;
 		}
 		System.out.println("RESOLUTION DU CONFLIT avec :");
-		System.out.println(lc);
-
-                /*if (lc.contains(new Chirurgien("ROBERT CHASE"))) {
-                    System.out.println("STOP !");
-                    (new Scanner(System.in)).nextLine();
-                }*/
-
-		System.out.println(ls);
+		System.out.println(lc + "\n" + ls);
 		this.visualiser();
 
 		// Nomalisation des deux chirurgies : de sorte a ce qu'elle ne commence plus
@@ -116,8 +109,9 @@ public abstract class Conflit {
 			System.out.println("----Pas de decalage de chirurgie");
 		}
 
-		System.out.println("Voici le resultat final : ");
+		System.out.println("\nVoici le resultat final : ");
 		this.visualiser();
+		System.out.println();
 
 	}
 
