@@ -34,9 +34,6 @@ public class Chirurgien {
 
 			this.frequencesTravail.put(jour, frequence);
 		}
-
-		/*System.out.println(this + " : " + this.frequencesTravail);
-		(new Scanner(System.in)).nextLine();*/
 	}
 
 	public void definirJoursTravail(List<Chirurgie> listeChirurgies) {
@@ -62,17 +59,18 @@ public class Chirurgien {
 
 			// Si on a change de semaine
 			if (semainePrec != null && !semaine.equals(semainePrec)) {
-				this.etudier(chirurgiesSemaine, semainePrec);
+				this.analyserSemaineTravail(chirurgiesSemaine, semainePrec);
 				chirurgiesSemaine.clear();			// Vider la liste pour la prochaine semaine
 			}
 
 			// On ajoute la chirurgie quoi qu'il arrive
 			chirurgiesSemaine.add(operation);
-
 		}
+		// Prise en compte de la toute derniere semaine de travail
+		this.analyserSemaineTravail(chirurgiesSemaine, semaine);
 	}
 
-	private void etudier(List<Chirurgie> chirurgiesSemaine, IntervalleTemps semaine) {
+	private void analyserSemaineTravail(List<Chirurgie> chirurgiesSemaine, IntervalleTemps semaine) {
 		System.out.println(chirurgiesSemaine);
 		LocalDate max;
 		List<LocalDate> joursRien = semaine.listeLocalDateEntre();
@@ -83,25 +81,18 @@ public class Chirurgien {
 		// Si le chirurgien a travaille moins de 5 jours
 		// mais strictement plus que 1 jour
 		while (1 < joursTravail.size() && joursTravail.size() < 5) {
-			joursRien.removeAll(joursTravail);
+			joursRien.removeAll(joursTravail);	// Garder les jours ou le chirurgien n'a pas travaille
 
-			// Completer par le jour de la semaine les plus frequents
+			// Completer par le jour de la semaine le plus frequent
 			max = null;
 			for (LocalDate jour : joursRien) {
 				if (max == null || this.frequencesTravail.get(max.getDayOfWeek()) < this.frequencesTravail.get(jour.getDayOfWeek())) {
 					max = jour;
 				}
 			}
-			joursRien.remove(max);
-			joursTravail.add(max);
-
-			/*System.out.println(joursTravail + " -- " + joursRien);
-			(new Scanner(System.in)).nextLine();*/
+			joursRien.remove(max);	// Retirer ce jour des jours non en travail
+			joursTravail.add(max);	// Ajouter ce jour parmi les jours de travail
 		}
-
-		/*System.out.println(joursTravail);
-		(new Scanner(System.in)).nextLine();*/
-
 		this.joursTravail.addAll(joursTravail);
 	}
 
