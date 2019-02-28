@@ -50,6 +50,7 @@ public class Correcteur {
 	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
 			long dureeInter = premiere.dureeIntersection(seconde);
 
+			// Calcul des taux de suspection pour determiner la chirurgie a decouper
 			double tauxSuspect1 = premiere.tauxSuspect(dureeInter);
 			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
 			System.out.println("-------| " + dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
@@ -70,28 +71,28 @@ public class Correcteur {
 			if (seconde.duree() <= 0 || premiere.duree() <= 0)	throw new RuntimeException();
 	}
 
-        public static void decalageChirurgie(Chirurgie premiere, Chirurgie seconde){
-			long duree;
-			long dureeTranslation;
+    public static void decalageChirurgie(Chirurgie premiere, Chirurgie seconde){
+		long duree;
+		long dureeTranslation;
 
-            if(premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
+        if (premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
 
-                if(premiere.duree() > seconde.duree()){
-                    duree = Duration.between(premiere.getDatesOperation().getDateDebut(),
-												seconde.getDatesOperation().getDateFin()).toMinutes();
-                    dureeTranslation = duree + Correcteur.dureePause;
-                    Correcteur.translater(premiere, dureeTranslation);
-                    Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
-                }else{
-                    duree = Duration.between(seconde.getDatesOperation().getDateDebut(),
-												premiere.getDatesOperation().getDateFin()).toMinutes();
-                    dureeTranslation = duree + Correcteur.dureePause;
-                    Correcteur.translater(seconde, dureeTranslation);
-                    Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
-            	}
-
+            if (premiere.duree() > seconde.duree()){
+                duree = Duration.between(premiere.getDatesOperation().getDateDebut(),
+											seconde.getDatesOperation().getDateFin()).toMinutes();
+                dureeTranslation = duree + Correcteur.dureePause;
+                Correcteur.translater(premiere, dureeTranslation);
+                Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
             } else {
-				Correcteur.translation(premiere, seconde);
+                duree = Duration.between(seconde.getDatesOperation().getDateDebut(),
+											premiere.getDatesOperation().getDateFin()).toMinutes();
+                dureeTranslation = duree + Correcteur.dureePause;
+                Correcteur.translater(seconde, dureeTranslation);
+                Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
+        	}
+
+        } else {
+			Correcteur.translation(premiere, seconde);
         }
     }
 
@@ -124,7 +125,6 @@ public class Correcteur {
 		// Couper la duree
 		if (indesirables.contains(debut) && courante.dureeSuspecte()) {
 			// MAJ Stats
-			//Statistiques.nbNormalisation++;
 			Statistiques.plusNormalisation();
 
 			System.out.println("----Normalisation du debut : " + debut);
@@ -147,7 +147,6 @@ public class Correcteur {
 		// Couper la duree
 		if (indesirables.contains(fin) && courante.dureeSuspecte()) {
 			// MAJ Stats
-			//Statistiques.nbNormalisation++;
 			Statistiques.plusNormalisation();
 
 			System.out.println("----Normalisation de la fin : " + fin);
