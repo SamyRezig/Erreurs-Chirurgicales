@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.util.Scanner;
+import java.time.DayOfWeek;
+import java.util.Arrays;
+
 public class Main {
 
 	public static void main(String [] args) throws IOException {
+		/*System.out.println( Arrays.asList(DayOfWeek.values()) );
+		(new Scanner(System.in)).nextLine();*/
+
 		Agenda a = new Agenda("Chirurgies_v2.csv");
-                
 
         a.resolution();
-		
-        
+
         // Description statistique
 		a.descriptionCourante();
 
@@ -29,8 +34,7 @@ public class Main {
 
 		// Le nombre de conflits restant par journee
 		a.afficherJoursConflit();
-		
-		
+
 		//a.verifierChirurgies();
 		a.afficherGraphique(args);
 

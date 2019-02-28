@@ -77,10 +77,10 @@ public class PlanningJournee {
         	}
 
         	// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-			if (1 == 1 && (PlanningJournee.cpt++ >= 15 && PlanningJournee.cpt != 8)) {
+			if (1 != 1 && PlanningJournee.cpt++ >= 15) {
 	            this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
 
-	        } else if (PlanningJournee.cpt != 8) {
+	        } else if (1 != 1 && PlanningJournee.cpt != 8) {
 	            this.disponibilites.trierListes2(this.listeChirurgies);
 
 	        } else {

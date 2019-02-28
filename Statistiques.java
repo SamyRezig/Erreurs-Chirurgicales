@@ -42,11 +42,10 @@ public class Statistiques {
 	public static List<Integer> nombresConflitsCorriges = new ArrayList<>();
 
 	public Statistiques(Agenda a) {
-            
-            List<Chirurgie> listeBase = a.getListeChirurgies();
-            List<Conflit> listeConflits = a.extraireConflits();
-            NavigableMap<LocalDate, PlanningJournee> planning = a.getPlanning();
-            
+        List<Chirurgie> listeBase = a.getListeChirurgies();
+        List<Conflit> listeConflits = a.extraireConflits();
+        NavigableMap<LocalDate, PlanningJournee> planning = a.getPlanning();
+
 		this.nbConflits = listeConflits.size();
 
 		// Extraction des chirurgies en conflits
@@ -89,8 +88,9 @@ public class Statistiques {
 		System.out.println("----Calcul des durees pour chaque journee.");
 		this.dureeJournees = this.dureeJournees(planning);
 
-		System.out.println("EDT par salle");
-		this.afficherJoursTravailSalles(planning);
+		System.out.println("EDT par chirurgien");
+		this.afficherJoursTravailPlannifie(planning);
+		(new Scanner(System.in)).nextLine();
 
 		System.out.println("Jours avec chirurgiens insuffisants : ");
 		this.afficherJoursChirurgiensInsuffisants(planning);
@@ -98,11 +98,56 @@ public class Statistiques {
 		System.out.println("Fin du chargement des outils statistiques.");
 	}
 
-	public void afficherJoursTravail(NavigableMap<LocalDate, PlanningJournee> planning) {
+	public void afficherJoursTravailPlannifie(NavigableMap<LocalDate, PlanningJournee> planning) {
 		char lettre; // Stocke chaque lettre des noms des chirurgiens pour leur affichage
-		List<Chirurgien> listeChirurgiens = this.operations.stream().map(x -> x.getChirurgien()).distinct()
-				.collect(Collectors.toList());
+		List<LocalDate> tousJours = this.operations.stream()
+													.map( x->x.getDatesOperation().getDateDebut().toLocalDate() )
+													.distinct()
+													.sorted()
+													.collect( Collectors.toList() );
+		List<Chirurgien> listeChirurgiens = this.operations.stream()
+														.map(x -> x.getChirurgien()).distinct()
+														.collect( Collectors.toList() );
 
+		// Afficher leur jour de travail
+		for (LocalDate jour : tousJours) {
+			System.out.print(jour + " : ");
+			for (Chirurgien medecin : listeChirurgiens) {
+
+				if (medecin.censeTravailler(jour) && planning.get(jour).travaille(medecin)) {
+					System.out.print("\t*");
+
+				} else if (medecin.censeTravailler(jour) && !planning.get(jour).travaille(medecin)) {
+					System.out.print("\t+");
+
+				} else if (!medecin.censeTravailler(jour) && planning.get(jour).travaille(medecin)) {
+					//System.out.println(planning.get(jour));
+					System.out.print("\t?");
+				} else {
+					System.out.print("\t|");
+				}
+			}
+			System.out.print("  " + planning.get(jour).getListeChirurgies().size());
+			System.out.println();
+		}
+
+		// Afficher le nom des chirurgiens
+		System.out.println();
+		for (int i = 0; i < 16; i++) {
+			System.out.print("\t\t");
+			for (Chirurgien medecin : listeChirurgiens) {
+				lettre = (i < medecin.toString().length()) ? medecin.toString().charAt(i) : ' ';
+				System.out.print(lettre + "\t");
+			}
+		}
+
+	}
+
+	public void afficherJoursTravailChirurgiens(NavigableMap<LocalDate, PlanningJournee> planning) {
+		char lettre; // Stocke chaque lettre des noms des chirurgiens pour leur affichage
+		List<Chirurgien> listeChirurgiens = this.operations.stream()
+														.map(x -> x.getChirurgien()).distinct()
+														.collect(Collectors.toList());
 		// Afficher le nom des chirurgiens
 		for (int i = 0; i < 16; i++) {
 			System.out.print("\t\t");
@@ -132,9 +177,9 @@ public class Statistiques {
 
 	public void afficherJoursTravailSalles(NavigableMap<LocalDate, PlanningJournee> planning) {
 		char lettre; // Stocke chaque lettre des noms des chirurgiens pour leur affichage
-		List<Salle> listeSalles = this.operations.stream().map(x -> x.getSalle()).distinct()
-				.collect(Collectors.toList());
-
+		List<Salle> listeSalles = this.operations.stream()
+											.map(x -> x.getSalle()).distinct()
+											.collect(Collectors.toList());
 		// Afficher le nom des chirurgiens
 		for (int i = 0; i < 9; i++) {
 			System.out.print("\t\t");
@@ -217,8 +262,10 @@ public class Statistiques {
 	}
 
 	private long calculerDernierQuartile() {
-		OptionalLong ol = this.operationsSansConflit.stream().mapToLong(chrg -> chrg.duree()).sorted()
-				.skip(this.operationsSansConflit.size() * 3 / 4).findFirst();
+		OptionalLong ol = this.operationsSansConflit.stream()
+											.mapToLong(chrg -> chrg.duree()).sorted()
+											.skip(this.operationsSansConflit.size() * 3 / 4)
+											.findFirst();
 		long dernierQuartile = ol.getAsLong();
 
 		return dernierQuartile;
@@ -294,8 +341,13 @@ public class Statistiques {
 		long card;
 
 		for (Salle salleCourante : salles) {
-			sum = chirurgies.stream().filter(x -> x.getSalle().equals(salleCourante)).mapToLong(x -> x.duree()).sum();
-			card = chirurgies.stream().filter(x -> x.getSalle().equals(salleCourante)).count();
+			sum = chirurgies.stream()
+							.filter(x -> x.getSalle().equals(salleCourante))
+							.mapToLong(x -> x.duree())
+							.sum();
+			card = chirurgies.stream()
+							.filter(x -> x.getSalle().equals(salleCourante))
+							.count();
 			dureeSalles.put(salleCourante, (double) sum / (double) card);
 		}
 
@@ -314,9 +366,13 @@ public class Statistiques {
 		long card;
 
 		for (Chirurgien chgCourante : chirurgiens) {
-			sum = chirurgies.stream().filter(x -> x.getChirurgien().equals(chgCourante)).mapToLong(x -> x.duree())
-					.sum();
-			card = chirurgies.stream().filter(x -> x.getChirurgien().equals(chgCourante)).count();
+			sum = chirurgies.stream()
+							.filter(x -> x.getChirurgien().equals(chgCourante))
+							.mapToLong(x -> x.duree())
+							.sum();
+			card = chirurgies.stream()
+							.filter(x -> x.getChirurgien().equals(chgCourante))
+							.count();
 			dureeChirurgien.put(chgCourante, (double) sum / (double) card);
 		}
 

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class Agenda {
 	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
-	private int nbIterations = 30;
+	private int nbIterations = 23;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
     private Map<LocalDate, Ressources> joursRessources;
 	public Statistiques stats;
@@ -37,9 +37,6 @@ public class Agenda {
 		this();
 		this.remplirDepuisFichier(nomFichier);
         this.definirRessources();
-
-        System.out.println(this.joursRessources);
-
 		this.setPlanningParJournee(this.listeJournees());
 		this.recenserTousConflits();
         this.statistiques();
@@ -52,22 +49,44 @@ public class Agenda {
         List<Salle> sallesDispos;
         List<Salle> sallesUrgenceDispos;
 
+		// Determine les jours ou les chirurgiens devraient travailler
+		this.definirJoursTravailChirurgiens();
+
         for (LocalDate jour : tousJours) {
             chirurgiensDispos = this.extraireListeChirurgiensDispos(jour);
             sallesDispos = this.ressourcesExistantes.getListeSalles();
             sallesUrgenceDispos = this.ressourcesExistantes.getListeSallesUrgence();
+
             dispoJour = new Ressources(chirurgiensDispos, sallesDispos, sallesUrgenceDispos);
+
             this.joursRessources.put(jour, dispoJour);
         }
     }
 
+	private void definirJoursTravailChirurgiens() {
+		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
+			medecin.definirJoursTravail(this.listeChirurgies);
+		}
+	}
+
     private List<Chirurgien> extraireListeChirurgiensDispos(LocalDate jour) {
         List<Chirurgien> chirurgiensDispos = new ArrayList<>();
 
-        chirurgiensDispos = this.listeChirurgies.stream()
-												.filter( x -> x.getDatesOperation().getDateDebut().equals((jour)) )
+		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
+			// Ajout du chirurgien dans la liste
+			// si le chirurgien est cence travailler ce jour-ci
+			if (medecin.censeTravailler(jour)) {
+				chirurgiensDispos.add(medecin);
+			}
+		}
+
+
+		// Les chirurgiens qui ont operes dans la journee courante
+        /*chirurgiensDispos = this.listeChirurgies.stream()
+												.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals((jour)) )
 												.map( x -> x.getChirurgien() )
-												.collect( Collectors.toList() );
+												.distinct()
+												.collect( Collectors.toList() );*/
 
         return chirurgiensDispos;
     }
@@ -296,9 +315,9 @@ public class Agenda {
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
 
-			listeMedecins = /*ressourcesJour.getListeChirurgiens();*/this.getChirurgienJournee(tmp); //this.getListeChirurgiens();
-			listeSalles = ressourcesJour.getListeSalles();//this.getListeSalles();                            // Recuperation des salles existantes !
-            listeSallesUrgence = ressourcesJour.getListeSallesUrgence();//this.getListeSallesUrgence();		// Recuperation des salles d'urgence existantes !
+			listeMedecins = ressourcesJour.getListeChirurgiens(); //this.getChirurgienJournee(tmp); //this.getListeChirurgiens();
+			listeSalles = ressourcesJour.getListeSalles(); //this.getSallesJournee(l);                            // Recuperation des salles existantes !
+            listeSallesUrgence = ressourcesJour.getListeSallesUrgence(); //this.getSallesUrgenceJournee(l);		// Recuperation des salles d'urgence existantes !
 
 			// Creer un objet PlanningJournee
 			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
@@ -430,11 +449,11 @@ public class Agenda {
 
 	public void afficherConflitsTotaux() {
 		Map<String, List<Integer>> map = this.dataConflits();
-		System.out.println("Chevauchement :\t\t\t" + map.get("Chevauchement"));
-		System.out.println("Interference : \t\t\t" + map.get("Interference"));
-		System.out.println("Ubiquite : \t\t\t" + map.get("Ubiquite"));
-		System.out.println("Total : \t\t\t" + map.get("Total"));
-		System.out.println("Nombre de conflits corriges :\t" + Statistiques.nombresConflitsCorriges);
+		System.out.println("Chevauchement :\t" + map.get("Chevauchement"));
+		System.out.println("Interference : \t" + map.get("Interference"));
+		System.out.println("Ubiquite : \t" + map.get("Ubiquite"));
+		System.out.println("Total : \t" + map.get("Total"));
+		System.out.println("Conflits corriges: " + Statistiques.nombresConflitsCorriges);
 
 		int nbIterNecessaires = (map.get("Total").get( map.get("Total").size() - 1 ).equals(0)) ?
 										map.get("Total").size() - 1

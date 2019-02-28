@@ -1,6 +1,10 @@
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.DayOfWeek;
+import java.util.List;
+import java.util.ArrayList;
 
 public class IntervalleTemps {
 	private LocalDateTime dateDebut;
@@ -26,7 +30,16 @@ public class IntervalleTemps {
         }
 	}
 
-	
+	public IntervalleTemps(LocalDateTime debut, LocalDateTime fin) {
+		if (debut.isBefore(fin)) {
+			this.dateDebut = debut;
+			this.dateFin = fin;
+		} else {
+			this.dateDebut = fin;
+			this.dateFin = debut;
+		}
+	}
+
 	public LocalDateTime getDateDebut() {
 		return this.dateDebut;
 	}
@@ -64,6 +77,55 @@ public class IntervalleTemps {
 
 	public void reduireDebut(long biaisMinutes) {
 		this.dateDebut = this.dateDebut.plusMinutes(biaisMinutes);
+	}
+
+	public List<LocalDate> listeLocalDateEntre() {
+		LocalDate jourCourant = this.dateDebut.toLocalDate();
+		List<LocalDate> listeJours = new ArrayList<>();
+
+		while (this.dateDebut.toLocalDate().minusDays(1).isBefore(jourCourant) && jourCourant.isBefore(this.dateFin.toLocalDate().plusDays(1))) {
+			listeJours.add(jourCourant);
+			jourCourant = jourCourant.plusDays(1);
+		}
+
+		return listeJours;
+	}
+
+	public static IntervalleTemps enSemaine(LocalDate jour) {
+		LocalDate jourCourant;
+		LocalDate debutSemaine;
+		LocalDate finSemaine;
+
+		// Avoir le debut de la semaine : lundi
+		jourCourant = jour;
+		while (!jourCourant.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+			jourCourant = jourCourant.minusDays(1);
+		}
+		debutSemaine = jourCourant;		// lundi
+
+		//Avoir la fin de la semaine : dimanche
+		jourCourant = jour;
+		while (!jourCourant.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+			jourCourant = jourCourant.plusDays(1);
+		}
+		finSemaine = jourCourant;		// Dimanche
+
+		return new IntervalleTemps(debutSemaine.atTime(0, 0, 0), finSemaine.atTime(0, 0, 0));
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o != null && o.getClass().equals(this.getClass())) {
+			IntervalleTemps interv = (IntervalleTemps) o;
+			return ( this.dateDebut.equals(interv.dateDebut) && this.dateFin.equals(interv.dateFin) );
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return this.dateDebut.hashCode() + this.dateFin.hashCode();
 	}
 
 	@Override

@@ -8,7 +8,7 @@ public abstract class Conflit {
 	private Chirurgie premiereChirurgie;
 	private Chirurgie secondeChirurgie;
 
-	
+
 	public abstract boolean persiste();
 
 	public abstract boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls);
@@ -73,12 +73,12 @@ public abstract class Conflit {
 		}
 		System.out.println("RESOLUTION DU CONFLIT avec :");
 		System.out.println(lc);
-                
+
                 /*if (lc.contains(new Chirurgien("ROBERT CHASE"))) {
                     System.out.println("STOP !");
                     (new Scanner(System.in)).nextLine();
                 }*/
-                
+
 		System.out.println(ls);
 		this.visualiser();
 
@@ -99,7 +99,7 @@ public abstract class Conflit {
 		}
 
 		// Resolution par modification des ressources
-		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85) ) {
+		if (this.persiste() && this.ressourcesSuffisantes(lc, ls) && ((new Random()).nextDouble() <= 0.85 + 3) ) {
 			System.out.println("----Modification de la ressource est possible");
 			this.modifierChirurgie(lc, ls);
 			Statistiques.plusModifRessource();
