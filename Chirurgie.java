@@ -137,7 +137,6 @@ public class Chirurgie implements Comparable<Chirurgie> {
 			System.out.print(">>");		// La suite de la chirugie se trouve sur le lendemain
 		}
 		System.out.println();
-
 	}
 
 	public boolean courte() {

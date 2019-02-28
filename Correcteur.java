@@ -6,30 +6,45 @@ import java.time.LocalTime;
 
 public class Correcteur {
 	private static int dureePause = 15;
+	private static Log historiqueChirurgies = new Log();
+
+	public static Log getHistoriqueChirurgies() {
+		return Correcteur.historiqueChirurgies;
+	}
 
 	// Translater l'intervalle de temps d'une chirurgie
-	public static void translater(Chirurgie courante, long biaisMinutes) {
+	private static void translater(Chirurgie courante, long biaisMinutes) {
+		Correcteur.historiqueChirurgies.ajouter(courante);
 		courante.getDatesOperation().translater(biaisMinutes);
+		Correcteur.historiqueChirurgies.ajouter(courante);
 	}
 
 	// Reduire l'intervalle de temps d'une chirurgie par la fin
-	public static void reduireFin(Chirurgie courante, long biaisMinutes) {
+	private static void reduireFin(Chirurgie courante, long biaisMinutes) {
+		Correcteur.historiqueChirurgies.ajouter(courante);
 		courante.reduireFin(biaisMinutes);
+		Correcteur.historiqueChirurgies.ajouter(courante);
 	}
 
 	// Reduire l'intervalle de temps par la fin
-	public static void reduireDebut(Chirurgie courante, long biaisMinutes) {
+	private static void reduireDebut(Chirurgie courante, long biaisMinutes) {
+		Correcteur.historiqueChirurgies.ajouter(courante);
 		courante.reduireDebut(biaisMinutes);
+		Correcteur.historiqueChirurgies.ajouter(courante);
 	}
 
 	// Changer le chirurgien
 	public static void changerChirurgien(Chirurgie courante, Chirurgien ch) {
+		Correcteur.historiqueChirurgies.ajouter(courante);
 		courante.setChirurgien(ch);
+		Correcteur.historiqueChirurgies.ajouter(courante);
 	}
 
 	// Changer la salle
 	public static void changerSalle(Chirurgie courante, Salle s) {
+		Correcteur.historiqueChirurgies.ajouter(courante);
 		courante.setSalle(s);
+		Correcteur.historiqueChirurgies.ajouter(courante);
 	}
 
 	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
@@ -51,11 +66,11 @@ public class Correcteur {
                 System.out.println("--------Reduction par le debut");
 				Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
             }
-			
+
 			if (seconde.duree() <= 0 || premiere.duree() <= 0)	throw new RuntimeException();
 	}
 
-        public static void decalageChirurgie (Chirurgie premiere, Chirurgie seconde){
+        public static void decalageChirurgie(Chirurgie premiere, Chirurgie seconde){
 			long duree;
 			long dureeTranslation;
 

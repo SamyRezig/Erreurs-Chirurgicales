@@ -12,7 +12,7 @@ import java.time.LocalTime;
 public class Main {
 
 	public static void main(String [] args) throws IOException {
-		Agenda a = new Agenda("Chirurgies_v2.csv");
+		Agenda a = new Agenda("MiniBase(1).csv");
 
 		/*a.getListeChirurgies().stream()
 								.filter( x->x.dansJournee() && !x.estUrgente())
@@ -33,6 +33,8 @@ public class Main {
 
 		// Le nombre de conflits restant par journee
 		a.afficherJoursConflit();
+
+		System.out.println(Correcteur.getHistoriqueChirurgies());
 
 		//a.verifierChirurgies();
 		a.afficherGraphique(args);
