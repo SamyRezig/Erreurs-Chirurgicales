@@ -23,7 +23,6 @@ public class Correcteur {
 	}
 
 	// Changer le chirurgien
-
 	public static void changerChirurgien(Chirurgie courante, Chirurgien ch) {
 		courante.setChirurgien(ch);
 	}
@@ -34,53 +33,54 @@ public class Correcteur {
 	}
 
 	public static void couperDuree(Chirurgie premiere, Chirurgie seconde) {
-			// Si les chirurgies ne se chevauchent pas completement
-
 			long dureeInter = premiere.dureeIntersection(seconde);
-			//Sinon priviligié le changement de chirurgien / salle
+
 			double tauxSuspect1 = premiere.tauxSuspect(dureeInter);
 			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
-			System.out.println(dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
+			System.out.println("-------| " + dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
 
-                            if (tauxSuspect1 > tauxSuspect2) {
-                                    Correcteur.reduireFin(premiere, dureeInter + Correcteur.dureePause);
-                                    System.out.println("-------- a ete decoupee : " + premiere);
-                                    System.out.println("--------Reduction par la fin");
-									Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
-                                    if (premiere.duree() <= 0)	throw new RuntimeException();
+            if (tauxSuspect1 > tauxSuspect2) {
+                Correcteur.reduireFin(premiere, dureeInter + Correcteur.dureePause);
+                System.out.println("--------a ete decoupee : " + premiere);
+                System.out.println("--------Reduction par la fin");
+				Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
 
-                            } else {
-                                    Correcteur.reduireDebut(seconde, dureeInter + Correcteur.dureePause);
-                                    System.out.println("-------- a ete decoupee : " + seconde);
-                                    System.out.println("--------Reduction par le debut");
-									Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
-                                    if (seconde.duree() <= 0)	throw new RuntimeException();
-                            }
-
+            } else {
+                Correcteur.reduireDebut(seconde, dureeInter + Correcteur.dureePause);
+                System.out.println("--------a ete decoupee : " + seconde);
+                System.out.println("--------Reduction par le debut");
+				Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
+            }
+			
+			if (seconde.duree() <= 0 || premiere.duree() <= 0)	throw new RuntimeException();
 	}
 
         public static void decalageChirurgie (Chirurgie premiere, Chirurgie seconde){
+			long duree;
+			long dureeTranslation;
+
             if(premiere.estImbrique(seconde) || seconde.estImbrique(premiere)){
+
                 if(premiere.duree() > seconde.duree()){
-                    long duree = Duration.between(premiere.getDatesOperation().getDateDebut(), seconde.getDatesOperation().getDateFin()).toMinutes();
-                    long dureeTranslation = duree + Correcteur.dureePause;
+                    duree = Duration.between(premiere.getDatesOperation().getDateDebut(),
+												seconde.getDatesOperation().getDateFin()).toMinutes();
+                    dureeTranslation = duree + Correcteur.dureePause;
                     Correcteur.translater(premiere, dureeTranslation);
                     Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
                 }else{
-                    long duree = Duration.between(seconde.getDatesOperation().getDateDebut(), premiere.getDatesOperation().getDateFin()).toMinutes();
-                    long dureeTranslation = duree + Correcteur.dureePause;
+                    duree = Duration.between(seconde.getDatesOperation().getDateDebut(),
+												premiere.getDatesOperation().getDateFin()).toMinutes();
+                    dureeTranslation = duree + Correcteur.dureePause;
                     Correcteur.translater(seconde, dureeTranslation);
                     Statistiques.mettreAJourDureeTotaleDecalage(dureeTranslation);
-            }
-            }else{
+            	}
+
+            } else {
 				Correcteur.translation(premiere, seconde);
         }
     }
 
-	public static void normaliserDebut(Chirurgie courante) {
-		LocalTime debut = LocalTime.from(courante.getDatesOperation().getDateDebut());
-
-		// LocalTime indesirables
+	public static List<LocalTime> heuresIndesirables() {
 		List<LocalTime> indesirables = new ArrayList<>();
 		indesirables.add(LocalTime.of(8, 0));
 		indesirables.add(LocalTime.of(0, 0));
@@ -96,6 +96,15 @@ public class Correcteur {
 		indesirables.add(LocalTime.of(14, 50));
 		indesirables.add(LocalTime.of(15, 20));
 		indesirables.add(LocalTime.of(17, 0));
+
+		return indesirables;
+	}
+
+	public static void normaliserDebut(Chirurgie courante) {
+		LocalTime debut = LocalTime.from(courante.getDatesOperation().getDateDebut());
+
+		// LocalTime indesirables
+		List<LocalTime> indesirables = Correcteur.heuresIndesirables();
 
 		// Couper la duree
 		if (indesirables.contains(debut) && courante.dureeSuspecte()) {
@@ -118,21 +127,7 @@ public class Correcteur {
 		LocalTime fin = LocalTime.from(courante.getDatesOperation().getDateFin());
 
 		// LocalTime indesirables
-		List<LocalTime> indesirables = new ArrayList<>();
-		indesirables.add(LocalTime.of(8, 0));
-		indesirables.add(LocalTime.of(0, 0));
-		indesirables.add(LocalTime.of(14, 0));
-		indesirables.add(LocalTime.of(13, 40));
-		indesirables.add(LocalTime.of(14, 15));
-		indesirables.add(LocalTime.of(11, 15));
-		indesirables.add(LocalTime.of(15, 15));
-		indesirables.add(LocalTime.of(12, 50));
-		indesirables.add(LocalTime.of(13, 50));
-		indesirables.add(LocalTime.of(10, 15));
-		indesirables.add(LocalTime.of(12, 35));
-		indesirables.add(LocalTime.of(14, 50));
-		indesirables.add(LocalTime.of(15, 20));
-		indesirables.add(LocalTime.of(17, 0));
+		List<LocalTime> indesirables = Correcteur.heuresIndesirables();
 
 		// Couper la duree
 		if (indesirables.contains(fin) && courante.dureeSuspecte()) {

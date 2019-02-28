@@ -65,7 +65,7 @@ public abstract class Conflit {
 	}
 
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
-		this.reordonner();      // Reordonner au dernier moment, les chirurgies peuvent changer entre temps
+		//this.reordonner();      // Reordonner au dernier moment, les chirurgies peuvent changer entre temps
 
 		if (!this.persiste()) {
 			System.out.println("Ce conflit n'existe plus.");

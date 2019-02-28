@@ -54,10 +54,8 @@ public class PlanningJournee {
 					this.listeConflits.add(nouveauConflit);
 					Statistiques.recenser(nouveauConflit);
 				}
-
 			}
 		}
-
 	}
 
 	public void montrerConflits() {
@@ -92,8 +90,8 @@ public class PlanningJournee {
 	private List<Salle> sallesUtilisables(List<Chirurgie> chirurgies, List<Salle> salles) {
 		List<Salle> sallesUtilisables;
 		List<Salle> sallesUtilises = chirurgies.stream()
-													.map( x->x.getSalle() )
-													.collect(Collectors.toList());
+												.map( x->x.getSalle() )
+												.collect(Collectors.toList());
 
 		sallesUtilisables = new ArrayList<>(salles);
 		sallesUtilisables.removeAll(sallesUtilises);
@@ -104,13 +102,13 @@ public class PlanningJournee {
 	private void trierRessources() {
 		// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
 		if (true || PlanningJournee.cpt++ >= 15) {
-			this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
+			this.disponibilites.trierListesParDuree(this.listeChirurgies);
 
 		} else if (PlanningJournee.cpt != 8) {
-			this.disponibilites.trierListes2(this.listeChirurgies);
+			this.disponibilites.trierListesParNombre(this.listeChirurgies);
 
 		} else {
-			this.disponibilites.trierListes(this.listeChirurgies);
+			this.disponibilites.trierListesAleatoire(this.listeChirurgies);
 		}
 	}
 
@@ -137,7 +135,6 @@ public class PlanningJournee {
         	}
 			// Correction du conflit
 			conflitCourant.resoudreConflit(chirurgiensUtilisables, sallesUtilisables);
-
         }
 	}
 

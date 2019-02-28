@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 public class Agenda {
-	// Liste de conflits a retirer pour resoudre chaque conflits dans PlanningJournee
 	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
 	private int nbIterations = 23;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
@@ -80,7 +79,6 @@ public class Agenda {
 			}
 		}
 
-
 		// Les chirurgiens qui ont operes dans la journee courante
         /*chirurgiensDispos = this.listeChirurgies.stream()
 												.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals((jour)) )
@@ -127,8 +125,6 @@ public class Agenda {
 			System.out.println("Pas de fichier trouve.");
 		}
 
-		// Definition des chirurgiens disponibles et des salles.
-		//this.setPlanningParJournee(this.listeJournees());
 	}
 
 	private void definirRessourcesExistants() {
@@ -219,13 +215,10 @@ public class Agenda {
 
 	public List<Chirurgien> extraireListeChirurgiens() {
 		List<Chirurgien> lc = new ArrayList<>();
-
 		for(Chirurgie c : this.listeChirurgies) {
-
 			if(!lc.contains(c.getChirurgien())) {
 				lc.add(c.getChirurgien());
 			}
-
 		}
 		return lc;
 	}
@@ -250,7 +243,6 @@ public class Agenda {
         return lsu;
     }
 
-
 	public List<Chirurgie> getChirurgieJournee(LocalDate l) {
 		List<Chirurgie> chirurgieJournee = new ArrayList<>();
 		for (Chirurgie c : this.listeChirurgies) {
@@ -258,13 +250,16 @@ public class Agenda {
 				chirurgieJournee.add(c);
 			}
 		}
-
 		return chirurgieJournee;
 	}
 
 	private List<LocalDate> listeJournees() {
-		List<LocalDate> ld = this.listeChirurgies.stream().map(x -> x.getDatesOperation().getDateDebut().toLocalDate())
-				.distinct().collect(Collectors.toList());
+		List<LocalDate> ld = this.listeChirurgies.stream()
+												.map(x -> x.getDatesOperation()
+															.getDateDebut()
+															.toLocalDate())
+												.distinct()
+												.collect(Collectors.toList());
 		return ld;
 	}
 
@@ -297,7 +292,6 @@ public class Agenda {
 	}
 
 	public void setPlanningParJournee(List<LocalDate> ld) {
-
 		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
 
@@ -310,28 +304,26 @@ public class Agenda {
 
 		for (LocalDate l : ld) {
             ressourcesJour = this.joursRessources.get(l);
-            //System.out.println(ressourcesJour);
 
 			// Obtention des listes de chirurgiens et salles
 			tmp = this.getChirurgieJournee(l);
 
-			listeMedecins = ressourcesJour.getListeChirurgiens(); //this.getChirurgienJournee(tmp); //this.getListeChirurgiens();
-			listeSalles = ressourcesJour.getListeSalles(); //this.getSallesJournee(l);                            // Recuperation des salles existantes !
-            listeSallesUrgence = ressourcesJour.getListeSallesUrgence(); //this.getSallesUrgenceJournee(l);		// Recuperation des salles d'urgence existantes !
+			listeMedecins = ressourcesJour.getListeChirurgiens();			// Recuperation des chirurgiens disponibles
+			listeSalles = ressourcesJour.getListeSalles(); 					// Recuperation des salles existantes !
+            listeSallesUrgence = ressourcesJour.getListeSallesUrgence();	// Recuperation des salles d'urgence existantes !
 
 			// Creer un objet PlanningJournee
 			jour = new PlanningJournee(tmp, listeSalles, listeSallesUrgence, listeMedecins);
+
 			// Mettre dans Map
 			mapJournees.put(l, jour);
 
 		}
-		this.planning = mapJournees;		// Setting de l'attribut planning
+		this.planning = mapJournees;	// Setting de l'attribut planning
 	}
 
 	public void recenserTousConflits() {
-		Statistiques.nouvelleIteration();
-		// Pour jour, rescenser les conflits de ce jour
-		// Ajouter tous les conflits dans la liste ListConflits
+		Statistiques.nouvelleIteration();	// Ajouter un nouveau Integer dans les listes de U/I/Ch pour les statistiques
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.setConflits();
 		}
@@ -353,6 +345,8 @@ public class Agenda {
 	public void resolution() {
 		int nbConflitsPrec = 0;
 		int i = 0;
+
+		// Les planning et la liste de conflits est deja chargee
 		System.out.println("Debut de la resolution des conflits.");
 		while (this.nombreConflits() > 0 && ++i < this.nbIterations) {
 			nbConflitsPrec = this.nombreConflits();
@@ -366,6 +360,7 @@ public class Agenda {
 
 		}
 		System.out.println("Fin de la resolution des conflits.");
+		this.nbIterations = i;	// Affecter la valeur pour l'affichage du graphique
 	}
 
 	public void descriptionCourante() {
@@ -438,12 +433,12 @@ public class Agenda {
 
 		for (LocalDate jour : this.planning.keySet()) {
 			contenuJour = this.planning.get(jour);
-				if (contenuJour.getListeConflits().size() > 0) {
-					System.out.print(jour + " : " + contenuJour.getListeConflits().size() + " conflits restant, ");
-					System.out.print(contenuJour.nbChirurgiensDispos() + " chirurgiens disponibles, ");
-					System.out.print(contenuJour.nbChirurgies() + " chirurgies.");
-					System.out.println();
-				}
+			if (contenuJour.getListeConflits().size() > 0) {
+				System.out.print(jour + " : " + contenuJour.getListeConflits().size() + " conflits restant, ");
+				System.out.print(contenuJour.nbChirurgiensDispos() + " chirurgiens disponibles, ");
+				System.out.print(contenuJour.nbChirurgies() + " chirurgies.");
+				System.out.println();
+			}
 		}
 	}
 
@@ -460,12 +455,11 @@ public class Agenda {
 										:
 										map.get("Total").size();
 
-		String plus = (this.nombreConflits() == 0) ? "" : "+";
+		String plus = (this.nombreConflits() == 0) ? "" : "+";	// Cas ou il fallait plus d'iteration pour resoudre tous les conflits
 		System.out.println("Nombre d'iterations necessaires : \t" + nbIterNecessaires + plus);
 
 		this.stats.afficherTauxSurvie();
 	}
-
 
 	public void afficherGraphique(String [] args) {
 		Map<String, List<Integer>> map = this.dataConflits();
@@ -475,5 +469,4 @@ public class Agenda {
 
 		g.afficher(args, this.nbIterations, 40);
 	}
-
 }

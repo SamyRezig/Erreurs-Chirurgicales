@@ -46,7 +46,7 @@ public class Ressources {
         }
     }
 
-    public void trierListes3(List<Chirurgie> listeChirurgies) {
+    public void trierListesParDuree(List<Chirurgie> listeChirurgies) {
 		Map<Chirurgien, Long> mapChirurgiens = new HashMap<>();
 		Map<Salle, Long> mapSalles = new HashMap<>();
 		Map<Salle, Long> mapSallesUrgentes = new HashMap<>();
@@ -103,14 +103,14 @@ public class Ressources {
 										.collect(Collectors.toList());
 	}
 
-    public void trierListes2(List<Chirurgie> listeChirurgies) {
+    public void trierListesParNombre(List<Chirurgie> listeChirurgies) {
         Map<Chirurgien, Integer> mapChirurgiens = new HashMap<>();
         Map<Salle, Integer> mapSalles = new HashMap<>();
         Map<Salle, Integer> mapSallesUrgentes = new HashMap<>();
         Integer nbChrg = null;
 
         for (Chirurgie courante : listeChirurgies) {
-
+            // Gestoin des chirurgiens
             if (this.listeChirurgiens.contains(courante.getChirurgien())) {
                 // Gestion des chirurgiens
                 nbChrg = mapChirurgiens.get(courante.getChirurgien());
@@ -159,7 +159,7 @@ public class Ressources {
     }
 
 
-    public void trierListes(List<Chirurgie> listeChirurgies) {
+    public void trierListesAleatoire(List<Chirurgie> listeChirurgies) {
         Collections.shuffle(this.listeChirurgiens);
         Collections.shuffle(this.listeSalles);
         Collections.shuffle(this.listeSallesUrgence);

@@ -21,11 +21,8 @@ public class Main {
         // Description statistique
 		a.descriptionCourante();
 
-		System.out.println("Nombre de normalisation : \t" + Statistiques.nbNormalisation);
-		System.out.println("Nombre de decoupages : \t\t" + Statistiques.nbDecoupage);
-		System.out.println("Nombre de modifs ressources : \t" + Statistiques.nbRess);
-		System.out.println("Nombre de decalages : \t\t" + Statistiques.nbDecalage);
-		System.out.println(" === Nombre de corrections : \t" + Statistiques.nbCorrection);
+		// Evolution des conflits
+		a.stats.afficherNombreCorrections();
 
 		a.creerNouveauFichier();
 

@@ -91,7 +91,6 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	public boolean estChevauchement(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation) && this.salle.equals(second.salle)
 				&& this.chirurgien.equals(second.chirurgien)) {
-			//System.out.println("CHEVAUCHEMENT");
 			return true;
 		}
 		return false;
@@ -99,7 +98,6 @@ public class Chirurgie implements Comparable<Chirurgie> {
 
 	public boolean estInterference(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation) && this.salle.equals(second.salle)) {
-			//System.out.println("INTERFERENCE");
 			return true;
 		}
 		return false;
@@ -108,7 +106,6 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	public boolean estUbiquite(Chirurgie second) {
 		if (this.datesOperation.intersect(second.datesOperation)
 				&& this.getChirurgien().equals(second.getChirurgien())) {
-			//System.out.println("UBIQUITE");
 			return true;
 		}
 		return false;
@@ -144,7 +141,7 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	}
 
 	public boolean courte() {
-		return this.datesOperation.duree() < 61;
+		return this.datesOperation.duree() < 61;	// Duree moyenne de la grande BD
 
 	}
 
@@ -222,11 +219,18 @@ public class Chirurgie implements Comparable<Chirurgie> {
 		return this.datesOperation.getDateDebut().compareTo(autre.datesOperation.getDateDebut());
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o.getClass().equals(this.getClass()) ) {
+			Chirurgie chr = (Chirurgie) o;
+			return chr.getId() == this.getId();
+		}
+		return false;
+	}
 
 	@Override
-	public Chirurgie clone() {
-		Chirurgie tmp = this;
-		return tmp;
+	public int hashCode() {
+		return this.getId();
 	}
 
 	@Override
