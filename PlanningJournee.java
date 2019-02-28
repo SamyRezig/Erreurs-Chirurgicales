@@ -101,6 +101,19 @@ public class PlanningJournee {
 		return sallesUtilisables;
 	}
 
+	private void trierRessources() {
+		// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
+		if (true || PlanningJournee.cpt++ >= 15) {
+			this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
+
+		} else if (PlanningJournee.cpt != 8) {
+			this.disponibilites.trierListes2(this.listeChirurgies);
+
+		} else {
+			this.disponibilites.trierListes(this.listeChirurgies);
+		}
+	}
+
 	public void resoudreConflits() {
 		List<Chirurgie> intersectent;
 		List<Chirurgien> chirurgiensUtilisables;
@@ -108,6 +121,7 @@ public class PlanningJournee {
 
     	for(Conflit conflitCourant : this.listeConflits) {
 			conflitCourant.reordonner();
+			this.trierRessources();
 
 			// Definir les ressources utilisabales
 			intersectent = this.chirurgiesIntersectent(conflitCourant.getSecondeChirurgie());
@@ -124,16 +138,6 @@ public class PlanningJournee {
 			// Correction du conflit
 			conflitCourant.resoudreConflit(chirurgiensUtilisables, sallesUtilisables);
 
-        	// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-			if (true || PlanningJournee.cpt++ >= 15) {
-	            this.disponibilites.trierListes3(this.listeChirurgies);	// On reordonne les listes des salles et des chirurgiens disponibles
-
-	        } else if (PlanningJournee.cpt != 8) {
-	            this.disponibilites.trierListes2(this.listeChirurgies);
-
-	        } else {
-	            this.disponibilites.trierListes(this.listeChirurgies);
-			}
         }
 	}
 
