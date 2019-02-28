@@ -90,8 +90,8 @@ public class Statistiques {
 		this.dureeJournees = this.dureeJournees(planning);
 
 		System.out.println("EDT par chirurgien");
-		this.afficherJoursTravailSalles(planning);
-		(new Scanner(System.in)).nextLine();
+		this.afficherJoursTravailPlannifie(planning);
+		//(new Scanner(System.in)).nextLine();
 
 		System.out.println("Jours avec chirurgiens insuffisants : ");
 		this.afficherJoursChirurgiensInsuffisants(planning);
@@ -531,8 +531,8 @@ public class Statistiques {
 
 		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats)
 				+ " conflits corriges par correction");
-		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes par decalage soit un decalage de " + Statistiques.dureeTotaleDecalage/60 + " heures hors normalisation");
-		System.out.println("Duree moyenne de decoupage : \t" + Statistiques.dureeMoyenneDecoupage() + " minutes par decoupage soit " + Statistiques.dureeTotaleDecoupage/60 + " heures decoupees hors normalisation");
+		System.out.println("Duree moyenne de decalage : \t" + Statistiques.dureeMoyenneDecalage() + " minutes par decalage soit un decalage de " + (float) Statistiques.dureeTotaleDecalage/60 + " heures hors normalisation");
+		System.out.println("Duree moyenne de decoupage : \t" + Statistiques.dureeMoyenneDecoupage() + " minutes par decoupage soit " + (float) Statistiques.dureeTotaleDecoupage/60 + " heures decoupees hors normalisation");
 	}
 
 	private static double dureeMoyenneDecoupage() {
