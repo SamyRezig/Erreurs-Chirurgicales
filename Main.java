@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.InputMismatchException;
 
 public class Main {
+	
 	private static int demanderNombreEntre(int inf, int sup) {
 		Scanner demande = new Scanner(System.in);
 		int reponse = -1;
@@ -25,6 +26,7 @@ public class Main {
 				}
 
 			} catch (InputMismatchException e) {
+				// Un caractere a ete saisi
 				demande.nextLine();
 				reponse = -1;
 				System.out.println("Ceci n'est pas un nombre !");

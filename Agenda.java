@@ -19,19 +19,30 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 public class Agenda {
-	private List<Chirurgie> listeChirurgies;				// Liste contenant tous les chirurgies
-	private int nbIterations = 23;
-	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
-    private Map<LocalDate, Ressources> joursRessources;
-	private Ressources ressourcesExistantes;
-	public Statistiques stats;
 
+	private List<Chirurgie> listeChirurgies;					// Liste contenant tous les chirurgies
+	private int nbIterations = 23;								// Nombre d'itaretions maximum pour resoudre les conflits
+	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
+    private Map<LocalDate, Ressources> joursRessources;			// Ressources diponibles pour jours
+	private Ressources ressourcesExistantes;					// Toutes les ressources de la base de donnees
+	public Statistiques stats;									// Effectuer des statistiques sur les chirurgies et les corrections
+
+	/**
+	  * Initialiser les objets. N'est utilisable qu'a l'interieur de la classe
+	  * car un agenda vide n'a pas de sens.
+	  */
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
 		this.planning = new TreeMap<>();
         this.joursRessources = new HashMap<>();
 	}
 
+	/**
+	  * Constructeur principal. Il lit le fichier de donnees, extrait les
+	  * ressources existantes, definit les conflits, separe l'ensemble de
+	  * chirurgies en plusieurs sous ensembles de chirurgie avec un jour de
+	  * debut en commun, prepare des statistiques (moyenne, quartiles...)
+	  */
 	public Agenda(String nomFichier) {
 		this();
 		this.remplirDepuisFichier(nomFichier);
@@ -41,6 +52,11 @@ public class Agenda {
         this.statistiques();
 	}
 
+	/**
+	  * Determiner les ressources disponibles pour chaque jour.
+	  * Cette methode utilise une analyse de l'emploi du temps des chirurgiens
+	  * pour completer leur emploi du temps.
+	  */
 	private void definirRessources() {
         List<LocalDate> tousJours = this.listeJournees();
         Ressources dispoJour;
@@ -64,6 +80,11 @@ public class Agenda {
         }
     }
 
+	/**
+	  * Parcours la liste de chirurgiens pour en extraire ceux disponibles
+	  * selon un jour donne.
+	  * @return Les chirurgiens qui sont disponibles ce jour.
+	  */
     private List<Chirurgien> extraireListeChirurgiensDispos(LocalDate jour) {
         List<Chirurgien> chirurgiensDispos = new ArrayList<>();
 
@@ -81,22 +102,33 @@ public class Agenda {
 												.map( x -> x.getChirurgien() )
 												.distinct()
 												.collect( Collectors.toList() );*/
-
         return chirurgiensDispos;
     }
 
+	/**
+	  * Getter de la liste contenant toutes les chirurgies recensees.
+	  * @return Liste avec l'integralite des chirurgies recensees.
+	  */
     public List<Chirurgie> getListeChirurgies() {
         return this.listeChirurgies;
     }
 
+	/**
+	  * Getter pour obtenir le planning des chirurgies en fonction des jours.
+	  * @return planning des chirurgies en fonction des jours.
+	  */
     public NavigableMap<LocalDate, PlanningJournee> getPlanning() {
         return this.planning;
     }
 
+	/**
+	  * Remplir la liste de chirurgies avec le fichier donne. N'est utilisee que
+	  * pour le constructeur principal de la classe Agenda.
+	  */
 	private void remplirDepuisFichier(String nomFichier) {
 		BufferedReader fluxTexte = null;
-		String ligne;
-		Chirurgie operation;
+		String ligne;				// Ligne d'un fichier
+		Chirurgie operation;		// Variable de stockage pour une chirrugie.
 
 		try {
 			// Ouverture du flux sur le fichier
@@ -107,18 +139,26 @@ public class Agenda {
 
 			// Lecture de la 2e ligne jusqu'a la fin du fichier
 			while ((ligne = fluxTexte.readLine()) != null) {
-				operation = creationChirurgie(ligne.split(";"));
-				this.listeChirurgies.add(operation);
+				operation = creationChirurgie(ligne.split(";"));	// Cretation d'une chirrugie a partir de la ligne du fichier
+				this.listeChirurgies.add(operation);				// Ajouter cette nouvelle chirurgie dans la liste des chirurgies
 			}
-			this.definirRessourcesExistants();
+			this.definirRessourcesExistants();			// Determiner les chirurgiens et salles existants.
 			System.out.println("Fin de la lecture des chirurgies.");
 
 		} catch (IOException e) {
+			// Probleme au niveau de la lecture du nomFichier
+			// Le fichier n'a probablement pas ete trouve.
 			System.out.println("Pas de fichier " + nomFichier + " trouve.");
 		}
 
 	}
 
+	/**
+	  * Determiner les chirrugiens et les salles existants. La methode extrait
+	  * chaque ressource depuis la liste de chirurgies en attribut de la classe.
+	  * Elle ne doit pas etre lancer avant le recensement des chirurgies par
+	  * remplirDepuisFichier()
+	  */
 	private void definirRessourcesExistants() {
 		List<Chirurgien> listeChirurgiens = this.extraireListeChirurgiens();
 		List<Salle> listeSalles = this.extraireListeSalles();
@@ -127,6 +167,11 @@ public class Agenda {
 		this.ressourcesExistantes = new Ressources(listeChirurgiens, listeSalles, listeSallesUrgence);
 	}
 
+	/**
+	  * Creer un nouveau fichier pour mettre les chirurgies une fois les Conflits
+	  * corriges.
+	  * @throws IOException Erreur de fichier.
+	  */
 	public void creerNouveauFichier() throws IOException {
 		String nomFichier = "ChirurgiesCorrigees.csv";
 		FileWriter writer = new FileWriter(nomFichier);
@@ -161,7 +206,13 @@ public class Agenda {
 	    	 System.out.println("Un fichier " + nomFichier + " a ete genere.");
 	}
 
-	public Chirurgie creationChirurgie(String[] infoSeparees) {
+	/**
+	  * @param infoSeparees contient dans l'ordre l'identifiant de la chirurgie,
+	  * la date de debut, l'heure de debut, la date de fin, l'heure de fin,
+	  * le nom de la salle et le nom du chirurgien
+	  * @return La nouvelle chirurgie
+	  */
+	public Chirurgie creationChirurgie(String [] infoSeparees) {
 		int identifiant = Integer.parseInt(infoSeparees[0]);
 		IntervalleTemps datesOperation = new IntervalleTemps(infoSeparees[1], infoSeparees[2], infoSeparees[1],
 				infoSeparees[3]);
@@ -171,6 +222,13 @@ public class Agenda {
 		return new Chirurgie(identifiant, datesOperation, bloc, chirurgien);
 	}
 
+	/**
+	  * Chercher une salle existante parmi la liste de chirurgie. N'est utilisee
+	  * que pour la lecture du fichier.
+	  * @param nomSalle Le nom de la salle
+	  * @return Un passage par valeur de la salle trouvee ou une salle creee
+	  * a defaut de la trouver
+	  */
 	private Salle trouverSalle(String nomSalle) {
 		for (Chirurgie operation : this.listeChirurgies) {
 			if (operation.getSalle().getNom().equals(nomSalle)) {
@@ -180,6 +238,12 @@ public class Agenda {
 		return new Salle(nomSalle);
 	}
 
+	/**
+	  * Chercher un chirurgien existante parmi la liste de chirurgie. N'est utilisee
+	  * que pour la lecture du fichier.
+	  * @param nomChirurgien le nom du chirurgien
+	  * @return passage par valeur du chirurgien ou un completement cree.
+	  */
 	private Chirurgien trouverChirurgien(String nomChirurgien) {
 		for (Chirurgie operation : this.listeChirurgies) {
 			if (operation.getChirurgien().getNom().equals(nomChirurgien)) {
@@ -189,18 +253,34 @@ public class Agenda {
 		return new Chirurgien(nomChirurgien);
 	}
 
+	/**
+	  * Getter pour la liste de chirurgiens. Passe par les ressources existantes.
+	  * @return la liste de chirurgiens.
+	  */
 	public List<Chirurgien> getListeChirurgiens() {
 		return this.ressourcesExistantes.getListeChirurgiens();
 	}
 
+	/**
+	  * Getter pour la liste de salles non urgente. Passe par les ressources existantes.
+	  * @return la liste de salles non urgente.
+	  */
 	public List<Salle> getListeSalles() {
 		return this.ressourcesExistantes.getListeSalles();
 	}
 
+	/**
+	  * Getter pour la liste de salles urgente. Passe par les ressources existantes.
+	  * @return la liste de salles urgente.
+	  */
 	public List<Salle> getListeSallesUrgence() {
 		return this.ressourcesExistantes.getListeSallesUrgence();
 	}
 
+	/**
+	  * Parcours les chirurgies pour extraire les chirurgiens.
+	  * @return une nouvelle liste de chirurgiens
+	  */
 	public List<Chirurgien> extraireListeChirurgiens() {
 		List<Chirurgien> lc = new ArrayList<>();
 		for(Chirurgie c : this.listeChirurgies) {
@@ -211,6 +291,10 @@ public class Agenda {
 		return lc;
 	}
 
+	/**
+	  * Parcours les chirurgies pour extraire les salles non urgentes.
+	  * @return une nouvelle liste de salles non urgentes
+	  */
 	public List<Salle> extraireListeSalles(){
 		List<Salle> ls = new ArrayList<>();
 		for(Chirurgie c : this.listeChirurgies) {
@@ -221,6 +305,10 @@ public class Agenda {
 		return ls;
 	}
 
+	/**
+	  * Parcours les chirurgies pour extraire les salles urgentes.
+	  * @return une nouvelle liste de salles urgentes
+	  */
     public List<Salle> extraireListeSallesUrgence(){
         List<Salle> lsu = new ArrayList<>();
             for(Chirurgie c : this.listeChirurgies) {
@@ -231,6 +319,10 @@ public class Agenda {
         return lsu;
     }
 
+	/**
+	  * @return une liste de chirurgies debutant dans la date donnee.
+	  * @param l la date dont on souhaite extraire les chirurgies.
+	  */
 	public List<Chirurgie> getChirurgieJournee(LocalDate l) {
 		List<Chirurgie> chirurgieJournee = new ArrayList<>();
 		for (Chirurgie c : this.listeChirurgies) {
@@ -241,6 +333,9 @@ public class Agenda {
 		return chirurgieJournee;
 	}
 
+	/**
+	  * @return une liste de jours ou il y a eu des chirurgies.
+	  */
 	private List<LocalDate> listeJournees() {
 		List<LocalDate> ld = this.listeChirurgies.stream()
 												.map(x -> x.getDatesOperation()
@@ -251,11 +346,15 @@ public class Agenda {
 		return ld;
 	}
 
+	/**
+	  * Remplir la map de (LocalDate, Planning)
+	  * @param ld la liste de jours avec des operations.
+	  */
 	public void setPlanningParJournee(List<LocalDate> ld) {
 		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
 
-		List<Chirurgie> tmp = null; // Liste des chirurgies pour une journee
+		List<Chirurgie> tmp = null; 			// Liste des chirurgies pour une journee
 		List<Chirurgien> listeMedecins = null;
 		List<Salle> listeSalles = null;
         List<Salle> listeSallesUrgence = null;
@@ -282,6 +381,9 @@ public class Agenda {
 		this.planning = mapJournees;	// Setting de l'attribut planning
 	}
 
+	/**
+	  * Parcours chaque planning de chaque jour pour definir les conflits existant
+	  */
 	public void recenserTousConflits() {
 		Statistiques.nouvelleIteration();	// Ajouter un nouveau Integer dans les listes de U/I/Ch pour les statistiques
 		for (PlanningJournee contenuJour : this.planning.values()) {
@@ -289,19 +391,29 @@ public class Agenda {
 		}
 	}
 
+	/**
+	  * Visualiser les conflits en ligne de commandes.
+	  */
 	public void montrerConflits() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.montrerConflits();
 		}
 	}
 
-	// Resolution conflits
+	/**
+	  * Resoudre tous les conflits existants dans chaque planning de chaque
+	  * journee
+	  */
 	public void resoudreTousConflits() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.resoudreConflits();
 		}
 	}
 
+	/**
+	  * Resoudre tous les conflits recenses dans chaque planning en plusieurs iteration
+	  * successives. Affiche le numero de de l'iteration avec la resolution du conflit.
+	  */
 	public void resolution() {
 		int nbConflitsPrec = 0;
 		int i = 0;
@@ -324,11 +436,19 @@ public class Agenda {
 		//this.nbIterations = i;	// Affecter la valeur pour l'affichage du graphique
 	}
 
+	/**
+	  * Une fois les conflits corriges, comparer l'etat de l'agenda avant et apres
+	  * les corrections.
+	  */
 	public void comparaisonStats() {
 		Statistiques apresStats = new Statistiques(this);
 		this.stats.comparer(apresStats);
 	}
 
+	/**
+	  * Parcours chaque planning de chaque journee pour afficher les chirurgies
+	  * qui semblent irrealistes.
+	  */
 	public void verifierChirurgies() {
 		System.out.println("Chirurgies suspectes : ");
 		for (PlanningJournee contenuJour : this.planning.values()) {
@@ -336,10 +456,17 @@ public class Agenda {
 		}
 	}
 
+	/**
+	  * @return le nombre de conflits resultant de la somme des nombres de conflits
+	  * recenses dans chaque planning.
+	  */
 	private int nombreConflits() {
 		return this.extraireConflits().size();
 	}
 
+	/**
+	  * @return une liste contenant tous les conflits recenses dans chaque planning.
+	  */
 	public List<Conflit> extraireConflits() {
 		List<Conflit> tousConflits = new ArrayList<>();
 
@@ -350,16 +477,26 @@ public class Agenda {
 		return tousConflits;
 	}
 
+	/**
+	  * Instancie un objet Statistiques. Utilise uniquement par le Constructeur
+	  * principal.
+	  */
 	public void statistiques() {
 		this.stats = new Statistiques(this);
 	}
 
+	/**
+	  * Visualisation de l'ensemble des chirurgies.
+	  */
 	public void visualiser() {
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiser();
 		}
 	}
 
+	/**
+	  * Visualisation de l'ensemble des conflits recenses dans chaque planning
+	  */
 	public void visualiserConflits() {
         for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.visualiserConflits();

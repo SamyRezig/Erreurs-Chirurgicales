@@ -5,17 +5,28 @@ import java.util.Map;
 import java.util.ArrayList;
 
 public class Log {
-    private NavigableMap<Integer, List<String>> mapEtats;
+    private NavigableMap<Integer, List<String>> mapEtats;   // Historique des etats differents etats des chirurgies.
 
+    /**
+	  * Constructeur principal. Instancie la map.
+	  */
     public Log() {
         this.mapEtats = new TreeMap<>();
     }
 
+    /**
+      * Afficher l'historique des etats de chaque chirurgies.
+      */
     public void afficher() {
     	this.mapEtats.entrySet().stream()
     							.forEach( x->this.afficherEtats(x.getKey() ));
     }
 
+    /**
+      * Afficher l'historique des etes d'une chirurgie donnee. Affiche un message
+      * d'erreur si la chirurgie n'a pas ete trouvee.
+      * @param id l'identifiant de la chirurgie.
+      */
     public void afficherEtats(int id) {
         List<String> etats = mapEtats.get(id);
 
@@ -27,6 +38,11 @@ public class Log {
         }
     }
 
+    /**
+      * Ajouter un nouvelle etat d'une chirurgie a l'historique
+      * @param operation la chirurgie dans un nouvel etat. L'etat n'est pas gardee
+      * s'il est deja recense.
+      */
     public void ajouter(Chirurgie operation) {
         List<String> etats = this.mapEtats.get(operation.getId());
         String nouvelleEtat = operation.toString();
@@ -42,10 +58,17 @@ public class Log {
         }
     }
 
+    /**
+      * Integrer une nouvelle chirurgie a la base.
+      * @param id identifiant de la nouvelle chirurgie.
+      * @param nouvelleEtat l'etat initial de la chirurgie
+      */
     private void integrer(int id, String nouvelleEtat) {
+        // Creation de la liste d'etats
         List<String> nouvelleListe = new ArrayList<>();
         nouvelleListe.add(nouvelleEtat);
 
+        // Ajout de la liste a la map
         this.mapEtats.put(id, nouvelleListe);
     }
 

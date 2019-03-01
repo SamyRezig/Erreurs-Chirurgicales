@@ -6,6 +6,9 @@ import java.util.Set;
 
 public class Ubiquite extends Conflit {
 
+	/**
+	  * Appelle le constructeur de la classe Conflit seulement
+	  */
 	public Ubiquite(Chirurgie first, Chirurgie second) {
 		super(first, second);
   	}
@@ -19,6 +22,10 @@ public class Ubiquite extends Conflit {
 		return (lc.size() >= 1);	// La liste de chirurgiens n'est pas censee contenir le chirurgien qu'on veut changer
 	}
 
+	/**
+	  * Cherche le chirurgien de remplcement depuis la liste donne.
+	  * @param lc la liste de chirurgiens utilisables.
+	  */
 	public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
 		Chirurgien tmpChirurgien = null;
 		//Change de chirurgien

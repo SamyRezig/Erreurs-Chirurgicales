@@ -17,6 +17,10 @@ public class Interference extends Conflit {
 	}
 
     @Override
+    /**
+	  * Cherche la salle de remplcement depuis la liste donne.
+	  * @param ls la liste de salles utilisables.
+	  */
     public void modifierChirurgie(List<Chirurgien> lc, List<Salle> ls) {
     	Salle tmpSalle = null;
         for (Salle s : ls) {
