@@ -101,15 +101,7 @@ public class PlanningJournee {
 
 	private void trierRessources() {
 		// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-		if (true || PlanningJournee.cpt++ >= 15) {
-			this.disponibilites.trierListesParDuree(this.listeChirurgies);
-
-		} else if (PlanningJournee.cpt != 8) {
-			this.disponibilites.trierListesParNombre(this.listeChirurgies);
-
-		} else {
-			this.disponibilites.trierListesAleatoire(this.listeChirurgies);
-		}
+		this.disponibilites.trierListesAleatoire(this.listeChirurgies);
 	}
 
 	public void resoudreConflits() {
@@ -121,10 +113,10 @@ public class PlanningJournee {
 			conflitCourant.reordonner();
 			this.trierRessources();
 
-			// Definir les ressources utilisabales
+			// Definir les ressources utilisabales :
+			// Retirer les ressources qui provoqueraient un future conflit
+			// La salle/chirrugien a modifier ne fait plus partie des listes
 			intersectent = this.chirurgiesIntersectent(conflitCourant.getSecondeChirurgie());
-
-			System.out.println(conflitCourant.getSecondeChirurgie());
 			chirurgiensUtilisables = this.chirurgiensUtilisables(intersectent);
 
 			// Choix des salles

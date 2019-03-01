@@ -30,11 +30,11 @@ public class Statistiques {
 
 	private static long dureeTotaleDecalage = 0;
 	private static long dureeTotaleDecoupage = 0;
-	public static int nbNormalisation = 0;
-	public static int nbDecoupage = 0;
-	public static int nbRess = 0;
-	public static int nbDecalage = 0;
-	public static int nbCorrection = 0;
+	private static int nbNormalisation = 0;
+	private static int nbDecoupage = 0;
+	private static int nbRess = 0;
+	private static int nbDecalage = 0;
+	private static int nbCorrection = 0;
 
 	public static List<Integer> nombresUbiquite = new ArrayList<>();
 	public static List<Integer> nombresInterference = new ArrayList<>();
@@ -86,7 +86,7 @@ public class Statistiques {
 		System.out.println("----Calcul des durees pour chaque journee.");
 		this.dureeJournees = this.dureeJournees(planning);
 
-		System.out.println("----EDT par chirurgien disponibles");
+		/*System.out.println("----EDT par chirurgien disponibles");
 		this.afficherJoursTravailPlannifie(a);
 		//(new Scanner(System.in)).nextLine();
 
@@ -95,7 +95,7 @@ public class Statistiques {
 
 		System.out.println("----Nombre de chirurgies normales le soir : ");
 		System.out.println(this.nombreChirurgiesNormalesSoir(listeBase));
-		//(new Scanner(System.in)).nextLine();
+		//(new Scanner(System.in)).nextLine();*/
 
 		System.out.println("Fin du chargement des outils statistiques.");
 	}

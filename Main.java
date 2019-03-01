@@ -19,6 +19,7 @@ public class Main {
 								.forEach(System.out::print);*/
 
         a.resolution();
+        Correcteur.getHistoriqueChirurgies().afficher();
 
         // Description statistique
 		a.descriptionCourante();
@@ -34,7 +35,7 @@ public class Main {
 		// Le nombre de conflits restant par journee
 		a.afficherJoursConflit();
 
-		Correcteur.getHistoriqueChirurgies().afficher();
+		
 
 		//a.verifierChirurgies();
 		a.afficherGraphique(args);

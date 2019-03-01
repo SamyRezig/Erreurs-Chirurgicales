@@ -71,9 +71,9 @@ public class Agenda {
     private List<Chirurgien> extraireListeChirurgiensDispos(LocalDate jour) {
         List<Chirurgien> chirurgiensDispos = new ArrayList<>();
 
+        // Pour tout chirurgien, on l'ajoute dans la liste
+     	// s'il est cense travailler ce jour-ci
 		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
-			// Ajout du chirurgien dans la liste
-			// si le chirurgien est cence travailler ce jour-ci
 			if (medecin.censeTravailler(jour)) {
 				chirurgiensDispos.add(medecin);
 			}

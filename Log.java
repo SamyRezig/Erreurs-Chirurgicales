@@ -1,6 +1,7 @@
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 public class Log {
@@ -11,9 +12,8 @@ public class Log {
     }
 
     public void afficher() {
-        for (Integer id : mapEtats.keySet()) {
-            this.afficherEtats(id);
-        }
+    	this.mapEtats.entrySet().stream()
+    							.forEach( x->this.afficherEtats(x.getKey() ));
     }
 
     public void afficherEtats(int id) {

@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class Ressources {
@@ -87,6 +88,7 @@ public class Ressources {
 			}
 		}
 		// Conversion des chirurgiens en une liste
+		System.out.println(mapChirurgiens);
 		this.listeChirurgiens = mapChirurgiens.entrySet().stream()
 									.sorted(Map.Entry.comparingByValue())
 									.map( x->x.getKey() )

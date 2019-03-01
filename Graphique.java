@@ -3,11 +3,9 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.LineChart;
 import java.util.List;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 
@@ -24,11 +22,11 @@ public class Graphique extends Application {
     public int getIterationMax() {
     	return Graphique.iterationMax;
     }
-    
+
     public int getConflitMax() {
     	return Graphique.conflitMax;
     }
-    
+
     public void afficher(String [] args, int nbIteration, int nbConflit) {
     	this.setIterationMax(nbIteration);
     	this.setConflitMax(nbConflit);
@@ -38,25 +36,25 @@ public class Graphique extends Application {
     public void setIterationMax(int nb) {
     	Graphique.iterationMax = nb;
     }
-    
+
     public void setConflitMax(int nb) {
     	Graphique.conflitMax = nb;
     }
-    
+
     @SuppressWarnings("unchecked")
     private void initialiserAxes(Group root) {
-    	
-    	
-    	
+
+
+
         System.out.println("Initialisation des axes");
         // Definir l'axe x
-        NumberAxis xAxe = new NumberAxis(0, this.iterationMax+1, 1);
+        NumberAxis xAxe = new NumberAxis(0, this.iterationMax + 1, 1);
 
         xAxe.setLabel("Iterations");
 
         // Definir l'axe y
         NumberAxis yAxe = new NumberAxis(0, this.conflitMax, 10);
-        
+
         yAxe.setLabel("Nombre de conflits");
 
         this.graphe = new LineChart(xAxe, yAxe);
@@ -100,7 +98,7 @@ public class Graphique extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Nombre de conflits en fonction du temps");
         Group root = null;
-  
+
         this.initGroup();
 
         if (this.graphe != null) {
@@ -117,7 +115,7 @@ public class Graphique extends Application {
         primaryStage.setScene(sc);
         primaryStage.show();
     }
-    
-    
+
+
 
 }
