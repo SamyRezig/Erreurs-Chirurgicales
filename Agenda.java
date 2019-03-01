@@ -23,8 +23,8 @@ public class Agenda {
 	private int nbIterations = 23;
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
     private Map<LocalDate, Ressources> joursRessources;
-	public Statistiques stats;
 	private Ressources ressourcesExistantes;
+	public Statistiques stats;
 
 	private Agenda() {
 		this.listeChirurgies = new ArrayList<>();
@@ -49,7 +49,9 @@ public class Agenda {
         List<Salle> sallesUrgenceDispos;
 
 		// Determine les jours ou les chirurgiens devraient travailler
-		this.definirJoursTravailChirurgiens();
+		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
+			medecin.definirJoursTravail(this.listeChirurgies);
+		}
 
         for (LocalDate jour : tousJours) {
             chirurgiensDispos = this.extraireListeChirurgiensDispos(jour);
@@ -61,12 +63,6 @@ public class Agenda {
             this.joursRessources.put(jour, dispoJour);
         }
     }
-
-	private void definirJoursTravailChirurgiens() {
-		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
-			medecin.definirJoursTravail(this.listeChirurgies);
-		}
-	}
 
     private List<Chirurgien> extraireListeChirurgiensDispos(LocalDate jour) {
         List<Chirurgien> chirurgiensDispos = new ArrayList<>();
@@ -111,18 +107,14 @@ public class Agenda {
 
 			// Lecture de la 2e ligne jusqu'a la fin du fichier
 			while ((ligne = fluxTexte.readLine()) != null) {
-				//System.out.println(ligne);
-
 				operation = creationChirurgie(ligne.split(";"));
 				this.listeChirurgies.add(operation);
-
 			}
 			this.definirRessourcesExistants();
 			System.out.println("Fin de la lecture des chirurgies.");
-			//System.out.println(listeChirurgies);
 
 		} catch (IOException e) {
-			System.out.println("Pas de fichier trouve.");
+			System.out.println("Pas de fichier " + nomFichier + " trouve.");
 		}
 
 	}
@@ -197,10 +189,6 @@ public class Agenda {
 		return new Chirurgien(nomChirurgien);
 	}
 
-	public int sizeCsv() {
-		return this.listeChirurgies.size();
-	}
-
 	public List<Chirurgien> getListeChirurgiens() {
 		return this.ressourcesExistantes.getListeChirurgiens();
 	}
@@ -263,34 +251,6 @@ public class Agenda {
 		return ld;
 	}
 
-	private List<Chirurgien> getChirurgienJournee(List<Chirurgie> listeChg) {
-		List<Chirurgien> listeMedecins = new ArrayList<>();
-
-		for (Chirurgie chg : listeChg) {
-			if (!listeMedecins.contains(chg.getChirurgien())) {
-				listeMedecins.add(chg.getChirurgien());
-			}
-		}
-
-		return listeMedecins;
-	}
-
-	public List<Salle> getSallesJournee(LocalDate jour) {
-		return this.listeChirurgies.stream()
-							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && !x.estUrgente())
-							.map( x->x.getSalle() )
-							.distinct()
-							.collect(Collectors.toList());
-	}
-
-    public List<Salle> getSallesUrgenceJournee(LocalDate jour) {
-		return this.listeChirurgies.stream()
-							.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals(jour) && x.estUrgente())
-							.map( x->x.getSalle() )
-							.distinct()
-							.collect(Collectors.toList());
-	}
-
 	public void setPlanningParJournee(List<LocalDate> ld) {
 		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
@@ -350,7 +310,8 @@ public class Agenda {
 		System.out.println("Debut de la resolution des conflits.");
 		while (this.nombreConflits() > 0 && ++i < this.nbIterations) {
 			nbConflitsPrec = this.nombreConflits();
-			System.out.println("Nombre de conflits : " + nbConflitsPrec);
+			System.out.println("Nombre de conflits restant : " + nbConflitsPrec);
+			System.out.println("\nIteration numero " + i + "\n");
 
 			this.resoudreTousConflits();
 			this.setPlanningParJournee(this.listeJournees());
@@ -360,27 +321,19 @@ public class Agenda {
 
 		}
 		System.out.println("Fin de la resolution des conflits.");
-		this.nbIterations = i;	// Affecter la valeur pour l'affichage du graphique
+		//this.nbIterations = i;	// Affecter la valeur pour l'affichage du graphique
 	}
 
-	public void descriptionCourante() {
+	public void comparaisonStats() {
 		Statistiques apresStats = new Statistiques(this);
-
-		this.visualiserConflits();
 		this.stats.comparer(apresStats);
 	}
 
-	public void resolutionCommentee() {
-		this.resolution();
-		this.descriptionCourante();
-	}
-
 	public void verifierChirurgies() {
-		System.out.println("Chirurgies bizarres : ");
+		System.out.println("Chirurgies suspectes : ");
 		for (PlanningJournee contenuJour : this.planning.values()) {
 			contenuJour.verifierChirurgies();
 		}
-		System.out.println("Fin verification des chirurgies bizarres");
 	}
 
 	private int nombreConflits() {
@@ -395,17 +348,6 @@ public class Agenda {
 		}
 
 		return tousConflits;
-	}
-
-	public Map<String, List<Integer>> dataConflits() {
-		Map<String, List<Integer>> data = new HashMap<>();
-
-		data.put("Ubiquite", Statistiques.nombresUbiquite);
-		data.put("Interference", Statistiques.nombresInterference);
-		data.put("Chevauchement", Statistiques.nombresChevauchement);
-		data.put("Total", Statistiques.nombresConflits);
-
-		return data;
 	}
 
 	public void statistiques() {
@@ -424,49 +366,4 @@ public class Agenda {
 		}
     }
 
-	public Chirurgie derniereChirurgie() {
-		return this.planning.lastEntry().getValue().derniereChirurgie();
-	}
-
-	public void afficherJoursConflit() {
-		PlanningJournee contenuJour;
-
-		for (LocalDate jour : this.planning.keySet()) {
-			contenuJour = this.planning.get(jour);
-			if (contenuJour.getListeConflits().size() > 0) {
-				System.out.print(jour + " : " + contenuJour.getListeConflits().size() + " conflits restant, ");
-				System.out.print(contenuJour.nbChirurgiensDispos() + " chirurgiens disponibles, ");
-				System.out.print(contenuJour.nbChirurgies() + " chirurgies.");
-				System.out.println();
-			}
-		}
-	}
-
-	public void afficherConflitsTotaux() {
-		Map<String, List<Integer>> map = this.dataConflits();
-		System.out.println("Chevauchement :\t" + map.get("Chevauchement"));
-		System.out.println("Interference : \t" + map.get("Interference"));
-		System.out.println("Ubiquite : \t" + map.get("Ubiquite"));
-		System.out.println("Total : \t" + map.get("Total"));
-		System.out.println("Conflits corriges: " + Statistiques.nombresConflitsCorriges);
-
-		int nbIterNecessaires = (map.get("Total").get( map.get("Total").size() - 1 ).equals(0)) ?
-										map.get("Total").size() - 1
-										:
-										map.get("Total").size();
-
-		String plus = (this.nombreConflits() == 0) ? "" : "+";	// Cas ou il fallait plus d'iteration pour resoudre tous les conflits
-		System.out.println("Nombre d'iterations necessaires : \t" + nbIterNecessaires + plus);
-
-		this.stats.afficherTauxSurvie();
-	}
-
-	public void afficherGraphique(String [] args) {
-		Map<String, List<Integer>> map = this.dataConflits();
-		Graphique g = new Graphique();
-
-		Graphique.valeurs = map;
-
-		g.afficher(args, this.nbIterations, 40);
-	}
 }

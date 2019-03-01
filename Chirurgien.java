@@ -31,7 +31,6 @@ public class Chirurgien {
 			frequence = listeChirurgies.stream()
 										.filter( x -> x.getDatesOperation().getDateDebut().getDayOfWeek().equals(jour) )
 										.count();
-
 			this.frequencesTravail.put(jour, frequence);
 		}
 	}
@@ -70,28 +69,34 @@ public class Chirurgien {
 		this.analyserSemaineTravail(chirurgiesSemaine, semaine);
 	}
 
-	private void analyserSemaineTravail(List<Chirurgie> chirurgiesSemaine, IntervalleTemps semaine) {
-		System.out.println(chirurgiesSemaine);
-		LocalDate max;
-		List<LocalDate> joursRien = semaine.listeLocalDateEntre();
-		List<LocalDate> joursTravail = chirurgiesSemaine.stream()
+	private void analyserSemaineTravail(List<Chirurgie> chirurgiesSemaineChirurgien, IntervalleTemps semaine) {
+		LocalDate max = null;
+		// Liste contenant les jours ou le chirurgien a travaille dans la semaine courante
+		List<LocalDate> joursTravail = chirurgiesSemaineChirurgien.stream()
 												.map( x->x.getDatesOperation().getDateDebut().toLocalDate() )
 												.distinct()
 												.collect( Collectors.toList() );
-		// Si le chirurgien a travaille moins de 5 jours
-		// mais strictement plus que 1 jour
-		while (1 < joursTravail.size() && joursTravail.size() < 5) {
-			joursRien.removeAll(joursTravail);	// Garder les jours ou le chirurgien n'a pas travaille
+		// Liste contenant des jours ou le chirurgie n'a pas travaille dans la semaine courante
+		List<LocalDate> joursLibres = semaine.listeLocalDateEntre();
+		joursLibres.removeAll(joursTravail);	// Garder les jours ou le chirurgien n'a pas travaille
 
-			// Completer par le jour de la semaine le plus frequent
+		// Si le chirurgien a travaille moins de 5 jours
+		// mais strictement plus que 1 jour, il faut lui rajouter des jours !
+		while (1 < joursTravail.size() && joursTravail.size() < 5 && !joursLibres.isEmpty()) {
+			// Completer par le jour de la semaine le plus frequent les jours ou il ne travaille pas
+			// Recherche du jour ou il travaille le plus
 			max = null;
-			for (LocalDate jour : joursRien) {
+			for (LocalDate jour : joursLibres) {
 				if (max == null || this.frequencesTravail.get(max.getDayOfWeek()) < this.frequencesTravail.get(jour.getDayOfWeek())) {
 					max = jour;
 				}
 			}
-			joursRien.remove(max);	// Retirer ce jour des jours non en travail
-			joursTravail.add(max);	// Ajouter ce jour parmi les jours de travail
+			if (this.frequencesTravail.get(max.getDayOfWeek()) != 0) {
+				joursLibres.remove(max);// Retirer ce jour : le chirurgien peut travailler ce jour-ci
+				joursTravail.add(max);	// Ajouter ce jour parmi les jours de travail
+			} else {
+				joursLibres.remove(max);	// Retirer ce jour : le chirurgien n'est pas libre et ne pourra jamais travailler ce jour-ci
+			}
 		}
 		this.joursTravail.addAll(joursTravail);
 	}

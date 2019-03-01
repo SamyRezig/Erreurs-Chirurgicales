@@ -43,10 +43,6 @@ public class Graphique extends Application {
 
     @SuppressWarnings("unchecked")
     private void initialiserAxes(Group root) {
-
-
-
-        System.out.println("Initialisation des axes");
         // Definir l'axe x
         NumberAxis xAxe = new NumberAxis(0, this.iterationMax + 1, 1);
 
@@ -66,7 +62,6 @@ public class Graphique extends Application {
 
     @SuppressWarnings("unchecked")
     private void tracer(List<Integer> nuagePoints, String nom) {
-        System.out.println("Tracer une courbe");
         Series series = new XYChart.Series();
         series.setName(nom);
 
@@ -105,9 +100,8 @@ public class Graphique extends Application {
         	graphe.setPrefHeight(this.hauteur);
         	graphe.setPrefWidth(this.largeur);
             root = this.getGroup();
-            System.out.println("Root initialise !");
         } else {
-            System.out.println("Impossible");
+            System.out.println("Impossible d'afficher le graphique.");
         }
 
 

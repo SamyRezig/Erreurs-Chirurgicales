@@ -58,11 +58,12 @@ public abstract class Conflit {
 
     public void resoudreConflit(List<Chirurgien> lc, List<Salle> ls) {
 		if (!this.persiste()) {		// Le conflit a pu etre resolu entre temps
-			System.out.println("Ce conflit n'existe plus.");
+			System.out.println("Le conflit entre les chirurgies " + this.getPremiereChirurgie().getId() + " et " + this.getSecondeChirurgie().getId() + " n'existe plus.");
+			this.visualiser();
 			return;
 		}
-		System.out.println("RESOLUTION DU CONFLIT avec :");
-		System.out.println(lc + "\n" + ls);
+		System.out.println("RESOLUTION DU CONFLIT entre " + this.getPremiereChirurgie().getId() + " et " + this.getSecondeChirurgie().getId() + " : ");
+		System.out.println("Chirurgiens disponibles : \t" + lc + "\n" + "Salles dispnobles : \t\t" + ls);
 		this.visualiser();
 
 		// Nomalisation des deux chirurgies : de sorte a ce qu'elle ne commence plus
@@ -82,12 +83,14 @@ public abstract class Conflit {
 
 		// Resolution par decoupage
 		double ts = this.tauxSuperposition();
-		if (this.persiste() && this.tauxSuperposition() < 0.8 && (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte()) && (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
-			System.out.println("----Decoupage des chirurgies -- taux de superposition = " + ts);
+		if (this.persiste() && this.tauxSuperposition() < 0.8
+							&& (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte())
+							&& (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {
+			System.out.println("----Decoupage des chirurgies");
 			Correcteur.couperDuree(this.getPremiereChirurgie(), this.getSecondeChirurgie());
 			Statistiques.plusDecoupe();
 		} else {
-			System.out.println("----Pas de decoupage de chirurgies -- ts = " + ts);
+			System.out.println("----Pas de decoupage de chirurgies");
 		}
 
 		// Resolution par decalage

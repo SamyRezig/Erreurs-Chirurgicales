@@ -30,23 +30,6 @@ public class Ressources {
         return this.listeSallesUrgence;
     }
 
-    public int nbChirurgiensDispos() {
-        return this.listeChirurgiens.size();
-    }
-
-    public void tl(List<Chirurgie> listeChirurgies) {
-        Map<Chirurgien, Long> mapChirurgiens = new HashMap<>();
-        Chirurgien medecin = null;
-        Long duree = null;
-
-        for (Chirurgie chrg : listeChirurgies) {
-            // Si le chirurgien est cense etre disponible
-            if (this.listeChirurgiens.contains(chrg.getChirurgien())) {
-
-            }
-        }
-    }
-
     public void trierListesParDuree(List<Chirurgie> listeChirurgies) {
 		Map<Chirurgien, Long> mapChirurgiens = new HashMap<>();
 		Map<Salle, Long> mapSalles = new HashMap<>();

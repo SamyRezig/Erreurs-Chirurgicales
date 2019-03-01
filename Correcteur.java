@@ -53,17 +53,16 @@ public class Correcteur {
 			// Calcul des taux de suspection pour determiner la chirurgie a decouper
 			double tauxSuspect1 = premiere.tauxSuspect(dureeInter);
 			double tauxSuspect2 = seconde.tauxSuspect(dureeInter);
-			System.out.println("-------| " + dureeInter + " -- " + tauxSuspect1 + " -- " + tauxSuspect2);
 
             if (tauxSuspect1 > tauxSuspect2) {
                 Correcteur.reduireFin(premiere, dureeInter + Correcteur.dureePause);
-                System.out.println("--------a ete decoupee : " + premiere);
+                System.out.println("--------La chirurgie " + premiere.getId() + " a ete decoupee");
                 System.out.println("--------Reduction par la fin");
 				Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
 
             } else {
                 Correcteur.reduireDebut(seconde, dureeInter + Correcteur.dureePause);
-                System.out.println("--------a ete decoupee : " + seconde);
+                System.out.println("--------La chirurgie " + seconde.getId() + " a ete decoupee");
                 System.out.println("--------Reduction par le debut");
 				Statistiques.plusDureeDecoupage(dureeInter + Correcteur.dureePause);
             }

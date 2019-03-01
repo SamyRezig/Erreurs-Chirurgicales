@@ -147,30 +147,6 @@ public class Chirurgie implements Comparable<Chirurgie> {
 		return this.duree() > 134;	// dernier quartile de la grande base de donnees 134
 	}
 
-    public boolean heureSuspecte() {
-        return this.heureDebutSuspecte() || this.heureFinSuspecte();
-    }
-
-	public boolean heureDebutSuspecte() {
-		List<LocalDateTime> heuresSuspectes = new ArrayList<>();
-		for (LocalDateTime heure : heuresSuspectes) {
-			if (this.datesOperation.getDateDebut().equals(heure)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean heureFinSuspecte() {
-		List<LocalDateTime> heuresSuspectes = new ArrayList<>();
-		for (LocalDateTime heure : heuresSuspectes) {
-			if (this.datesOperation.getDateFin().equals(heure)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public double tauxSuspect(long chevauchement) {
 		return 1 - ((double) chevauchement / (double) this.datesOperation.duree());
 	}
@@ -208,7 +184,7 @@ public class Chirurgie implements Comparable<Chirurgie> {
     		return true;
     	} else if (this.duree() <= 0) {
     		return true;
-    	} else if (this.duree() >= 60 * 5) {
+    	} else if (this.duree() > 60 * 5) {
 			return true;
 		} else if (this.datesOperation.getDateFin().toLocalTime().equals( LocalTime.of(0, 0) )) {
 			return true;

@@ -101,7 +101,7 @@ public class PlanningJournee {
 
 	private void trierRessources() {
 		// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-		this.disponibilites.trierListesAleatoire(this.listeChirurgies);
+		this.disponibilites.trierListesParDuree(this.listeChirurgies);
 	}
 
 	public void resoudreConflits() {
@@ -148,7 +148,6 @@ public class PlanningJournee {
 
 		for (Chirurgie chrg : this.listeChirurgies) {
 			if (chrg.incoherente()) {
-				if (enConflit.contains(chrg))	System.out.println("EN CONFLIT : ");
 				System.out.println(chrg);
 				chrg.visualisation();
 			}
@@ -167,13 +166,9 @@ public class PlanningJournee {
 		return enConflit;
 	}
 
-	public Chirurgie derniereChirurgie() {
-		return this.listeChirurgies.get( this.listeChirurgies.size() - 1 );
-	}
-
 	public long dureeTotale() {
 		Chirurgie premiere = this.listeChirurgies.get(0);
-		Chirurgie derniere = this.derniereChirurgie();
+		Chirurgie derniere = this.listeChirurgies.get( this.listeChirurgies.size() - 1 );
 
 		return Duration.between(premiere.getDatesOperation().getDateDebut(), derniere.getDatesOperation().getDateFin()).toMinutes();
 	}
@@ -201,7 +196,7 @@ public class PlanningJournee {
 	}
 
 	public int nbChirurgiensDispos() {
-		return this.disponibilites.nbChirurgiensDispos();
+		return this.disponibilites.getListeChirurgiens().size();
 	}
 
 	@Override
