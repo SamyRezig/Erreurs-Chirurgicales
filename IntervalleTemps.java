@@ -7,10 +7,16 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class IntervalleTemps {
-	private LocalDateTime dateDebut;
-	private LocalDateTime dateFin;
-	private String jourDeb;
+	
+	private LocalDateTime dateDebut;	// Date et horaire de debut de l'intervalle
+	private LocalDateTime dateFin;		// Date et horaire de fin de l'intervalle
 
+	/**
+	  * @param jourDebut chaine de caracteres representant la date de debut
+	  * @param horaireDebut chaide de carateres representant l'horaire de debut
+	  * @param jourFin chaine de caracteres representant la date de fin
+	  * @param horaireFin chaide de carateres representant l'horaire de fin
+	  */
 	public IntervalleTemps(String jourDebut, String horaireDebut, String jourFin, String horaireFin) {
 		// Concatenation des String pour avoir deux dates de la forme dd/MM/yyyy
 		// HH:mm:ss distincts
@@ -30,7 +36,12 @@ public class IntervalleTemps {
         }
 	}
 
+	/**
+	  * @param debut debut de l'intervalle
+	  * @param fin fin de l'intervalle
+	  */
 	public IntervalleTemps(LocalDateTime debut, LocalDateTime fin) {
+		// Ordonner les dates.
 		if (debut.isBefore(fin)) {
 			this.dateDebut = debut;
 			this.dateFin = fin;
@@ -40,19 +51,34 @@ public class IntervalleTemps {
 		}
 	}
 
+	/**
+	  * Getter pour la date de debut.
+	  * @return la date de debut.
+	  */
 	public LocalDateTime getDateDebut() {
 		return this.dateDebut;
 	}
 
-
+	/**
+	  * Getter pour la date de fin
+	  * @return la date de fin.
+	  */
 	public LocalDateTime getDateFin() {
 		return this.dateFin;
 	}
 
+	/**
+	  * @return true si l'intervalle donne intersecte l'intervalle courant et
+	  * false sinon.
+	  */
 	public boolean intersect(IntervalleTemps secondInterv) {
-		if (this.dateFin.compareTo(secondInterv.dateDebut) >= 0 && this.dateDebut.compareTo(secondInterv.dateFin) <= 0) {
+		// Cas de figure : ---------- (this)
+		//						-----------
+		if (this.dateFin.compareTo(secondInterv.dateDebut) >= 0 && this.dateDebut.compareTo(secondInterv.dateDebut) <= 0) {
 			return true;
 
+		// Cas de figure : 			-------------- (this)
+		//					--------------
 		} else if (secondInterv.dateFin.compareTo(this.dateDebut) >= 0
 				&& secondInterv.dateDebut.compareTo(this.dateFin) <= 0) {
 			return true;
@@ -62,23 +88,41 @@ public class IntervalleTemps {
 		}
 	}
 
+	/**
+	  * @return duree de l'intervalle en minutes.
+	  */
 	public long duree() {
 		return Duration.between(this.dateDebut, this.dateFin).toMinutes();
 	}
 
+	/**
+	  * Translater l'intervalle.
+	  * @param biaisMinutes le nombre de minutes à translater.
+	  */
 	public void translater(long biaisMinutes) {
 		this.dateDebut = this.dateDebut.plusMinutes(biaisMinutes);
 		this.dateFin = this.dateFin.plusMinutes(biaisMinutes);
 	}
 
+	/**
+	  * Reduire la fin de l'intervalle.
+	  * @param biaisMinutes nombre de minutes a reduire.
+	  */
 	public void reduireFin(long biaisMinutes) {
 		this.dateFin = this.dateFin.plusMinutes(-biaisMinutes);
 	}
 
+	/**
+	  * Reduire l'intervalle par le debut.
+	  * @param biaisMinutes nombre de nimutes a reduire.
+	  */
 	public void reduireDebut(long biaisMinutes) {
 		this.dateDebut = this.dateDebut.plusMinutes(biaisMinutes);
 	}
 
+	/**
+	  * @return une liste de jour entre qui commence dans l'intervalle courante.
+	  */
 	public List<LocalDate> listeLocalDateEntre() {
 		LocalDate jourCourant = this.dateDebut.toLocalDate();
 		List<LocalDate> listeJours = new ArrayList<>();
@@ -91,8 +135,12 @@ public class IntervalleTemps {
 		return listeJours;
 	}
 
+	/**
+	  * @return l'intervalle de temps representant la semaine qui encadre le jour donne.
+	  * @param jour le jour dont on veut obtenir la semaine.
+	  */
 	public static IntervalleTemps enSemaine(LocalDate jour) {
-		LocalDate jourCourant;
+		LocalDate jourCourant;		// Les jours de la semaine.
 		LocalDate debutSemaine;
 		LocalDate finSemaine;
 
@@ -114,6 +162,9 @@ public class IntervalleTemps {
 	}
 
 	@Override
+	/**
+	  * Egalite sur les deux dates et horareis.
+	  */
 	public boolean equals(Object o) {
 		if (o != null && o.getClass().equals(this.getClass())) {
 			IntervalleTemps interv = (IntervalleTemps) o;
@@ -124,6 +175,9 @@ public class IntervalleTemps {
 	}
 
 	@Override
+	/**
+	  * @return somme des hashs des deux dates.
+	  */
 	public int hashCode() {
 		return this.dateDebut.hashCode() + this.dateFin.hashCode();
 	}
