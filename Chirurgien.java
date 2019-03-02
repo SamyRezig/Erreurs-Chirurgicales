@@ -9,7 +9,7 @@ import java.util.Scanner;
 import java.time.LocalDate;
 
 /**
-  * CLasse representant un chirurgien.
+  * Classe representant un chirurgien.
   * @author Samy Rezig
   * @author Yves Tran
   * @see Chirurgie

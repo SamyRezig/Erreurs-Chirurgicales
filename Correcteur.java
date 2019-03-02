@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalTime;
 
 /**
-  * CLasse representant comportant uniquement des methodes statiques
+  * Classe representant comportant uniquement des methodes statiques
   * pour la resolution des conflits. Elle contient des outils pour traiter les
   * chirurgies.
   * @author Samy Rezig

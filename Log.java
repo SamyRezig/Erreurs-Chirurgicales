@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.ArrayList;
 
 /**
-  * CLasse pour stocker les differents etats des chirurgies avant et apres chaque
+  * Classe pour stocker les differents etats des chirurgies avant et apres chaque
   * modification de celle-ci. Elle retrace l'historique de chaque chirurgie.
   * @author Samy Rezig
   * @author Yves Tran

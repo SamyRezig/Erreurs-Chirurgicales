@@ -1,7 +1,7 @@
 import java.util.List;
 
 /**
-  * CLasse representant une interference entre deux chirurgies. Cela signifie que
+  * Classe representant une interference entre deux chirurgies. Cela signifie que
   * les deux chirurgies s'intersectent et partagent la meme salle.
   * @author Samy Rezig
   * @author Yves Tran

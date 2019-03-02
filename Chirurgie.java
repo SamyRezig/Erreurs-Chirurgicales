@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalTime;
 
 /**
-  * CLasse representant une chirurgie.
+  * Classe representant une chirurgie.
   * @author Samy Rezig
   * @author Yves Tran
   * @see Salle

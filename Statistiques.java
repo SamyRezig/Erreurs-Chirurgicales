@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 /**
-  * CLasse contenant des statistiques a un moment donne d'un agenda. Elle contient
+  * Classe contenant des statistiques a un moment donne d'un agenda. Elle contient
   * l'evolution des conflits dans des variables statiques.
   * @author Samy Rezig
   * @author Yves Tran

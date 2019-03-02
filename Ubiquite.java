@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
-  * CLasse representant une ubiquite entre deux chirurgies. Cela signifie que
+  * Classe representant une ubiquite entre deux chirurgies. Cela signifie que
   * les deux chirurgies s'intersectent et partagent le meme chirurgien.
   * @author Samy Rezig
   * @author Yves Tran

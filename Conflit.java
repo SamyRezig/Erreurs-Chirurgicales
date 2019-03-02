@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
-  * CLasse representant un conflit entre deux chirurgies.
+  * Classe representant un conflit entre deux chirurgies.
   * @author Samy Rezig
   * @author Yves Tran
   * @see Chirurgie

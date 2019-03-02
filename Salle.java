@@ -1,5 +1,5 @@
 /**
-  * CLasse representant une salle (un bloc operatiore).
+  * Classe representant une salle (un bloc operatiore).
   * @author Samy Rezig
   * @author Yves Tran
   * @see Chirurgie

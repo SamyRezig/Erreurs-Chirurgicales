@@ -34,7 +34,7 @@ public class Main {
 		// Choix du fichier
 		switch (choix) {
 			case 1:
-				a = new Agenda("MiniBase(1).csv");
+				a = new Agenda("MiniBase(1)a.csv");
 				break;
 			case 2:
 				a = new Agenda("Chirurgies_v2.csv");

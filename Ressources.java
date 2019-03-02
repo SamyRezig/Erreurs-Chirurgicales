@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
-  * CLasse regroupant les ressources des chirurgies. Elle comporte une liste de
+  * Classe regroupant les ressources des chirurgies. Elle comporte une liste de
   * chirurgiens, une liste de salles non urgentes et une liste de salles d'urgence.
   * @author Samy Rezig
   * @author Yves Tran
