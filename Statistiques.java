@@ -44,7 +44,7 @@ public class Statistiques {
 	public static List<Integer> nombresConflitsCorriges = new ArrayList<>();
 
 	public Statistiques(Agenda a) {
-        List<Chirurgie> listeBase = a.getListeChirurgies();
+        List<Chirurgie> listeBase = a.extraireListeChirurgies();
         List<Conflit> listeConflits = a.extraireConflits();
         NavigableMap<LocalDate, PlanningJournee> planning = a.getPlanning();
 
@@ -315,11 +315,11 @@ public class Statistiques {
 		long card;
 
 		for (Salle salleCourante : salles) {
-			sum = a.getListeChirurgies().stream()
+			sum = a.extraireListeChirurgies().stream()
 										.filter(x -> x.getSalle().equals(salleCourante))
 										.mapToLong(x -> x.duree())
 										.sum();
-			card = a.getListeChirurgies().stream()
+			card = a.extraireListeChirurgies().stream()
 										.filter(x -> x.getSalle().equals(salleCourante))
 										.count();
 			dureeSalles.put(salleCourante, (double) sum / (double) card);
@@ -333,11 +333,11 @@ public class Statistiques {
 		long card;
 
 		for (Chirurgien chgCourante : a.getListeChirurgiens()) {
-			sum = a.getListeChirurgies().stream()
+			sum = a.extraireListeChirurgies().stream()
 										.filter(x -> x.getChirurgien().equals(chgCourante))
 										.mapToLong(x -> x.duree())
 										.sum();
-			card = a.getListeChirurgies().stream()
+			card = a.extraireListeChirurgies().stream()
 										.filter(x -> x.getChirurgien().equals(chgCourante))
 										.count();
 			dureeChirurgien.put(chgCourante, (double) sum / (double) card);

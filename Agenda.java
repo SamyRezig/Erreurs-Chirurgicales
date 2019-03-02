@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 public class Agenda {
 
-	private List<Chirurgie> listeChirurgies;					// Liste contenant tous les chirurgies
 	private int nbIterations = 23;								// Nombre d'itaretions maximum pour resoudre les conflits
 	private NavigableMap<LocalDate, PlanningJournee> planning;	// Map regroupant les chirurgies/salles/chirurgiens par jour
     private Map<LocalDate, Ressources> joursRessources;			// Ressources diponibles pour jours
@@ -32,7 +31,7 @@ public class Agenda {
 	  * car un agenda vide n'a pas de sens.
 	  */
 	private Agenda() {
-		this.listeChirurgies = new ArrayList<>();
+		//this.listeChirurgies = new ArrayList<>();
 		this.planning = new TreeMap<>();
         this.joursRessources = new HashMap<>();
 	}
@@ -45,9 +44,11 @@ public class Agenda {
 	  */
 	public Agenda(String nomFichier) {
 		this();
-		this.remplirDepuisFichier(nomFichier);
-        this.definirRessources();
-		this.setPlanningParJournee(this.listeJournees());
+
+		List<Chirurgie> listeChirurgies;
+		listeChirurgies = this.remplirDepuisFichier(nomFichier);
+        this.definirRessources(listeChirurgies);
+		this.setPlanningParJournee(this.listeJournees(listeChirurgies), listeChirurgies);
 		this.recenserTousConflits();
         this.statistiques();
 	}
@@ -57,8 +58,8 @@ public class Agenda {
 	  * Cette methode utilise une analyse de l'emploi du temps des chirurgiens
 	  * pour completer leur emploi du temps.
 	  */
-	private void definirRessources() {
-        List<LocalDate> tousJours = this.listeJournees();
+	private void definirRessources(List<Chirurgie> listeChirurgies) {
+        List<LocalDate> tousJours = this.listeJournees(listeChirurgies);
         Ressources dispoJour;
         List<Chirurgien> chirurgiensDispos;
         List<Salle> sallesDispos;
@@ -66,7 +67,7 @@ public class Agenda {
 
 		// Determine les jours ou les chirurgiens devraient travailler
 		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
-			medecin.definirJoursTravail(this.listeChirurgies);
+			medecin.definirJoursTravail(listeChirurgies);
 		}
 
         for (LocalDate jour : tousJours) {
@@ -106,14 +107,6 @@ public class Agenda {
     }
 
 	/**
-	  * Getter de la liste contenant toutes les chirurgies recensees.
-	  * @return Liste avec l'integralite des chirurgies recensees.
-	  */
-    public List<Chirurgie> getListeChirurgies() {
-        return this.listeChirurgies;
-    }
-
-	/**
 	  * Getter pour obtenir le planning des chirurgies en fonction des jours.
 	  * @return planning des chirurgies en fonction des jours.
 	  */
@@ -125,7 +118,8 @@ public class Agenda {
 	  * Remplir la liste de chirurgies avec le fichier donne. N'est utilisee que
 	  * pour le constructeur principal de la classe Agenda.
 	  */
-	private void remplirDepuisFichier(String nomFichier) {
+	private List<Chirurgie> remplirDepuisFichier(String nomFichier) {
+		List<Chirurgie> listeChirurgies = new ArrayList<>();	// Liste de chirurgies recensees
 		BufferedReader fluxTexte = null;
 		String ligne;				// Ligne d'un fichier
 		Chirurgie operation;		// Variable de stockage pour une chirrugie.
@@ -139,10 +133,10 @@ public class Agenda {
 
 			// Lecture de la 2e ligne jusqu'a la fin du fichier
 			while ((ligne = fluxTexte.readLine()) != null) {
-				operation = creationChirurgie(ligne.split(";"));	// Cretation d'une chirrugie a partir de la ligne du fichier
-				this.listeChirurgies.add(operation);				// Ajouter cette nouvelle chirurgie dans la liste des chirurgies
+				operation = creationChirurgie(ligne.split(";"), listeChirurgies);	// Cretation d'une chirrugie a partir de la ligne du fichier
+				listeChirurgies.add(operation);				// Ajouter cette nouvelle chirurgie dans la liste des chirurgies
 			}
-			this.definirRessourcesExistants();			// Determiner les chirurgiens et salles existants.
+			this.definirRessourcesExistants(listeChirurgies);			// Determiner les chirurgiens et salles existants.
 			System.out.println("Fin de la lecture des chirurgies.");
 
 		} catch (IOException e) {
@@ -150,6 +144,8 @@ public class Agenda {
 			// Le fichier n'a probablement pas ete trouve.
 			System.out.println("Pas de fichier " + nomFichier + " trouve.");
 		}
+
+		return listeChirurgies;
 
 	}
 
@@ -159,11 +155,13 @@ public class Agenda {
 	  * Elle ne doit pas etre lancer avant le recensement des chirurgies par
 	  * remplirDepuisFichier()
 	  */
-	private void definirRessourcesExistants() {
-		List<Chirurgien> listeChirurgiens = this.extraireListeChirurgiens();
-		List<Salle> listeSalles = this.extraireListeSalles();
-		List<Salle> listeSallesUrgence = this.extraireListeSallesUrgence();
+	private void definirRessourcesExistants(List<Chirurgie> listeChirurgies) {
+		// Extraction des listes de chirurgiens et salles.
+		List<Chirurgien> listeChirurgiens = this.extraireListeChirurgiens(listeChirurgies);
+		List<Salle> listeSalles = this.extraireListeSalles(listeChirurgies);
+		List<Salle> listeSallesUrgence = this.extraireListeSallesUrgence(listeChirurgies);
 
+		// Creation et attribution de la nouvelle ressource
 		this.ressourcesExistantes = new Ressources(listeChirurgiens, listeSalles, listeSallesUrgence);
 	}
 
@@ -172,52 +170,53 @@ public class Agenda {
 	  * corriges.
 	  * @throws IOException Erreur de fichier.
 	  */
-	public void creerNouveauFichier() throws IOException {
+	public void creerNouveauFichier(List<Chirurgie> listeChirurgies) throws IOException {
 		String nomFichier = "ChirurgiesCorrigees.csv";
 		FileWriter writer = new FileWriter(nomFichier);
 		DateTimeFormatter formateurDate = DateTimeFormatter.ofPattern("dd/LL/yyyy");
 		DateTimeFormatter formateurHeure = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-		 StringBuilder sb = new StringBuilder();
-	      sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");
-	      sb.append('\n');
-	      writer.write(sb.toString());
-	      sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
+	    sb.append("ID;DATE CHIRURGIE;HEURE_DEBUT CHIRURGIE;HEURE_FIN CHIRURGIE;SALLE;CHIRURGIEN");	// Premiere ligne
+	    sb.append('\n');
+	    writer.write(sb.toString());
+	    sb = new StringBuilder();
 
-	    	 for(Chirurgie c : this.listeChirurgies) {
-	    		 sb.append(c.getId());
-	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalDate().format(formateurDate));
-	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateDebut().toLocalTime().format(formateurHeure));
-	    		 sb.append(';');
-	    		 sb.append(c.getDatesOperation().getDateFin().toLocalTime().format(formateurHeure));
-	    		 sb.append(';');
-	    		 sb.append(c.getSalle());
-	    		 sb.append(';');
-	    		 sb.append(c.getChirurgien().getNom());
-	    		 sb.append('\n');
-	    	     writer.write(sb.toString());
-	    	     sb = new StringBuilder();
+	    for(Chirurgie c : listeChirurgies) {
+	    	sb.append(c.getId());
+	    	sb.append(';');
+	    	sb.append(c.getDatesOperation().getDateDebut().toLocalDate().format(formateurDate));
+	     	sb.append(';');
+	     	sb.append(c.getDatesOperation().getDateDebut().toLocalTime().format(formateurHeure));
+	    	sb.append(';');
+	    	sb.append(c.getDatesOperation().getDateFin().toLocalTime().format(formateurHeure));
+	    	sb.append(';');
+	     	sb.append(c.getSalle());
+	    	sb.append(';');
+	    	sb.append(c.getChirurgien().getNom());
+	    	sb.append('\n');
+	    	writer.write(sb.toString());
+	    	sb = new StringBuilder();
 
-	    	 }
-	    	 writer.flush();
-	    	 writer.close();
-	    	 System.out.println("Un fichier " + nomFichier + " a ete genere.");
+	    }
+	    writer.flush();	// Reinitialisation du buffer
+	    writer.close();
+	    System.out.println("Un fichier " + nomFichier + " a ete genere.");
 	}
 
 	/**
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  * @param infoSeparees contient dans l'ordre l'identifiant de la chirurgie,
 	  * la date de debut, l'heure de debut, la date de fin, l'heure de fin,
 	  * le nom de la salle et le nom du chirurgien
 	  * @return La nouvelle chirurgie
 	  */
-	public Chirurgie creationChirurgie(String [] infoSeparees) {
+	private Chirurgie creationChirurgie(String [] infoSeparees, List<Chirurgie> listeChirurgies) {
 		int identifiant = Integer.parseInt(infoSeparees[0]);
 		IntervalleTemps datesOperation = new IntervalleTemps(infoSeparees[1], infoSeparees[2], infoSeparees[1],
 				infoSeparees[3]);
-		Salle bloc = this.trouverSalle(infoSeparees[4]);
-		Chirurgien chirurgien = this.trouverChirurgien(infoSeparees[5]);
+		Salle bloc = this.trouverSalle(infoSeparees[4], listeChirurgies);
+		Chirurgien chirurgien = this.trouverChirurgien(infoSeparees[5], listeChirurgies);
 
 		return new Chirurgie(identifiant, datesOperation, bloc, chirurgien);
 	}
@@ -226,11 +225,12 @@ public class Agenda {
 	  * Chercher une salle existante parmi la liste de chirurgie. N'est utilisee
 	  * que pour la lecture du fichier.
 	  * @param nomSalle Le nom de la salle
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  * @return Un passage par valeur de la salle trouvee ou une salle creee
 	  * a defaut de la trouver
 	  */
-	private Salle trouverSalle(String nomSalle) {
-		for (Chirurgie operation : this.listeChirurgies) {
+	private Salle trouverSalle(String nomSalle, List<Chirurgie> listeChirurgies) {
+		for (Chirurgie operation : listeChirurgies) {
 			if (operation.getSalle().getNom().equals(nomSalle)) {
 				return operation.getSalle();
 			}
@@ -242,10 +242,11 @@ public class Agenda {
 	  * Chercher un chirurgien existante parmi la liste de chirurgie. N'est utilisee
 	  * que pour la lecture du fichier.
 	  * @param nomChirurgien le nom du chirurgien
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  * @return passage par valeur du chirurgien ou un completement cree.
 	  */
-	private Chirurgien trouverChirurgien(String nomChirurgien) {
-		for (Chirurgie operation : this.listeChirurgies) {
+	private Chirurgien trouverChirurgien(String nomChirurgien, List<Chirurgie> listeChirurgies) {
+		for (Chirurgie operation : listeChirurgies) {
 			if (operation.getChirurgien().getNom().equals(nomChirurgien)) {
 				return operation.getChirurgien();
 			}
@@ -279,11 +280,12 @@ public class Agenda {
 
 	/**
 	  * Parcours les chirurgies pour extraire les chirurgiens.
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  * @return une nouvelle liste de chirurgiens
 	  */
-	public List<Chirurgien> extraireListeChirurgiens() {
+	public List<Chirurgien> extraireListeChirurgiens(List<Chirurgie> listeChirurgies) {
 		List<Chirurgien> lc = new ArrayList<>();
-		for(Chirurgie c : this.listeChirurgies) {
+		for(Chirurgie c : listeChirurgies) {
 			if(!lc.contains(c.getChirurgien())) {
 				lc.add(c.getChirurgien());
 			}
@@ -293,11 +295,12 @@ public class Agenda {
 
 	/**
 	  * Parcours les chirurgies pour extraire les salles non urgentes.
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  * @return une nouvelle liste de salles non urgentes
 	  */
-	public List<Salle> extraireListeSalles(){
+	public List<Salle> extraireListeSalles(List<Chirurgie> listeChirurgies){
 		List<Salle> ls = new ArrayList<>();
-		for(Chirurgie c : this.listeChirurgies) {
+		for(Chirurgie c : listeChirurgies) {
 			if(!ls.contains(c.getSalle()) && !c.getSalle().estUrgence()) {
 				ls.add(c.getSalle());
 			}
@@ -307,11 +310,12 @@ public class Agenda {
 
 	/**
 	  * Parcours les chirurgies pour extraire les salles urgentes.
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  * @return une nouvelle liste de salles urgentes
 	  */
-    public List<Salle> extraireListeSallesUrgence(){
+    public List<Salle> extraireListeSallesUrgence(List<Chirurgie> listeChirurgies){
         List<Salle> lsu = new ArrayList<>();
-            for(Chirurgie c : this.listeChirurgies) {
+            for(Chirurgie c :listeChirurgies) {
 				if(!lsu.contains(c.getSalle()) && c.getSalle().estUrgence()) {
 					lsu.add(c.getSalle());
 				}
@@ -320,12 +324,14 @@ public class Agenda {
     }
 
 	/**
+	  * Utiliser pour creer le planning de chaque journee.
 	  * @return une liste de chirurgies debutant dans la date donnee.
 	  * @param l la date dont on souhaite extraire les chirurgies.
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  */
-	public List<Chirurgie> getChirurgieJournee(LocalDate l) {
+	private List<Chirurgie> getChirurgieJournee(LocalDate l, List<Chirurgie> listeChirurgies) {
 		List<Chirurgie> chirurgieJournee = new ArrayList<>();
-		for (Chirurgie c : this.listeChirurgies) {
+		for (Chirurgie c : listeChirurgies) {
 			if (c.getDatesOperation().getDateDebut().toLocalDate().equals(l)) {
 				chirurgieJournee.add(c);
 			}
@@ -334,10 +340,12 @@ public class Agenda {
 	}
 
 	/**
+	  * Utiliser pour creer le planning de chaque journee.
 	  * @return une liste de jours ou il y a eu des chirurgies.
+	  * @param listeChirurgies liste contenant toutes les chirurgies qu'on veut considerees.
 	  */
-	private List<LocalDate> listeJournees() {
-		List<LocalDate> ld = this.listeChirurgies.stream()
+	private List<LocalDate> listeJournees(List<Chirurgie> listeChirurgies) {
+		List<LocalDate> ld = listeChirurgies.stream()
 												.map(x -> x.getDatesOperation()
 															.getDateDebut()
 															.toLocalDate())
@@ -348,9 +356,11 @@ public class Agenda {
 
 	/**
 	  * Remplir la map de (LocalDate, Planning)
+	  * @param listeChirurgies liste contenant toutes les chirurgies dont on veut
+	  * extraire le sous ensemble de chirurgies.
 	  * @param ld la liste de jours avec des operations.
 	  */
-	public void setPlanningParJournee(List<LocalDate> ld) {
+	public void setPlanningParJournee(List<LocalDate> ld, List<Chirurgie> listeChirurgies) {
 		NavigableMap<LocalDate, PlanningJournee> mapJournees = new TreeMap<>();
 		PlanningJournee jour = null;
 
@@ -365,7 +375,7 @@ public class Agenda {
             ressourcesJour = this.joursRessources.get(l);
 
 			// Obtention des listes de chirurgiens et salles
-			tmp = this.getChirurgieJournee(l);
+			tmp = this.getChirurgieJournee(l, listeChirurgies);
 
 			listeMedecins = ressourcesJour.getListeChirurgiens();			// Recuperation des chirurgiens disponibles
 			listeSalles = ressourcesJour.getListeSalles(); 					// Recuperation des salles existantes !
@@ -411,10 +421,31 @@ public class Agenda {
 	}
 
 	/**
+	  * Utilisable apres creation des plannings pour chaque journee.
+	  * @return une liste de chirurgies extraites des planning de chaque jour.
+	  * @return une liste vide si les planning sont vide. Un message d'avertissement est affiche.
+	  */
+	public List<Chirurgie> extraireListeChirurgies() {
+		List<Chirurgie> listeChirurgies = new ArrayList<>();
+
+		if (this.planning.size() == 0) {
+			System.out.println("Pas de chirurgi trouvee. Les plannings ne sont pas remplis.");
+
+		} else {
+			for (PlanningJournee contenuJour : this.planning.values()) {
+				listeChirurgies.addAll(contenuJour.getListeChirurgies());	// Pas de doublon normalement
+			}
+		}
+
+		return listeChirurgies;
+	}
+
+	/**
 	  * Resoudre tous les conflits recenses dans chaque planning en plusieurs iteration
 	  * successives. Affiche le numero de de l'iteration avec la resolution du conflit.
 	  */
 	public void resolution() {
+		List<Chirurgie> listeChirurgies = this.extraireListeChirurgies();
 		int nbConflitsPrec = 0;
 		int i = 0;
 
@@ -426,7 +457,7 @@ public class Agenda {
 			System.out.println("\nIteration numero " + i + "\n");
 
 			this.resoudreTousConflits();
-			this.setPlanningParJournee(this.listeJournees());
+			this.setPlanningParJournee(this.listeJournees(listeChirurgies), listeChirurgies);
 			this.recenserTousConflits();
 
 			Statistiques.setNombresConflitsCorriges(nbConflitsPrec - this.nombreConflits());

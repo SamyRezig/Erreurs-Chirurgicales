@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.InputMismatchException;
 
 public class Main {
-	
+
 	private static int demanderNombreEntre(int inf, int sup) {
 		Scanner demande = new Scanner(System.in);
 		int reponse = -1;
@@ -49,8 +49,12 @@ public class Main {
 
 		if (a != null) {
 			a.resolution();
-			a.creerNouveauFichier();
+
+			List<Chirurgie> listeChirurgies = a.extraireListeChirurgies();
+			a.creerNouveauFichier(listeChirurgies);
+
 			Main.afficherStatistiques(a);
+
 			System.out.println("\nFermer le graphique pour continuer.");
 			a.stats.afficherGraphique(null);
 		}
@@ -127,7 +131,7 @@ public class Main {
 			System.out.println("\t2- Afficher l'evolution des corrections des chirurgies");
 			System.out.println("\t3- Afficher les chirurgies suspectes (trop courte ou trop longue)");
 			System.out.println("\t4- Afficher le planning des chirurgiens");
-			System.out.println("\t5- Afficher le planning des salles");
+			System.out.println("\t5- Afficher le planning des salles utilisees");
 			System.out.println("\t6- Afficher des statistiques complementaires");
 			System.out.println("\t7- Quitter.");
 			reponse = Main.demanderNombreEntre(1, 7);
