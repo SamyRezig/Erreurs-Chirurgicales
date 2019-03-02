@@ -27,9 +27,9 @@ public class PlanningJournee {
 	/**
 	  * Constructeur principal.
 	  * @param lc la liste des chirurgies.
-	  * @param les liste des salles normales.
+	  * @param ls liste des salles normales.
 	  * @param lsu la liste des salles d'urgence.
-	  * @param la liste des chirurgiens.
+	  * @param lc liste des chirurgiens.
 	  */
 	public PlanningJournee(List<Chirurgie> lc,List<Salle> ls, List<Salle> lsu,  List<Chirurgien> lch) {
 		this.listeChirurgies = lc;
