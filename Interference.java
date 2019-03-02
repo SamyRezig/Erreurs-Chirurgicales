@@ -11,6 +11,11 @@ import java.util.List;
   */
 public class Interference extends Conflit {
 
+    /**
+      * Appelle le constructeur de la classe Conflit seulement
+      * @param first premiere chirurgie en interference
+      * @param second seconde chirurgie en interference
+      */
     public Interference(Chirurgie first, Chirurgie second) {
 	super(first, second);
     }

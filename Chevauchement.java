@@ -16,6 +16,8 @@ public class Chevauchement extends Conflit {
 
 	/**
 	  * Appelle le constructeur de la classe Conflit seulement
+	  * @param first premiere chirurgie en chevauchement
+	  * @param second seconde chirurgie en chevauchement
 	  */
 	public Chevauchement(Chirurgie first, Chirurgie second) {
 		super(first, second);

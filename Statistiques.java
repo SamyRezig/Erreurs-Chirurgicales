@@ -450,7 +450,7 @@ public class Statistiques {
 
 	/**
 	  * @return l'ecart type entre les valeurs donnees.
-	  * @param une collectino des valeurs a analyser.
+	  * @param valeurs une collection des valeurs a analyser.
 	  */
 	public double ecartType(Collection<Double> valeurs) {
 		double moyenne = 0.0;
@@ -693,6 +693,7 @@ public class Statistiques {
 	/**
 	  * Calcule d'un taux d'existance : le nombre d'entiers positifs dans la liste
 	  * par la taille de la lsite.
+	  * @param nombres sequence de nombres a etudier
 	  * @return le taux d'existance.
 	  */
 	public double tauxExistence(List<Integer> nombres) {
@@ -739,13 +740,13 @@ public class Statistiques {
 	  * dans le temps. Cette methode s'utilise qu'une seuele fois car elle lance
 	  * la methode start de Application de javaFX.
 	  */
-	public void afficherGraphique(String [] args) {
+	public void afficherGraphique() {
 		Map<String, List<Integer>> map = Statistiques.dataConflits();
 		Graphique g = new Graphique();
 
 		Graphique.valeurs = map;
 
-		g.afficher(args, Statistiques.nombresConflits.size() - 1, 45);
+		g.afficher(null, Statistiques.nombresConflits.size() - 1, 45);
 	}
 
 }

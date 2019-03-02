@@ -52,7 +52,7 @@ public class Main {
 			Main.afficherStatistiques(a);
 
 			System.out.println("\nFermer le graphique pour continuer.");
-			a.stats.afficherGraphique(null);
+			a.stats.afficherGraphique();
 		}
 		return a;
 	}

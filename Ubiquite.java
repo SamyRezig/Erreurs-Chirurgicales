@@ -17,6 +17,8 @@ public class Ubiquite extends Conflit {
 
 	/**
 	  * Appelle le constructeur de la classe Conflit seulement
+	  * @param first premiere chirurgie en ubiquite
+	  * @param second seconde chirurgie en ubiquite
 	  */
 	public Ubiquite(Chirurgie first, Chirurgie second) {
 		super(first, second);
