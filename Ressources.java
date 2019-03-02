@@ -1,10 +1,8 @@
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 import java.util.Collections;
-import java.util.Comparator;
 
 /**
   * Classe regroupant les ressources des chirurgies. Elle comporte une liste de

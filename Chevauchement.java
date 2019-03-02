@@ -1,7 +1,5 @@
-import java.time.Duration;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
+
 
 /**
   * Classe representant un chevauchement entre deux chirurgies. Cela signifie que

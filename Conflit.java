@@ -1,7 +1,4 @@
 import java.util.List;
-import java.util.Scanner;
-import java.util.Random;
-import java.util.Set;
 
 /**
   * Classe representant un conflit entre deux chirurgies.
@@ -142,7 +139,6 @@ public abstract class Conflit {
 		}
 
 		// Resolution par decoupage
-		double ts = this.tauxSuperposition();
 		if (this.persiste() && this.tauxSuperposition() < 0.8
 							&& (this.getPremiereChirurgie().dureeSuspecte() || this.getSecondeChirurgie().dureeSuspecte())
 							&& (!this.getPremiereChirurgie().courte() || !this.getSecondeChirurgie().courte())) {

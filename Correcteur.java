@@ -1,5 +1,4 @@
 import java.time.Duration;
-import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalTime;

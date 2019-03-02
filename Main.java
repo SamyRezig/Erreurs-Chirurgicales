@@ -26,7 +26,6 @@ public class Main {
 				System.out.println("Ceci n'est pas un nombre !");
 			}
 		}
-
 		return reponse;
 	}
 	private static Agenda corrigerFichier(int choix) throws IOException {
