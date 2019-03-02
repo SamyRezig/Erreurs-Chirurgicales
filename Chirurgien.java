@@ -8,10 +8,19 @@ import java.util.stream.Collectors;
 import java.util.Scanner;
 import java.time.LocalDate;
 
+/**
+  * CLasse representant un chirurgien.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Chirurgie
+  * @see Ressources
+  */
 public class Chirurgien {
+
 	private String nom;									// Nom du chirurgien.
 	private Map<DayOfWeek, Long> frequencesTravail;		// Nombre de fois qu'un chirurgien travaille pour chaque jour de la semaine.
 	private List<LocalDate> joursTravail;				// Liste des jours ou le chirurgien est disponible.
+
 
 	/**
 	  * Constructeur principal.
@@ -157,4 +166,5 @@ public class Chirurgien {
 	public String toString() {
 		return this.nom;
 	}
+
 }

@@ -6,10 +6,18 @@ import java.time.DayOfWeek;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+  * CLasse representant un intervalle de temps entre deux dates avec les horaires
+  * precises.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Chirurgie
+  */
 public class IntervalleTemps {
-	
+
 	private LocalDateTime dateDebut;	// Date et horaire de debut de l'intervalle
 	private LocalDateTime dateFin;		// Date et horaire de fin de l'intervalle
+
 
 	/**
 	  * @param jourDebut chaine de caracteres representant la date de debut

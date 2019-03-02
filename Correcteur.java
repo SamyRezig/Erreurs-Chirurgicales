@@ -4,9 +4,21 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalTime;
 
+/**
+  * CLasse representant comportant uniquement des methodes statiques
+  * pour la resolution des conflits. Elle contient des outils pour traiter les
+  * chirurgies.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Log
+  * @see Conflit
+  * @see Chirurgie
+  */
 public class Correcteur {
+
 	private static int dureePause = 15;						// Duree interchirurgicale.
 	private static Log historiqueChirurgies = new Log();	// Historique des differents etats des chirurgies modifiees.
+
 
 	/**
 	  * Getter pour avoir l'historique des chirurgies modifiees.

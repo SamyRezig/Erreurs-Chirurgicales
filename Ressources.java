@@ -6,11 +6,21 @@ import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+  * CLasse regroupant les ressources des chirurgies. Elle comporte une liste de
+  * chirurgiens, une liste de salles non urgentes et une liste de salles d'urgence.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Salle
+  * @see Chirurgien
+  * @see Agenda
+  */
 public class Ressources {
 
     private List<Chirurgien> listeChirurgiens;      // Liste contenant les chirurgiens.
     private List<Salle> listeSalles;                // Liste contenant les salles non urgentes.
     private List<Salle> listeSallesUrgence;         // Liste contenant les salles d'urgence.
+
 
     /**
       * Constructeur princiapl.
@@ -103,7 +113,6 @@ public class Ressources {
 			}
 		}
 		// Conversion des chirurgiens en une liste
-		System.out.println(mapChirurgiens);
 		this.listeChirurgiens = mapChirurgiens.entrySet().stream()
 									.sorted(Map.Entry.comparingByValue())  // Tri croissant
 									.map( x->x.getKey() )
@@ -209,4 +218,5 @@ public class Ressources {
 
         return strb.toString();
     }
+
 }

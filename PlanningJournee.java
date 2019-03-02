@@ -8,11 +8,21 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.HashSet;
 
+/**
+  *Structure stockant les chirurgies et les ressources disponibles pour une
+  * certaine date.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Agenda
+  * @see Conflit
+  * @see Chirurgie
+  */
 public class PlanningJournee {
 
 	private List<Chirurgie> listeChirurgies;	// La liste des chirurgies commencant dans la journee.
 	private Ressources disponibilites;			// Les ressources disponibles pour cette journee.
 	private List<Conflit> listeConflits;		// Les conflits de la journee.
+
 
 	/**
 	  * Constructeur principal.
@@ -280,4 +290,5 @@ public class PlanningJournee {
 
 		return strb.toString();
 	}
+
 }

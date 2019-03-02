@@ -9,6 +9,14 @@ import java.util.List;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 
+/**
+  * Pour l'affichage d'un graphique avec le nombre des differents types de conflits
+  * en fonction du nombre d'iterations lors de la resolution des conflits.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Application
+  * @see Statistiques
+  */
 public class Graphique extends Application {
 
     private double largeur = 700;                       // Largeur de la fenetre
@@ -18,8 +26,8 @@ public class Graphique extends Application {
     private LineChart graphe;                           // Le graphique
     public static int iterationMax;                     // Determine la taille de l'axe des abscisses.
     public static int  conflitMax;                      // Determine la taille de l'axe des ordonnees.
-
     private Group root;                                 // Contient tous les elements a ajouter dans la fenetre : le graphe.
+
 
     /**
       * Getter pour avoir le nombre la taille de l'axe des abscisses.

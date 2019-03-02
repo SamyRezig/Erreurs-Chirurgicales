@@ -14,7 +14,16 @@ import java.util.NavigableMap;
 import java.time.LocalDate;
 import java.util.Collections;
 
+/**
+  * CLasse contenant des statistiques a un moment donne d'un agenda. Elle contient
+  * l'evolution des conflits dans des variables statiques.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Agenda
+  * @see Correction
+  */
 public class Statistiques {
+
 	private int nbConflits;				// Nombre de conflits
 	private long dureeMoyenne;			// Duree moyenne d'une operation
 	private long premierQuartile;		// Premier quartile des durees des chirurgies sans conflit
@@ -42,6 +51,7 @@ public class Statistiques {
 	public static List<Integer> nombresChevauchement = new ArrayList<>();	// Evolution du nombre de chevauchements en fonction des iteratinons.
 	public static List<Integer> nombresConflits = new ArrayList<>();		// Evolution du nombre de conflits en fonction des iteratinons.
 	public static List<Integer> nombresConflitsCorriges = new ArrayList<>();// Evolution du nombre de conflits corriges en fonction des iteratinons.
+
 
 	/**
 	  * Constructeur principal.
@@ -565,7 +575,7 @@ public class Statistiques {
 		System.out.println("Premier quartile : \t\t" + this.premierQuartile + "\t\t\t" + apresStats.getPremierQuartile());
 		System.out.println("Dernier quartile : \t\t" + this.dernierQuartile + "\t\t\t" + apresStats.getDernierQuartile());
 
-		System.out.println("Ecart-type duree des salles : :\t"
+		System.out.println("Ecart-type duree des salles : \t"
 				+ (float) this.ecartTypeSalles + "\t\t"
 				+ (float) apresStats.getEcartTypeSalles());
 		System.out.println("Ecart-type duree chirurgiens :\t"
@@ -737,4 +747,5 @@ public class Statistiques {
 
 		g.afficher(args, Statistiques.nombresConflits.size() - 1, 45);
 	}
+
 }

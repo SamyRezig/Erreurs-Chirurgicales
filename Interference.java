@@ -1,5 +1,14 @@
 import java.util.List;
 
+/**
+  * CLasse representant une interference entre deux chirurgies. Cela signifie que
+  * les deux chirurgies s'intersectent et partagent la meme salle.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Conflit
+  * @see Ubiquite
+  * @see Chevauchement
+  */
 public class Interference extends Conflit {
 
     public Interference(Chirurgie first, Chirurgie second) {
@@ -13,7 +22,7 @@ public class Interference extends Conflit {
 
     @Override
     public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
-		return (ls.size() >= 1);  // La liste de salles n'est pas censee contenir la salle qu'on veut changer
+		return (ls.size() >= 1);  // La liste de salles n'est plus censee contenir la salle qu'on veut changer
 	}
 
     @Override
@@ -30,7 +39,6 @@ public class Interference extends Conflit {
             }
         }
         if (tmpSalle != null)	Correcteur.changerSalle(this.getSecondeChirurgie(), tmpSalle);
-
     }
 
 }

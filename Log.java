@@ -4,8 +4,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+/**
+  * CLasse pour stocker les differents etats des chirurgies avant et apres chaque
+  * modification de celle-ci. Elle retrace l'historique de chaque chirurgie.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Correcteur
+  * @see Chirurgie
+  */
 public class Log {
+
     private NavigableMap<Integer, List<String>> mapEtats;   // Historique des etats differents etats des chirurgies.
+
 
     /**
 	  * Constructeur principal. Instancie la map.
@@ -76,4 +86,5 @@ public class Log {
     public String toString() {
         return mapEtats.toString();
     }
+
 }

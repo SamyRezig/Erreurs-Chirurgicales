@@ -3,9 +3,21 @@ import java.util.Scanner;
 import java.util.Random;
 import java.util.Set;
 
+/**
+  * CLasse representant un conflit entre deux chirurgies.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Chirurgie
+  * @see Correcteur
+  * @see Chevauchement
+  * @see Interference
+  * @see Ubiquite
+  */
 public abstract class Conflit {
+
 	private Chirurgie premiereChirurgie;	// Chirurgie en conflit avec la seconde chirurgie
 	private Chirurgie secondeChirurgie;		// Chirurgie en conflit avec la premiere chirurgie
+
 
 	/**
 	  * @return true si les deux chirurgies sont toujours en conflit
@@ -156,4 +168,5 @@ public abstract class Conflit {
 	public String toString() {
 		return this.getClass() + " -- " + this.premiereChirurgie + " avec " + this.secondeChirurgie;
 	}
+
 }

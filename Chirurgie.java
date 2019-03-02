@@ -4,13 +4,26 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalTime;
 
+/**
+  * CLasse representant une chirurgie.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Salle
+  * @see Chirurgien
+  * @see IntervalleTemps
+  * @see PlanningJournee
+  * @see Conflit
+  * @see Correcteur
+  * @see Log
+  */
 public class Chirurgie implements Comparable<Chirurgie> {
-	
+
 	private int identifiant;					// Identifiant de la chirurgie
 	private IntervalleTemps datesOperation;		// Dates de debut et fin de la chirrugie
 	private Salle salle;						// La salle ou l'operation a lieu
 	private Chirurgien chirurgien;				// Le chirurgien qui opere
     private boolean urgence;					// Pour savoir s'il s'agit d'une urgence
+
 
 	/**
 	  * @param id l'identifiant de la chirurgie
@@ -175,25 +188,29 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	  */
 	public void visualisation() {
 		List<LocalDateTime> ref = new ArrayList<>();
+		// Fin de l'operation
 		LocalDateTime fin = this.datesOperation.getDateFin();
+		// Debut de l'operation
 		LocalDateTime debut = this.datesOperation.getDateDebut();
-		LocalDateTime base = debut.minusSeconds(debut.getSecond())
-									.minusMinutes(debut.getMinute())
-									.minusHours(debut.getHour());
+		// Debut de la journee
+		LocalDateTime base = debut.toLocalDate().atStartOfDay();
+
 		// Construction des marquages de temps
 		for (int i = 0; i < 24 * 4; i++) {
 			ref.add(base);
 			base = base.plusMinutes(15);
 		}
 
+		// Affichage
 		for (LocalDateTime time : ref) {
 			if (time.isAfter(debut) && time.isBefore(fin)) {
-				System.out.print("*");
+				System.out.print("*");		// Chirurgie en cours
 
 			} else {
-				System.out.print("-");
+				System.out.print("-");		// Rien
 			}
 		}
+
 		// Chirurgie sur deux jours successifs
 		if (fin.getDayOfYear() != (debut.getDayOfYear())) {
 			System.out.print(">>");		// La suite de la chirugie se trouve sur le lendemain
@@ -230,10 +247,11 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	}
 
 	/**
-	  * @return true si la chirurgie courante est imbrique dans celle donnee et
+	  * @return true si la chirurgie courante est imbrique dans celle donnee
 	  * false sinon.
 	  */
-    public boolean estImbrique(Chirurgie chg){
+    public boolean estImbrique(Chirurgie chg) {
+
         if ( (chg.getDatesOperation().getDateDebut().isBefore(this.getDatesOperation().getDateDebut())
 			|| chg.getDatesOperation().getDateDebut().equals(this.getDatesOperation().getDateDebut()))
 
@@ -314,6 +332,9 @@ public class Chirurgie implements Comparable<Chirurgie> {
 	}
 
 	@Override
+	/**
+	  * Le hash est l'identifiant de la chirurgie puisque celle-ci est unique.
+	  */
 	public int hashCode() {
 		return this.getId();
 	}

@@ -4,6 +4,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+/**
+  * CLasse representant une ubiquite entre deux chirurgies. Cela signifie que
+  * les deux chirurgies s'intersectent et partagent le meme chirurgien.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Conflit
+  * @see Interference
+  * @see Chevauchement
+  */
 public class Ubiquite extends Conflit {
 
 	/**
@@ -18,8 +27,9 @@ public class Ubiquite extends Conflit {
 		return this.getPremiereChirurgie().estUbiquite(this.getSecondeChirurgie());
 	}
 
+	@Override
 	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
-		return (lc.size() >= 1);	// La liste de chirurgiens n'est pas censee contenir le chirurgien qu'on veut changer
+		return (lc.size() >= 1);	// La liste de chirurgiens n'est plus censee contenir le chirurgien qu'on veut changer
 	}
 
 	/**

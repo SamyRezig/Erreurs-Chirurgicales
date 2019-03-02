@@ -1,6 +1,14 @@
-
+/**
+  * CLasse representant une salle (un bloc operatiore).
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Chirurgie
+  * @see Ressources
+  */
 public class Salle {
+
 	private String nom;	// Nom de la salle.
+
 
 	/**
 	  * Constructeur principal.
@@ -45,4 +53,5 @@ public class Salle {
 	public String toString() {
 		return this.nom;
 	}
+
 }

@@ -3,8 +3,20 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+/**
+  * Classe representant un chevauchement entre deux chirurgies. Cela signifie que
+  * les deux chirurgies s'intersectent, partagent la meme salle et le chirurgien.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Conflit
+  * @see Ubiquite
+  * @see Interference
+  */
 public class Chevauchement extends Conflit {
 
+	/**
+	  * Appelle le constructeur de la classe Conflit seulement
+	  */
 	public Chevauchement(Chirurgie first, Chirurgie second) {
 		super(first, second);
 	}
@@ -16,7 +28,7 @@ public class Chevauchement extends Conflit {
 
 	@Override
 	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
-		// Les listes de chirurgiens/salles ne sont pas censees contenir le chirurgien / la salle a modifier
+		// Les listes de chirurgiens/salles ne sont plus censees contenir le chirurgien / la salle a modifier
 		return (lc.size() >= 1) || (ls.size() >= 1);
 	}
 

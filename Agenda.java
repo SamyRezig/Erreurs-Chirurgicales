@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.SortedMap;
 import java.util.NavigableMap;
@@ -18,6 +17,16 @@ import java.util.Set;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
+/**
+  * Classe representant une structure pour organiser des chirurgies. Elles sont
+  * stockees et regroupees en fontion des jours. Il est possible de faire des
+  * statistiques sur un agenda.
+  * @author Samy Rezig
+  * @author Yves Tran
+  * @see Statistiques
+  * @see PlanningJournee
+  * @see Ressources
+  */
 public class Agenda {
 
 	private int nbIterations = 23;								// Nombre d'itaretions maximum pour resoudre les conflits
@@ -25,6 +34,7 @@ public class Agenda {
     private Map<LocalDate, Ressources> joursRessources;			// Ressources diponibles pour jours
 	private Ressources ressourcesExistantes;					// Toutes les ressources de la base de donnees
 	public Statistiques stats;									// Effectuer des statistiques sur les chirurgies et les corrections
+
 
 	/**
 	  * Initialiser les objets. N'est utilisable qu'a l'interieur de la classe
