@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
+import java.util.InputMismatchException;
 
 /**
   * Classe representant une structure pour organiser des chirurgies. Elles sont
@@ -129,6 +130,7 @@ public class Agenda {
 	/**
 	  * Remplir la liste de chirurgies avec le fichier donne. N'est utilisee que
 	  * pour le constructeur principal de la classe Agenda.
+	  * @throws InputMismatchException quand le fichier est incorrecte.
 	  */
 	private List<Chirurgie> remplirDepuisFichier(String nomFichier) {
 		List<Chirurgie> listeChirurgies = new ArrayList<>();	// Liste de chirurgies recensees
@@ -154,7 +156,7 @@ public class Agenda {
 		} catch (IOException e) {
 			// Probleme au niveau de la lecture du nomFichier
 			// Le fichier n'a probablement pas ete trouve.
-			System.out.println("Pas de fichier " + nomFichier + " trouve.");
+			throw new InputMismatchException("Pas de fichier " + nomFichier + " trouve.");
 		}
 
 		return listeChirurgies;
