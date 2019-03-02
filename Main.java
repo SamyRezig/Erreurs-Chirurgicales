@@ -1,13 +1,6 @@
 import java.util.List;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-
 import java.util.Scanner;
-import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.time.LocalTime;
 import java.util.InputMismatchException;
 
 public class Main {
@@ -37,7 +30,7 @@ public class Main {
 	}
 	private static Agenda corrigerFichier(int choix) throws IOException {
 		Agenda a = null;
-
+		// Choix du fichier
 		switch (choix) {
 			case 1:
 				a = new Agenda("MiniBase(1).csv");
@@ -58,7 +51,6 @@ public class Main {
 			System.out.println("\nFermer le graphique pour continuer.");
 			a.stats.afficherGraphique(null);
 		}
-
 		return a;
 	}
 
@@ -88,22 +80,22 @@ public class Main {
 
 	private static void lancerAction(int numero, Agenda a) throws IOException {
 		switch (numero) {
-			case 1:
+			case 1:	// Reafficher les statistiques
 				Main.afficherStatistiques(a);
 				break;
-			case 2:
+			case 2:	// Afficher l'evolution des corrections des chirurgies
 				Correcteur.getHistoriqueChirurgies().afficher();
 				break;
-			case 3:
+			case 3:	// Afficher les chirurgies suspectes (trop courte ou trop longue
 				a.verifierChirurgies();
 				break;
-			case 4:
+			case 4:	// Afficher le planning des chirurgiens
 				a.stats.afficherJoursTravailPlannifie(a);
 				break;
-			case 5:
+			case 5:	// Afficher le planning des salles utilisees
 				a.stats.afficherJoursTravailSalles(a);
 				break;
-			case 6:
+			case 6:	// Afficher des statistiques complementaires
 				Main.afficherStatistiquesPlus(a);
 				break;
 			case 7:
@@ -117,12 +109,14 @@ public class Main {
 		Agenda a;
 		int reponse = -1;
 
+		// Choix du fichier.
 		System.out.println("\nChoisissez un fichier :");
 		System.out.println("\t1- MiniBase(1).csv");
 		System.out.println("\t2- Chirurgies_v2.csv");
 		reponse = Main.demanderNombreEntre(1, 2);
 		a = Main.corrigerFichier(reponse);
 
+		// Choix des actions.
 		reponse = -1;
 		while (reponse != 7) {
 			System.out.println("\n============================================================================");

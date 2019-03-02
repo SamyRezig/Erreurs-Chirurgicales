@@ -67,9 +67,11 @@ public class Agenda {
 
 		// Determine les jours ou les chirurgiens devraient travailler
 		for (Chirurgien medecin : this.ressourcesExistantes.getListeChirurgiens()) {
+			// Determiner les jours ou le chirurgiens est disponibles.
 			medecin.definirJoursTravail(listeChirurgies);
 		}
 
+		// Pour chaque jour, attribuer une ressource.
         for (LocalDate jour : tousJours) {
             chirurgiensDispos = this.extraireListeChirurgiensDispos(jour);
             sallesDispos = this.ressourcesExistantes.getListeSalles();

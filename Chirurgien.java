@@ -9,32 +9,51 @@ import java.util.Scanner;
 import java.time.LocalDate;
 
 public class Chirurgien {
-	private String nom;
-	private Map<DayOfWeek, Long> frequencesTravail;
-	private List<LocalDate> joursTravail;
+	private String nom;									// Nom du chirurgien.
+	private Map<DayOfWeek, Long> frequencesTravail;		// Nombre de fois qu'un chirurgien travaille pour chaque jour de la semaine.
+	private List<LocalDate> joursTravail;				// Liste des jours ou le chirurgien est disponible.
 
+	/**
+	  * Constructeur principal.
+	  * @param nom nom du chirurgien.
+	  */
 	public Chirurgien(String nom) {
 		this.nom = nom;
 		this.frequencesTravail = new HashMap<>();
 		this.joursTravail = new ArrayList<>();
 	}
 
+	/**
+	  * Getter pour le nom du chirurgien.
+	  * @return le nom du chirurgien.
+	  */
 	public String getNom() {
 		return this.nom;
 	}
 
+	/**
+	  * Remplir la map des frequences de travail par jour de la semaine.
+	  * Cela se fait en fonctino de la liste de chirurgies donnee.
+	  * @param listeChirurgies la liste de chirurgies de reference pour analyse.
+	  */
 	public void definirFrequencesTravail(List<Chirurgie> listeChirurgies) {
 		Long frequence;
 
 		for (DayOfWeek jour : DayOfWeek.values()) {
 			// Compte le nombre de fois que le chirurgien a travaille ce jour-ci
 			frequence = listeChirurgies.stream()
-										.filter( x -> x.getDatesOperation().getDateDebut().getDayOfWeek().equals(jour) )
-										.count();
+										.filter( x -> x.getDatesOperation().getDateDebut().getDayOfWeek().equals(jour)	// Retenir les chirurgies correspondant a un jour de la semaine
+														&& x.getChirurgien().equals(this))								// Retenir les jours ou le chirurgie courant a opere.
+										.count();		// Compter le nombre de chirurgies restante.
 			this.frequencesTravail.put(jour, frequence);
 		}
 	}
 
+	/**
+	  * Determiner les jours ou le chirurgien doit travailler. L'analyse se fait
+	  * par semaine.
+	  * @param listeChirurgies la liste de chirurgies de reference et a parcourir.
+	  */
 	public void definirJoursTravail(List<Chirurgie> listeChirurgies) {
 
 		// Definition les frequences de travail
@@ -45,9 +64,9 @@ public class Chirurgien {
 													.filter( x->x.getChirurgien().equals(this))
 													.collect(Collectors.toList());
 		List<Chirurgie> chirurgiesSemaine = new ArrayList<>();
-		LocalDate jour;
-		IntervalleTemps semaine = null;
-		IntervalleTemps semainePrec = null;
+		LocalDate jour;						// Variable de stockage pour un jour de lannee.
+		IntervalleTemps semaine = null;		// Semaine courante.
+		IntervalleTemps semainePrec = null;	// Semaine precedente.
 
 		for (Chirurgie operation : chirurgiesConcernees) {
 			jour = operation.getDatesOperation().getDateDebut().toLocalDate();
@@ -69,6 +88,11 @@ public class Chirurgien {
 		this.analyserSemaineTravail(chirurgiesSemaine, semaine);
 	}
 
+	/**
+	  * Analyser et determiner quels jours de la semaine doit etre ajouter au chirurgien.
+	  * Il doit travailler 5 jours dans la semaine. Les jours sont completes en
+	  * fonction de leur frequence de travail par jour de la semaine.
+	  */
 	private void analyserSemaineTravail(List<Chirurgie> chirurgiesSemaineChirurgien, IntervalleTemps semaine) {
 		LocalDate max = null;
 		// Liste contenant les jours ou le chirurgien a travaille dans la semaine courante
@@ -88,29 +112,39 @@ public class Chirurgien {
 			max = null;
 			for (LocalDate jour : joursLibres) {
 				if (max == null || this.frequencesTravail.get(max.getDayOfWeek()) < this.frequencesTravail.get(jour.getDayOfWeek())) {
-					max = jour;
+					max = jour;	// Un maximum a ete trouve.
 				}
 			}
 			if (this.frequencesTravail.get(max.getDayOfWeek()) != 0) {
 				joursLibres.remove(max);// Retirer ce jour : le chirurgien peut travailler ce jour-ci
 				joursTravail.add(max);	// Ajouter ce jour parmi les jours de travail
 			} else {
-				joursLibres.remove(max);	// Retirer ce jour : le chirurgien n'est pas libre et ne pourra jamais travailler ce jour-ci
+				joursLibres.remove(max); // Retirer ce jour : le chirurgien n'est pas libre et ne pourra jamais travailler ce jour-ci
 			}
 		}
-		this.joursTravail.addAll(joursTravail);
+		this.joursTravail.addAll(joursTravail);	// Ajouter les nouveaux jours a l'attribut
 	}
 
+	/**
+	  * Determine si le chirurgien est cense travailler durant le jour donnee de l'annee.
+	  * @return true si le chirurigen est disponible ce jour-ci et false sinon.
+	  */
 	public boolean censeTravailler(LocalDate jour) {
 		return this.joursTravail.contains(jour);
 	}
 
 	@Override
+	/**
+	  * Hash sur le nom du chirurgien.
+	  */
 	public int hashCode() {
 		return this.nom.hashCode();
 	}
 
 	@Override
+	/**
+	  * Egalite sur le nom du chirurgien.
+	  */
 	public boolean equals(Object o) {
 		if (this.getClass() == o.getClass()) {
 			// Egalite par le nom du chirurgien

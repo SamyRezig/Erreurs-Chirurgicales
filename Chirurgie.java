@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.time.LocalTime;
 
 public class Chirurgie implements Comparable<Chirurgie> {
+	
 	private int identifiant;					// Identifiant de la chirurgie
 	private IntervalleTemps datesOperation;		// Dates de debut et fin de la chirrugie
 	private Salle salle;						// La salle ou l'operation a lieu
