@@ -20,12 +20,15 @@ public abstract class Conflit {
 
 
 	/**
+	 * Verifie si le conflit a toujours lieu.
 	  * @return true si les deux chirurgies sont toujours en conflit
 	  * et false sinon.
 	  */
 	public abstract boolean persiste();
 
 	/**
+	  * Verifie si les ressources donnees sont suffisantes en theorie
+	  * pour resoudre le conflit.
 	  * @return true si la liste de chirurgiens et la liste de salles sont assez
 	  * longue pour permettre un changement de ressource selon le type de coonflit
 	  */
