@@ -146,7 +146,7 @@ public class PlanningJournee {
 	  */
 	private void trierRessources() {
 		// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-		this.disponibilites.trierListesParDuree(this.listeChirurgies);
+		this.disponibilites.trierListesParDuree(this.listeChirurgies);//this.listeChirurgies
 	}
 
 	/**

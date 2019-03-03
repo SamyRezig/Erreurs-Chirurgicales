@@ -33,7 +33,7 @@ public class Main {
 		// Choix du fichier
 		switch (choix) {
 			case 1:
-				a = new Agenda("MiniBase(1)a.csv");
+				a = new Agenda("MiniBase(1).csv");
 				break;
 			case 2:
 				a = new Agenda("Chirurgies_v2.csv");
@@ -69,9 +69,9 @@ public class Main {
 	// Afficher les statistiques de second plan.
 	private static void afficherStatistiquesPlus(Agenda a) {
 		System.out.println("Classement des heures avec le plus de conflits avant correction :");
-		a.stats.getHeuresConflits().stream()
-									.limit(20)
-									.forEach( x -> System.out.println("\t" + x));
+		a.stats.getHeuresConflits().entrySet().stream()
+											.limit(20)
+											.forEach( x -> System.out.println("\t" + x.getKey() + " = " + x.getValue()));
 
 		System.out.println("\nLa duree moyenne de travail de chaque chirurgien en minutes pour une chirurgie : ");
 		a.stats.getDureeParChirurgien().entrySet().stream()

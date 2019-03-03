@@ -171,13 +171,6 @@ public class Correcteur {
 		indesirables.add(LocalTime.of(14, 15));
 		indesirables.add(LocalTime.of(11, 15));
 		indesirables.add(LocalTime.of(15, 15));
-		indesirables.add(LocalTime.of(12, 50));
-		indesirables.add(LocalTime.of(13, 50));
-		indesirables.add(LocalTime.of(10, 15));
-		indesirables.add(LocalTime.of(12, 35));
-		indesirables.add(LocalTime.of(14, 50));
-		indesirables.add(LocalTime.of(15, 20));
-		indesirables.add(LocalTime.of(17, 0));
 
 		return indesirables;
 	}

@@ -397,8 +397,9 @@ public class Statistiques {
 	  * parmi les chirurgies en conflit.
 	  * @return la liste de horaires triees selon ce critere.
 	  */
-	public List<LocalTime> getHeuresConflits() {
-		return new ArrayList<>(this.heuresConflits.keySet());
+	public Map<LocalTime, Integer> getHeuresConflits() {
+		//return new ArrayList<>(this.heuresConflits.keySet());
+		return this.heuresConflits;
 	}
 
 	/**
@@ -545,11 +546,11 @@ public class Statistiques {
 	  */
 	public void afficherConflitsTotaux() {
 		Map<String, List<Integer>> map = Statistiques.dataConflits();
-		System.out.println("Chevauchement :\t\t" + map.get("Chevauchement"));
-		System.out.println("Interference : \t\t" + map.get("Interference"));
-		System.out.println("Ubiquite : \t\t" + map.get("Ubiquite"));
-		System.out.println("Total : \t\t" + map.get("Total"));
-		System.out.println("Conflits corriges:\t" + Statistiques.nombresConflitsCorriges);
+		System.out.println("Chevauchements :\t\t" + map.get("Chevauchement"));
+		System.out.println("Interferences : \t\t" + map.get("Interference"));
+		System.out.println("Ubiquites : \t\t\t" + map.get("Ubiquite"));
+		System.out.println("Total : \t\t\t" + map.get("Total"));
+		System.out.println("Conflits corriges:\t\t" + Statistiques.nombresConflitsCorriges);
 		System.out.println();
 		System.out.println("Taux d'existence des chevauchements : \t" + this.tauxExistence(Statistiques.nombresChevauchement) + " pourcent du temps");
 		System.out.println("Taux d'existence des interferences : \t" + this.tauxExistence(Statistiques.nombresInterference) + " pourcent du temps");
@@ -560,7 +561,7 @@ public class Statistiques {
 										:
 										map.get("Total").size();
 
-		String plus = (map.get("Total").get( map.get("Total").size() - 1 ) == 0) ? "" : "+";	// Cas ou il fallait plus d'iteration pour resoudre tous les conflits
+		String plus = (map.get("Total").get( map.get("Total").size() - 1 ) == 0) ? "" : "+";	// Cas ou il fallait plus d'iterations pour resoudre tous les conflits
 		System.out.println("Nombre d'iterations necessaires : \t" + nbIterNecessaires + plus);
 	}
 
@@ -571,8 +572,8 @@ public class Statistiques {
 	public void comparer(Statistiques apresStats) {
 		System.out.println("Statistiques \t\t AVANT correction \t APRES correction");
 		System.out.println("Duree moyenne : \t\t" + this.dureeMoyenne + "\t\t\t" + apresStats.getDureeMoyenne());
-		System.out.println("Duree mediane : \t\t" + this.mediane + "\t\t\t" + apresStats.getMediane());
 		System.out.println("Premier quartile : \t\t" + this.premierQuartile + "\t\t\t" + apresStats.getPremierQuartile());
+		System.out.println("Duree mediane : \t\t" + this.mediane + "\t\t\t" + apresStats.getMediane());
 		System.out.println("Dernier quartile : \t\t" + this.dernierQuartile + "\t\t\t" + apresStats.getDernierQuartile());
 
 		System.out.println("Ecart-type duree des salles : \t"
@@ -591,18 +592,18 @@ public class Statistiques {
 				+ this.ecartMoyenAllongement(apresStats.dureeJournees)
 				+ " minutes de plus par jour");
 
-		System.out.println("Duree moyenne de decalage : \t"
+		System.out.println("Duree moyenne des decalages : \t"
 				+ Statistiques.dureeMoyenneDecalage()
 				+ " minutes par decalage soit un decalage de "
 				+ (float) Statistiques.dureeTotaleDecalage / 60 + " heures");
 
-		System.out.println("Duree moyenne de decoupage : \t"
+		System.out.println("Duree moyenne des decoupages : \t"
 				+ Statistiques.dureeMoyenneDecoupage()
 				+ " minutes par decoupage soit "
 				+ (float) Statistiques.dureeTotaleDecoupage / 60
 				+ " heures decoupees hors normalisation");
 
-		System.out.println("Pertinance de la correction : \t" + this.mesurerPertinance(apresStats)
+		System.out.println("Pertinence de la correction : \t" + this.mesurerPertinance(apresStats)
 				+ " conflits corriges par correction");
 	}
 
@@ -610,7 +611,7 @@ public class Statistiques {
 	  * Affichage du nombre de corrections selon les types de corrections.
 	  */
 	public void afficherNombreCorrections() {
-		System.out.println("Nombre de normalisation : \t" + Statistiques.nbNormalisation);
+		System.out.println("Nombre de normalisations : \t" + Statistiques.nbNormalisation);
 		System.out.println("Nombre de modifs ressources : \t" + Statistiques.nbRess);
 		System.out.println("Nombre de decoupages : \t\t" + Statistiques.nbDecoupage);
 		System.out.println("Nombre de decalages : \t\t" + Statistiques.nbDecalage);
@@ -746,7 +747,7 @@ public class Statistiques {
 
 		Graphique.valeurs = map;
 
-		g.afficher(null, Statistiques.nombresConflits.size() - 1, 45);
+		g.afficher(null, Statistiques.nombresConflits.size() - 1, 10);
 	}
 
 }
