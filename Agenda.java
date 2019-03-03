@@ -106,12 +106,6 @@ public class Agenda {
 			}
 		}
 
-		// Les chirurgiens qui ont operes dans la journee courante
-        /*chirurgiensDispos = this.listeChirurgies.stream()
-												.filter( x -> x.getDatesOperation().getDateDebut().toLocalDate().equals((jour)) )
-												.map( x -> x.getChirurgien() )
-												.distinct()
-												.collect( Collectors.toList() );*/
         return chirurgiensDispos;
     }
 

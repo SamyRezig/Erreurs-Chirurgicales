@@ -146,7 +146,7 @@ public class PlanningJournee {
 	  */
 	private void trierRessources() {
 		// Ordonner les listes de salles classiques, d'urgence et des chirurgiens
-		this.disponibilites.trierListesParDuree(this.listeChirurgies);//this.listeChirurgies
+		this.disponibilites.trierListesParDuree(this.listeChirurgies);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class PlanningJournee {
 
     	for(Conflit conflitCourant : this.listeConflits) {
 			conflitCourant.reordonner();	// Classer les 2 chirurgies en conflit en fonction de leur date de debut.
-			this.trierRessources();			// Mise a jour des ressources en les ordonnant.
+			if (false)	this.trierRessources();			// Mise a jour des ressources en les ordonnant.
 
 			// Definir les ressources utilisabales :
 			// Retirer les ressources qui provoqueraient un future conflit

@@ -120,7 +120,7 @@ public abstract class Conflit {
 			return;
 		}
 		System.out.println("RESOLUTION DU CONFLIT entre " + this.getPremiereChirurgie().getId() + " et " + this.getSecondeChirurgie().getId() + " : ");
-		System.out.println("Chirurgiens disponibles : \t" + lc + "\n" + "Salles dispnobles : \t\t" + ls);
+		System.out.println("Chirurgiens disponibles : \t" + lc + "\n" + "Salles disponibles : \t\t" + ls);
 		this.visualiser();
 
 		// Nomalisation des deux chirurgies : de sorte a ce qu'elle ne commence plus

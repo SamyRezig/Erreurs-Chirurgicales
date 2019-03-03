@@ -29,7 +29,7 @@ public class Chevauchement extends Conflit {
 	@Override
 	public boolean ressourcesSuffisantes(List<Chirurgien> lc, List<Salle> ls) {
 		// Les listes de chirurgiens/salles ne sont plus censees contenir le chirurgien / la salle a modifier
-		return (lc.size() >= 1) || (ls.size() >= 1);
+		return (lc.size() >= 1) && (ls.size() >= 1);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class Chevauchement extends Conflit {
         Salle tmpSalle = null;
 
 		// Recherche du chirurgien
-		if(lc.size() >= 2){
+		if(lc.size() >= 1){
 			for(Chirurgien c : lc) {
 				if(!this.getPremiereChirurgie().getChirurgien().equals(c)) {
 					tmpChirurgien = c;
@@ -53,7 +53,7 @@ public class Chevauchement extends Conflit {
 		}
 
 		// Recherche de la salle
-		if (ls.size() >= 2) {
+		if (ls.size() >= 1) {
 			for(Salle s : ls) {
 				if(!this.getPremiereChirurgie().getSalle().equals(s)) {
 					tmpSalle = s;

@@ -112,17 +112,17 @@ public class Ressources {
 		}
 		// Conversion des chirurgiens en une liste
 		this.listeChirurgiens = mapChirurgiens.entrySet().stream()
-									.sorted(Map.Entry.comparingByValue())  // Tri croissant
+									.sorted(Map.Entry.<Chirurgien, Long>comparingByValue())  // Tri croissant
 									.map( x->x.getKey() )
 									.collect(Collectors.toList());
 		// Conversion des salles classiques en une liste
 		this.listeSalles = mapSalles.entrySet().stream()
-									.sorted(Map.Entry.comparingByValue())  // Tri croissant
+									.sorted(Map.Entry.<Salle, Long>comparingByValue())  // Tri croissant
 									.map(x->x.getKey())
 									.collect(Collectors.toList());
 		// Conversion des salles d'urgence en une liste
 		this.listeSallesUrgence = mapSallesUrgentes.entrySet().stream()
-										.sorted(Map.Entry.comparingByValue()) // Tri croissant
+										.sorted(Map.Entry.<Salle, Long>comparingByValue()) // Tri croissant
 										.map(x->x.getKey())
 										.collect(Collectors.toList());
 	}

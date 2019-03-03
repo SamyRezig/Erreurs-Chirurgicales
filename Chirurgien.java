@@ -84,7 +84,7 @@ public class Chirurgien {
 
 			// Si on a change de semaine
 			if (semainePrec != null && !semaine.equals(semainePrec)) {
-				this.analyserSemaineTravail(chirurgiesSemaine, semainePrec);
+				this.analyserSemaineTravail(chirurgiesSemaine, semainePrec);	// Les jours sont completes ici
 				chirurgiesSemaine.clear();			// Vider la liste pour la prochaine semaine
 			}
 
@@ -104,6 +104,7 @@ public class Chirurgien {
 		LocalDate max = null;
 		// Liste contenant les jours ou le chirurgien a travaille dans la semaine courante
 		List<LocalDate> joursTravail = chirurgiesSemaineChirurgien.stream()
+												.filter( x->x.getChirurgien().equals(this) )
 												.map( x->x.getDatesOperation().getDateDebut().toLocalDate() )
 												.distinct()
 												.collect( Collectors.toList() );
@@ -129,7 +130,7 @@ public class Chirurgien {
 				joursLibres.remove(max); // Retirer ce jour : le chirurgien n'est pas libre et ne pourra jamais travailler ce jour-ci
 			}
 		}
-		this.joursTravail.addAll(joursTravail);	// Ajouter les nouveaux jours a l'attribut
+		this.joursTravail.addAll(joursTravail);	// Ajouter les jours de diponibilite a l'attribut
 	}
 
 	/**

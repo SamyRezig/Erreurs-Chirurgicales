@@ -24,7 +24,7 @@ import java.util.Collections;
   */
 public class Statistiques {
 
-	private int nbConflits;				// Nombre de conflits
+	private final int nbConflits;				// Nombre de conflits
 	private long dureeMoyenne;			// Duree moyenne d'une operation
 	private long premierQuartile;		// Premier quartile des durees des chirurgies sans conflit
 	private long mediane;				// Mediane des durees des chirurgies sans conflit
@@ -595,7 +595,7 @@ public class Statistiques {
 		System.out.println("Duree moyenne des decalages : \t"
 				+ Statistiques.dureeMoyenneDecalage()
 				+ " minutes par decalage soit un decalage de "
-				+ (float) Statistiques.dureeTotaleDecalage / 60 + " heures");
+				+ (float) Statistiques.dureeTotaleDecalage / 60 + " heures au total");
 
 		System.out.println("Duree moyenne des decoupages : \t"
 				+ Statistiques.dureeMoyenneDecoupage()
@@ -747,7 +747,7 @@ public class Statistiques {
 
 		Graphique.valeurs = map;
 
-		g.afficher(null, Statistiques.nombresConflits.size() - 1, 10);
+		g.afficher(null, Statistiques.nombresConflits.size() - 1, 45);
 	}
 
 }
