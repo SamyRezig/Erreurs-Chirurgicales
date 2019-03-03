@@ -24,19 +24,19 @@ import java.util.Collections;
   */
 public class Statistiques {
 
-	private final int nbConflits;				// Nombre de conflits
-	private long dureeMoyenne;			// Duree moyenne d'une operation
-	private long premierQuartile;		// Premier quartile des durees des chirurgies sans conflit
-	private long mediane;				// Mediane des durees des chirurgies sans conflit
-	private long dernierQuartile;		// Dernier quartile des durees des chirurgies sans conflit
+	private final int nbConflits;			// Nombre de conflits
+	private final long dureeMoyenne;		// Duree moyenne d'une operation
+	private final long premierQuartile;		// Premier quartile des durees des chirurgies sans conflit
+	private final long mediane;				// Mediane des durees des chirurgies sans conflit
+	private final long dernierQuartile;		// Dernier quartile des durees des chirurgies sans conflit
 
-	private Map<LocalTime, Integer> heuresConflits;			// Frequence des horaires en conflit
-	private Map<Chirurgien, Double> dureeParChirurgien;		// Duree de travail par chirurgien
-	private Map<Salle, Double> dureeParSalle;				// Duree de travail par salle
-	private Map<LocalDate, Long> dureeJournees;				// Duree entre la premiere et la derniere chirurgie de chaque journee.
+	private final Map<LocalTime, Integer> heuresConflits;			// Frequence des horaires en conflit
+	private final Map<Chirurgien, Double> dureeParChirurgien;		// Duree de travail par chirurgien
+	private final Map<Salle, Double> dureeParSalle;					// Duree de travail par salle
+	private final Map<LocalDate, Long> dureeJournees;				// Duree entre la premiere et la derniere chirurgie de chaque journee.
 
-	private double ecartTypeSalles;			// Ecart type des durees de travail  des salles.
-	private double ecartTypeChirurgiens;	// Ecart type des durees de travail des chirurgiens
+	private final double ecartTypeSalles;			// Ecart type des durees de travail  des salles.
+	private final double ecartTypeChirurgiens;		// Ecart type des durees de travail des chirurgiens
 
 	private static long dureeTotaleDecalage = 0;	// Duree totale des decalages pour corriger les conflits.
 	private static long dureeTotaleDecoupage = 0;	// Duree totale des decoupages pour corriger les conflits
