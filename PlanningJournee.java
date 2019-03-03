@@ -159,7 +159,7 @@ public class PlanningJournee {
 
     	for(Conflit conflitCourant : this.listeConflits) {
 			conflitCourant.reordonner();	// Classer les 2 chirurgies en conflit en fonction de leur date de debut.
-			if (false)	this.trierRessources();			// Mise a jour des ressources en les ordonnant.
+			//if (false)	this.trierRessources();			// Mise a jour des ressources en les ordonnant.
 
 			// Definir les ressources utilisabales :
 			// Retirer les ressources qui provoqueraient un future conflit
